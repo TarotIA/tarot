@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>Susana Tarot · Runas · Voz Mejorada</title>
+    <title>Susana Tarot · Runas · Voz y Efectos</title>
     <script src="https://js.puter.com/v2/"></script>
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
@@ -21,7 +22,8 @@
         .view{display:none;animation:fadeSlide 0.25s ease}.view.active{display:block}
         @keyframes fadeSlide{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
         @keyframes cardReveal{from{opacity:0;transform:scale(0.92) rotateY(10deg)}to{opacity:1;transform:scale(1) rotateY(0)}}
-        @keyframes pulseGlow{0%{box-shadow:0 0 0 0 rgba(201,160,61,0.4)}70%{box-shadow:0 0 0 12px rgba(201,160,61,0)}100%{box-shadow:0 0 0 0 rgba(201,160,61,0)}}
+        @keyframes cardGlow{0%{box-shadow:0 0 0 0 rgba(201,160,61,0.5)}50%{box-shadow:0 0 0 12px rgba(201,160,61,0)}100%{box-shadow:0 0 0 0 rgba(201,160,61,0)}}
+        .glow-effect{animation:cardGlow 1s ease-out}
         .app-header{position:sticky;top:0;z-index:100;background:var(--glass-bg);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--shadow-sm);height:var(--header-height)}
         .app-header h1{font-size:1.2rem;background:linear-gradient(135deg,var(--gold),var(--gold-dark));-webkit-background-clip:text;background-clip:text;color:transparent}
         .header-actions{display:flex;gap:10px;align-items:center}
@@ -163,8 +165,14 @@
 <div id="modal-runa" class="modal-overlay"><div class="modal-content"><button class="close-btn" onclick="cerrarModalRuna()">✕</button><h2 id="runaModalTitle"></h2><div id="runaModalGlyph" class="rune-detail-glyph"></div><p id="runaModalPos"></p><div id="runaMeaning" class="inner-section"></div><div class="inner-section"><div id="runaSingleAI" style="white-space:pre-wrap"></div><div class="btn-group"><button class="btn btn-primary btn-sm" onclick="interpretarRunaIA()">✨ Interpretar IA</button><button class="btn btn-secondary btn-sm" onclick="escucharRunaIA()">🔊 Escuchar</button><button class="btn btn-secondary btn-sm" onclick="detenerVozLocal()">⏹️ Stop</button></div></div><textarea id="runaNotaPersonal" rows="3" placeholder="Notas personales sobre esta runa..."></textarea><div class="btn-group"><button class="btn btn-primary btn-sm" onclick="guardarNotaRuna()">💾 Guardar nota</button><button class="btn btn-secondary btn-sm" onclick="exportarRunaModalImagen()">📸 Imagen</button><button class="btn btn-secondary btn-sm" onclick="exportarRunaModalPDF()">📄 PDF</button></div></div></div>
 <div id="modal-selector-cartas" class="modal-overlay"><div class="modal-content"><button class="close-btn" onclick="cerrarModalSelector()">✕</button><h2>Selecciona una carta</h2><div class="search-box"><input id="selector-search" placeholder="🔍 Buscar carta..."></div><div class="chip-scroll" id="selector-chip-container"></div><div id="selector-grid" class="modal-selector-cartas"></div><div class="btn-group"><button class="btn btn-secondary" onclick="cerrarModalSelector()">Cancelar</button></div></div></div>
 <div id="modal-tirada-guardada" class="modal-overlay"><div class="modal-content"><button class="close-btn" onclick="cerrarTiradaGuardada()">✕</button><h2>📖 Tirada guardada</h2><div id="tirada-guardada-contenido"></div><div class="btn-group"><button class="btn btn-secondary btn-sm" onclick="exportarTiradaGuardadaPDF()">📄 PDF</button><button class="btn btn-secondary btn-sm" onclick="exportarTiradaGuardadaImagen()">📸 Imagen</button></div></div></div>
-<div id="modal-config" class="modal-overlay"><div class="modal-content"><button class="close-btn" onclick="cerrarConfigModal()">✕</button><h2>⚙️ Configuración</h2><div><select id="theme-select"><option value="light">☀️ Claro</option><option value="dark">🌙 Oscuro</option><option value="bosque">🌿 Bosque</option><option value="oceanico">🌊 Oceánico</option><option value="mistico">🔮 Místico</option><option value="calido">🔥 Cálido</option></select><select id="tapete-select"><option value="ninguno">Fondo: Ninguno</option><option value="verde">Verde</option><option value="azul">Azul</option><option value="purpura">Púrpura</option><option value="dorado">Dorado</option></select><div class="config-slider"><label>🗣️ Velocidad voz: <span id="speechRateValue">0.9</span></label><input type="range" id="speechRateSlider" min="0.7" max="1.3" step="0.05" value="0.9"></div><div class="config-slider"><label>🎵 Tono voz: <span id="speechPitchValue">1.0</span></label><input type="range" id="speechPitchSlider" min="0.5" max="1.5" step="0.05" value="1.0"></div><div class="config-slider"><label>🗣️ Seleccionar voz:</label><select id="voiceSelect" class="voice-selector"></select></div><div class="config-slider"><label>📏 Tamaño letra:</label><select id="fontSizeSelect"><option value="small">Pequeño</option><option value="normal" selected>Normal</option><option value="large">Grande</option></select></div><div class="config-slider"><label>✨ Sombras en cartas:</label><input type="checkbox" id="cardShadowsCheckbox" checked></div><div class="config-slider"><label>⏱️ Backup automático (minutos):</label><select id="autoBackupIntervalSelect"><option value="0">Desactivado</option><option value="15">15 min</option><option value="30">30 min</option><option value="60">60 min</option><option value="120">120 min</option></select></div></div></div></div>
-<div id="modal-manual" class="modal-overlay"><div class="modal-content"><button class="close-btn" onclick="cerrarManual()">✕</button><h2>📘 Manual de Susana Tarot y Runas</h2><div class="inner-section manual-content"><h3>🔮 Bienvenida</h3><p>Susana Tarot ahora incluye RUNAS NÓRDICAS (Elder Futhark) con glifos SVG, tiradas e interpretación con IA.</p><h3>ᚠ Runas</h3><p>24 símbolos mágicos. Cada runa tiene significado derecho e invertido. Puedes hacer tiradas de 1, 3 o 5 runas, guardarlas y recibir análisis profundo de IA.</p><h3>🃏 Mazo</h3><p>78 cartas de tarot completas con imágenes reales.</p><h3>✨ Carta/Runa del día</h3><p>Inspiración diaria.</p><h3>🔮 Tiradas de Tarot y Runas</h3><p>Múltiples esqueletos y libertad total.</p><h3>🔢 Numerología</h3><p>Números de vida, expresión, año personal, etc.</p><h3>🎤 Voz mejorada</h3><p>Puedes elegir la voz, velocidad y tono. Haz clic en cualquier botón 🔊 para escuchar.<br>⚠️ En Android, si las voces suenan metálicas, instala Google Text-to-Speech desde Play Store y selecciona una voz en español en los ajustes del sistema.</p><p style="margin-top:16px; text-align:center"><strong>Que los dioses y los arcanos te guíen. 🔮</strong></p></div></div></div>
+<div id="modal-config" class="modal-overlay"><div class="modal-content"><button class="close-btn" onclick="cerrarConfigModal()">✕</button><h2>⚙️ Configuración</h2><div><select id="theme-select"><option value="light">☀️ Claro</option><option value="dark">🌙 Oscuro</option><option value="bosque">🌿 Bosque</option><option value="oceanico">🌊 Oceánico</option><option value="mistico">🔮 Místico</option><option value="calido">🔥 Cálido</option></select><select id="tapete-select"><option value="ninguno">Fondo: Ninguno</option><option value="verde">Verde</option><option value="azul">Azul</option><option value="purpura">Púrpura</option><option value="dorado">Dorado</option></select><div class="config-slider"><label>🗣️ Velocidad voz: <span id="speechRateValue">0.9</span></label><input type="range" id="speechRateSlider" min="0.7" max="1.3" step="0.05" value="0.9"></div><div class="config-slider"><label>🎵 Tono voz: <span id="speechPitchValue">1.0</span></label><input type="range" id="speechPitchSlider" min="0.5" max="1.5" step="0.05" value="1.0"></div><div class="config-slider"><label>🗣️ Seleccionar voz:</label><select id="voiceSelect" class="voice-selector"></select></div><div class="config-slider"><label>📏 Tamaño letra:</label><select id="fontSizeSelect"><option value="small">Pequeño</option><option value="normal" selected>Normal</option><option value="large">Grande</option></select></div><div class="config-slider"><label>✨ Sombras en cartas:</label><input type="checkbox" id="cardShadowsCheckbox" checked></div><div class="config-slider"><label>⏱️ Backup automático (minutos):</label><select id="autoBackupIntervalSelect"><option value="0">Desactivado</option><option value="15">15 min</option><option value="30">30 min</option><option value="60">60 min</option><option value="120">120 min</option></select></div>
+    <div class="inner-section" style="margin-top:12px; text-align:center">
+        <p>🔊 <strong>Mejora la voz en Android:</strong></p>
+        <p>Si las voces suenan metálicas o no aparecen, instala <strong>Google Text-to-Speech</strong> desde Play Store y selecciona una voz en español en los ajustes del sistema.</p>
+        <a href="https://play.google.com/store/apps/details?id=com.google.android.tts" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" style="text-decoration:none; display:inline-block">📥 Descargar Google TTS</a>
+    </div>
+</div></div></div>
+<div id="modal-manual" class="modal-overlay"><div class="modal-content"><button class="close-btn" onclick="cerrarManual()">✕</button><h2>📘 Manual de Susana Tarot y Runas</h2><div class="inner-section manual-content"><h3>🔮 Bienvenida</h3><p>Susana Tarot ahora incluye RUNAS NÓRDICAS (Elder Futhark) con glifos SVG, tiradas e interpretación con IA.</p><h3>ᚠ Runas</h3><p>24 símbolos mágicos. Cada runa tiene significado derecho e invertido. Puedes hacer tiradas de 1, 3 o 5 runas, guardarlas y recibir análisis profundo de IA.</p><h3>🃏 Mazo</h3><p>78 cartas de tarot completas con imágenes reales.</p><h3>✨ Carta/Runa del día</h3><p>Inspiración diaria.</p><h3>🔮 Tiradas de Tarot y Runas</h3><p>Múltiples esqueletos y libertad total.</p><h3>🔢 Numerología</h3><p>Números de vida, expresión, año personal, etc.</p><h3>🎤 Voz mejorada</h3><p>Puedes elegir la voz, velocidad y tono. Haz clic en cualquier botón 🔊 para escuchar.</p><p style="margin-top:16px; text-align:center"><strong>Que los dioses y los arcanos te guíen. 🔮</strong></p></div></div></div>
 <div id="tapete-extendido" class="modal-overlay" style="background:rgba(0,0,0,0.8); backdrop-filter:blur(12px);"><div class="modal-content" style="max-width:90%"><button class="close-btn" onclick="cerrarTapeteExtendido()">✕</button><h2>🔍 Tirada expandida</h2><div id="tapete-cards-content" style="display:flex; flex-wrap:wrap; gap:16px; justify-content:center"></div><div class="btn-group"><button class="btn btn-primary" onclick="generarLecturaIA(); cerrarTapeteExtendido()">✨ Interpretar</button></div></div></div>
 <div id="toast" class="toast"></div>
 
@@ -181,7 +189,7 @@ function loadVoices() {
     const voices = window.speechSynthesis.getVoices();
     voiceSelect.innerHTML = '<option value="">Voz por defecto (sistema)</option>';
     voices.forEach(voice => {
-        if (voice.lang.includes('es') || voice.lang.includes('en') || true) {
+        if (voice.lang.includes('es') || voice.lang.includes('en')) {
             const option = document.createElement('option');
             option.value = voice.voiceURI;
             option.textContent = `${voice.name} (${voice.lang}) - ${voice.localService ? 'local' : 'red'}`;
@@ -262,28 +270,38 @@ function iniciarDictado(idElemento, btn) {
 }
 
 // ==================== UTILIDADES DE EXPORTACIÓN ====================
+async function esperarImagenes(elemento) {
+    const imagenes = elemento.querySelectorAll('img');
+    const promesas = Array.from(imagenes).map(img => {
+        if (img.complete) return Promise.resolve();
+        return new Promise((resolve) => {
+            img.onload = resolve;
+            img.onerror = resolve;
+        });
+    });
+    await Promise.all(promesas);
+}
+
 async function exportarElementoAImagen(elemento, nombreArchivo = 'captura') {
     if (!elemento) return;
     try {
-        const canvas = await html2canvas(elemento, { scale: 2, backgroundColor: '#f8f5f0' });
+        await esperarImagenes(elemento);
+        const canvas = await html2canvas(elemento, { scale: 2, backgroundColor: '#f8f5f0', useCORS: true, logging: false });
         const link = document.createElement('a');
         link.download = `${nombreArchivo}.png`;
         link.href = canvas.toDataURL();
         link.click();
         showToast('📸 Imagen guardada');
-    } catch (e) {
-        console.error(e);
-        showToast('Error al generar imagen');
-    }
+    } catch (e) { console.error(e); showToast('Error al generar imagen'); }
 }
 
 async function exportarElementoAPDF(elemento, titulo = 'Documento') {
     if (!elemento) return;
     try {
-        const canvas = await html2canvas(elemento, { scale: 2, backgroundColor: '#f8f5f0' });
+        await esperarImagenes(elemento);
+        const canvas = await html2canvas(elemento, { scale: 2, backgroundColor: '#f8f5f0', useCORS: true, logging: false });
         const imgData = canvas.toDataURL('image/png');
-        // Usamos jsPDF dinámicamente
-        const { jsPDF } = window.jspdf || await import('https://cdn.skypack.dev/jspdf');
+        const { jsPDF } = window.jspdf;
         const pdf = new jsPDF('p', 'mm', 'a4');
         const imgProps = pdf.getImageProperties(imgData);
         const pdfWidth = pdf.internal.pageSize.getWidth();
@@ -291,13 +309,10 @@ async function exportarElementoAPDF(elemento, titulo = 'Documento') {
         pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
         pdf.save(`${titulo}.pdf`);
         showToast('📄 PDF guardado');
-    } catch (e) {
-        console.error(e);
-        showToast('Error al generar PDF');
-    }
+    } catch (e) { console.error(e); showToast('Error al generar PDF'); }
 }
 
-// ==================== DEFINICIONES AMPLIADAS DE CARTAS Y RUNAS ====================
+// ==================== DEFINICIONES AMPLIADAS ====================
 const MAJOR_MEANINGS = {
 "El Loco":{up:"Nuevos comienzos llenos de fe, espontaneidad y optimismo. Representa el salto al vacío con confianza, la libertad y la aventura. Te invita a soltar el miedo y seguir tu intuición sin preocuparte por lo que piensen los demás.",rev:"Imprudencia temeraria, falta de dirección, comportamientos irresponsables. Puede indicar que estás evitando compromisos o actuando sin pensar en las consecuencias.",sombra:"Miedo a lo desconocido, negación del propio potencial."},
 "El Mago":{up:"Poder personal, manifestación, concentración de energía. Tienes todos los recursos necesarios para lograr tus metas. Es momento de actuar y materializar tus ideas.",rev:"Manipulación, talento desperdiciado, inseguridad. Puede señalar que estás usando mal tus habilidades o que alguien te está engañando.",sombra:"Ego inflado, abuso de poder."},
@@ -323,7 +338,6 @@ const MAJOR_MEANINGS = {
 "El Mundo":{up:"Plenitud, logro, culminación. Has completado un ciclo importante. La integración y el éxito total.",rev:"Falta de cierre, insatisfacción, demora. Casi lo logras, pero aún falta algo.",sombra:"Miedo al éxito, sabotaje."}
 };
 
-// Runas ampliadas
 const runasData = [
     { id: "fehu", glyph: "ᚠ", nombre: "Fehu", significado: "Riqueza, ganado, prosperidad material. Simboliza la energía de la abundancia en todas sus formas: dinero, bienes, salud o amor. Te recuerda que todo lo que posees es energía en movimiento. Es momento de cosechar los frutos de tu trabajo y también de compartir.", significadoInv: "Pérdida, fracaso, avaricia. Puede indicar que te aferras demasiado a lo material o que estás perdiendo algo valioso. Cuidado con la codicia.", sombra: "Apego al dinero, miedo a la escasez." },
     { id: "uruz", glyph: "ᚢ", nombre: "Uruz", significado: "Fuerza bruta, salud, vitalidad. Representa la energía del uro, un animal salvaje e indomable. Te da el poder para superar obstáculos y sanar. Es un momento de gran fortaleza física y emocional.", significadoInv: "Debilidad, falta de motivación, enfermedad. La energía se ha agotado. Puede ser un llamado a descansar o a reconsiderar tu enfoque.", sombra: "Fuerza mal dirigida, agresividad." },
@@ -468,6 +482,11 @@ function generarNuevaTirada() {
     aiReadingText=''; document.getElementById('ai-reading-text').innerHTML='Pulsa "✨ Generar lectura"'; 
     renderizarSpread(); aplicarTapete(); 
     document.getElementById('libre-panel').style.display = 'none';
+    // Efecto visual: añadir clase glow a las cartas recién generadas
+    setTimeout(() => {
+        document.querySelectorAll('#spread-content .spread-slot').forEach(slot => slot.classList.add('glow-effect'));
+        setTimeout(() => document.querySelectorAll('#spread-content .spread-slot').forEach(slot => slot.classList.remove('glow-effect')), 1000);
+    }, 100);
 }
 function renderizarSpread() { 
     const cont=document.getElementById('spread-content'); if(!cont) return; 
@@ -498,6 +517,10 @@ function configurarTiradaLibre() {
     aiReadingText = '';
     document.getElementById('ai-reading-text').innerHTML = 'Pulsa "✨ Generar lectura"';
     document.getElementById('libre-panel').style.display = 'block';
+    setTimeout(() => {
+        document.querySelectorAll('#spread-content .spread-slot').forEach(slot => slot.classList.add('glow-effect'));
+        setTimeout(() => document.querySelectorAll('#spread-content .spread-slot').forEach(slot => slot.classList.remove('glow-effect')), 1000);
+    }, 100);
 }
 function renderizarSpreadLibre() {
     const cont = document.getElementById('spread-content');
@@ -544,142 +567,18 @@ function guardarCartaDelDiaAuto() { const today=getDailyCard().fecha; if(localSt
 function registrarEmocion(e){ const key='emocion_'+new Date().toLocaleDateString('es-ES'); localStorage.setItem(key,e); document.getElementById('emocion-registrada').innerHTML='✅ Hoy: <strong>'+e+'</strong>'; }
 async function generarReflexionDiaria() { const c=deck[dailyCardData.idx]; const div=document.getElementById('daily-ai-text'); div.style.display='block'; div.innerHTML='<p>🌀 Generando reflexión...</p>'; const prompt = `Basándote en la carta del Tarot "${c.name}" (${dailyCardData.invertida?'invertida':'derecha'}), escribe una reflexión espiritual para el día de hoy de unas 150 palabras. Termina con "Consejo práctico".`; let respuesta = await callAI(prompt); if (!respuesta) { respuesta = `✨ **Reflexión basada en ${c.name}** ✨\n\n${dailyCardData.invertida?c.meaningRev:c.meaningUp}\n\n🌿 **Mensaje del día:** ${dailyCardData.invertida?'Revisa aspectos internos y suelta lo que no sirve.':'Avanza con confianza y ábrete a nuevas oportunidades.'}\n\n💡 **Consejo práctico:** Dedica 5 minutos a la meditación.`; } div.innerHTML = respuesta.replace(/\n/g,'<br>'); }
 function escucharReflexionDiaria() { speakText(document.getElementById('daily-ai-text').innerText); }
-function exportarCartaDiaCompletaPDF() {
-    const contenedor = document.createElement('div');
-    contenedor.style.background = 'white';
-    contenedor.style.padding = '20px';
-    contenedor.style.borderRadius = '16px';
-    const cartaDiv = document.querySelector('#carta-dia-container .day-card');
-    const iaDiv = document.getElementById('daily-ai-text');
-    if (!cartaDiv) return;
-    contenedor.innerHTML = cartaDiv.outerHTML + (iaDiv && iaDiv.style.display !== 'none' ? iaDiv.outerHTML : '');
-    document.body.appendChild(contenedor);
-    exportarElementoAPDF(contenedor, 'carta_dia_ia');
-    document.body.removeChild(contenedor);
-}
-function exportarCartaDiaCompletaImagen() {
-    const contenedor = document.createElement('div');
-    contenedor.style.background = 'white';
-    contenedor.style.padding = '20px';
-    contenedor.style.borderRadius = '16px';
-    const cartaDiv = document.querySelector('#carta-dia-container .day-card');
-    const iaDiv = document.getElementById('daily-ai-text');
-    if (!cartaDiv) return;
-    contenedor.innerHTML = cartaDiv.outerHTML + (iaDiv && iaDiv.style.display !== 'none' ? iaDiv.outerHTML : '');
-    document.body.appendChild(contenedor);
-    exportarElementoAImagen(contenedor, 'carta_dia_ia');
-    document.body.removeChild(contenedor);
-}
-function exportarCartaModalImagen() {
-    const modal = document.getElementById('modal-carta');
-    const contenido = modal.querySelector('.modal-content').cloneNode(true);
-    const divTemp = document.createElement('div');
-    divTemp.style.background = 'white';
-    divTemp.style.padding = '20px';
-    divTemp.appendChild(contenido);
-    document.body.appendChild(divTemp);
-    exportarElementoAImagen(divTemp, `carta_${deck[currentIdx]?.name}`);
-    document.body.removeChild(divTemp);
-}
-function exportarCartaModalPDF() {
-    const modal = document.getElementById('modal-carta');
-    const contenido = modal.querySelector('.modal-content').cloneNode(true);
-    const divTemp = document.createElement('div');
-    divTemp.style.background = 'white';
-    divTemp.style.padding = '20px';
-    divTemp.appendChild(contenido);
-    document.body.appendChild(divTemp);
-    exportarElementoAPDF(divTemp, `carta_${deck[currentIdx]?.name}`);
-    document.body.removeChild(divTemp);
-}
-function exportarRunaModalImagen() {
-    const modal = document.getElementById('modal-runa');
-    const contenido = modal.querySelector('.modal-content').cloneNode(true);
-    const divTemp = document.createElement('div');
-    divTemp.style.background = 'white';
-    divTemp.style.padding = '20px';
-    divTemp.appendChild(contenido);
-    document.body.appendChild(divTemp);
-    exportarElementoAImagen(divTemp, `runa_${runasData[currentRunaIdx]?.nombre}`);
-    document.body.removeChild(divTemp);
-}
-function exportarRunaModalPDF() {
-    const modal = document.getElementById('modal-runa');
-    const contenido = modal.querySelector('.modal-content').cloneNode(true);
-    const divTemp = document.createElement('div');
-    divTemp.style.background = 'white';
-    divTemp.style.padding = '20px';
-    divTemp.appendChild(contenido);
-    document.body.appendChild(divTemp);
-    exportarElementoAPDF(divTemp, `runa_${runasData[currentRunaIdx]?.nombre}`);
-    document.body.removeChild(divTemp);
-}
-function exportarTiradaCompletaImagen() {
-    if(!currentSpreadCards.length) return;
-    const contenedor = document.createElement('div');
-    contenedor.style.background = 'white';
-    contenedor.style.padding = '20px';
-    contenedor.style.borderRadius = '16px';
-    let cartasHTML = '<h2>🔮 Tirada de Tarot</h2>';
-    currentSpreadCards.forEach(sc => {
-        const c = deck[sc.idx];
-        cartasHTML += `<div style="margin:10px 0;"><strong>${sc.posicion}</strong><br><img src="${getCardImage(c)}" style="width:80px;transform:${sc.invertida?'rotate(180deg)':'none'}"><p>${c.name} (${sc.invertida?'Inv':'Der'})</p></div>`;
-    });
-    const iaText = document.getElementById('ai-reading-text').innerHTML;
-    contenedor.innerHTML = cartasHTML + `<div>${iaText}</div>`;
-    document.body.appendChild(contenedor);
-    exportarElementoAImagen(contenedor, 'tirada_tarot_ia');
-    document.body.removeChild(contenedor);
-}
-function exportarTiradaCompletaPDF() {
-    if(!currentSpreadCards.length) return;
-    const contenedor = document.createElement('div');
-    contenedor.style.background = 'white';
-    contenedor.style.padding = '20px';
-    contenedor.style.borderRadius = '16px';
-    let cartasHTML = '<h2>🔮 Tirada de Tarot</h2>';
-    currentSpreadCards.forEach(sc => {
-        const c = deck[sc.idx];
-        cartasHTML += `<div style="margin:10px 0;"><strong>${sc.posicion}</strong><br><img src="${getCardImage(c)}" style="width:80px;transform:${sc.invertida?'rotate(180deg)':'none'}"><p>${c.name} (${sc.invertida?'Inv':'Der'})</p></div>`;
-    });
-    const iaText = document.getElementById('ai-reading-text').innerHTML;
-    contenedor.innerHTML = cartasHTML + `<div>${iaText}</div>`;
-    document.body.appendChild(contenedor);
-    exportarElementoAPDF(contenedor, 'tirada_tarot_ia');
-    document.body.removeChild(contenedor);
-}
-function exportarTiradaRunasCompletaImagen() {
-    if(!currentSpreadRunas.length) return;
-    const contenedor = document.createElement('div');
-    contenedor.style.background = 'white';
-    contenedor.style.padding = '20px';
-    contenedor.style.borderRadius = '16px';
-    let runasHTML = '<h2>ᚠ Tirada de Runas</h2>';
-    currentSpreadRunas.forEach(r => {
-        runasHTML += `<div style="margin:10px 0;"><strong>${r.posicion}</strong><br><div style="font-size:3rem;">${r.runa.glyph}</div><p>${r.runa.nombre} (${r.invertida?'Inv':'Der'})</p></div>`;
-    });
-    const iaText = document.getElementById('runas-ai-text').innerHTML;
-    contenedor.innerHTML = runasHTML + `<div>${iaText}</div>`;
-    document.body.appendChild(contenedor);
-    exportarElementoAImagen(contenedor, 'tirada_runas_ia');
-    document.body.removeChild(contenedor);
-}
-function exportarTiradaRunasCompletaPDF() {
-    if(!currentSpreadRunas.length) return;
-    const contenedor = document.createElement('div');
-    contenedor.style.background = 'white';
-    contenedor.style.padding = '20px';
-    contenedor.style.borderRadius = '16px';
-    let runasHTML = '<h2>ᚠ Tirada de Runas</h2>';
-    currentSpreadRunas.forEach(r => {
-        runasHTML += `<div style="margin:10px 0;"><strong>${r.posicion}</strong><br><div style="font-size:3rem;">${r.runa.glyph}</div><p>${r.runa.nombre} (${r.invertida?'Inv':'Der'})</p></div>`;
-    });
-    const iaText = document.getElementById('runas-ai-text').innerHTML;
-    contenedor.innerHTML = runasHTML + `<div>${iaText}</div>`;
-    document.body.appendChild(contenedor);
-    exportarElementoAPDF(contenedor, 'tirada_runas_ia');
-    document.body.removeChild(contenedor);
-}
+
+// Exportaciones completas (se implementan igual que antes pero con async)
+async function exportarCartaDiaCompletaPDF() { const div = document.createElement('div'); div.style.background='white'; div.style.padding='20px'; const cartaDiv = document.querySelector('#carta-dia-container .day-card'); const iaDiv = document.getElementById('daily-ai-text'); if(!cartaDiv) return; div.innerHTML = cartaDiv.outerHTML + (iaDiv && iaDiv.style.display !== 'none' ? iaDiv.outerHTML : ''); document.body.appendChild(div); await exportarElementoAPDF(div, 'carta_dia_ia'); document.body.removeChild(div); }
+async function exportarCartaDiaCompletaImagen() { const div = document.createElement('div'); div.style.background='white'; div.style.padding='20px'; const cartaDiv = document.querySelector('#carta-dia-container .day-card'); const iaDiv = document.getElementById('daily-ai-text'); if(!cartaDiv) return; div.innerHTML = cartaDiv.outerHTML + (iaDiv && iaDiv.style.display !== 'none' ? iaDiv.outerHTML : ''); document.body.appendChild(div); await exportarElementoAImagen(div, 'carta_dia_ia'); document.body.removeChild(div); }
+async function exportarCartaModalImagen() { const modal = document.getElementById('modal-carta'); const contenido = modal.querySelector('.modal-content').cloneNode(true); const divTemp = document.createElement('div'); divTemp.style.background='white'; divTemp.style.padding='20px'; divTemp.appendChild(contenido); document.body.appendChild(divTemp); await exportarElementoAImagen(divTemp, `carta_${deck[currentIdx]?.name}`); document.body.removeChild(divTemp); }
+async function exportarCartaModalPDF() { const modal = document.getElementById('modal-carta'); const contenido = modal.querySelector('.modal-content').cloneNode(true); const divTemp = document.createElement('div'); divTemp.style.background='white'; divTemp.style.padding='20px'; divTemp.appendChild(contenido); document.body.appendChild(divTemp); await exportarElementoAPDF(divTemp, `carta_${deck[currentIdx]?.name}`); document.body.removeChild(divTemp); }
+async function exportarRunaModalImagen() { const modal = document.getElementById('modal-runa'); const contenido = modal.querySelector('.modal-content').cloneNode(true); const divTemp = document.createElement('div'); divTemp.style.background='white'; divTemp.style.padding='20px'; divTemp.appendChild(contenido); document.body.appendChild(divTemp); await exportarElementoAImagen(divTemp, `runa_${runasData[currentRunaIdx]?.nombre}`); document.body.removeChild(divTemp); }
+async function exportarRunaModalPDF() { const modal = document.getElementById('modal-runa'); const contenido = modal.querySelector('.modal-content').cloneNode(true); const divTemp = document.createElement('div'); divTemp.style.background='white'; divTemp.style.padding='20px'; divTemp.appendChild(contenido); document.body.appendChild(divTemp); await exportarElementoAPDF(divTemp, `runa_${runasData[currentRunaIdx]?.nombre}`); document.body.removeChild(divTemp); }
+async function exportarTiradaCompletaImagen() { if(!currentSpreadCards.length) return; const div = document.createElement('div'); div.style.background='white'; div.style.padding='20px'; let html = '<h2>🔮 Tirada de Tarot</h2>'; for(const sc of currentSpreadCards) { const c = deck[sc.idx]; html += `<div style="margin:10px 0;"><strong>${sc.posicion}</strong><br><img src="${getCardImage(c)}" style="width:80px;transform:${sc.invertida?'rotate(180deg)':'none'}"><p>${c.name} (${sc.invertida?'Inv':'Der'})</p></div>`; } html += `<div>${document.getElementById('ai-reading-text').innerHTML}</div>`; div.innerHTML = html; document.body.appendChild(div); await exportarElementoAImagen(div, 'tirada_tarot_ia'); document.body.removeChild(div); }
+async function exportarTiradaCompletaPDF() { if(!currentSpreadCards.length) return; const div = document.createElement('div'); div.style.background='white'; div.style.padding='20px'; let html = '<h2>🔮 Tirada de Tarot</h2>'; for(const sc of currentSpreadCards) { const c = deck[sc.idx]; html += `<div style="margin:10px 0;"><strong>${sc.posicion}</strong><br><img src="${getCardImage(c)}" style="width:80px;transform:${sc.invertida?'rotate(180deg)':'none'}"><p>${c.name} (${sc.invertida?'Inv':'Der'})</p></div>`; } html += `<div>${document.getElementById('ai-reading-text').innerHTML}</div>`; div.innerHTML = html; document.body.appendChild(div); await exportarElementoAPDF(div, 'tirada_tarot_ia'); document.body.removeChild(div); }
+async function exportarTiradaRunasCompletaImagen() { if(!currentSpreadRunas.length) return; const div = document.createElement('div'); div.style.background='white'; div.style.padding='20px'; let html = '<h2>ᚠ Tirada de Runas</h2>'; for(const r of currentSpreadRunas) { html += `<div style="margin:10px 0;"><strong>${r.posicion}</strong><br><div style="font-size:3rem;">${r.runa.glyph}</div><p>${r.runa.nombre} (${r.invertida?'Inv':'Der'})</p></div>`; } html += `<div>${document.getElementById('runas-ai-text').innerHTML}</div>`; div.innerHTML = html; document.body.appendChild(div); await exportarElementoAImagen(div, 'tirada_runas_ia'); document.body.removeChild(div); }
+async function exportarTiradaRunasCompletaPDF() { if(!currentSpreadRunas.length) return; const div = document.createElement('div'); div.style.background='white'; div.style.padding='20px'; let html = '<h2>ᚠ Tirada de Runas</h2>'; for(const r of currentSpreadRunas) { html += `<div style="margin:10px 0;"><strong>${r.posicion}</strong><br><div style="font-size:3rem;">${r.runa.glyph}</div><p>${r.runa.nombre} (${r.invertida?'Inv':'Der'})</p></div>`; } html += `<div>${document.getElementById('runas-ai-text').innerHTML}</div>`; div.innerHTML = html; document.body.appendChild(div); await exportarElementoAPDF(div, 'tirada_runas_ia'); document.body.removeChild(div); }
 
 // Runas: funciones restantes
 let currentRunaIdx = null;
@@ -728,6 +627,10 @@ function generarTiradaRunas() {
     }
     currentSpreadRunas = nuevas;
     renderTiradaRunas();
+    setTimeout(() => {
+        document.querySelectorAll('#runas-spread .spread-slot').forEach(slot => slot.classList.add('glow-effect'));
+        setTimeout(() => document.querySelectorAll('#runas-spread .spread-slot').forEach(slot => slot.classList.remove('glow-effect')), 1000);
+    }, 100);
 }
 function renderTiradaRunas() {
     const container = document.getElementById('runas-spread');
@@ -779,8 +682,8 @@ function guardarTiradaRunas() {
 }
 function runaDelDia() { const idx = Math.floor(Math.random() * runasData.length); const inv = Math.random() < 0.25; abrirRuna(idx, inv); showToast(`🌞 Runa del día: ${runasData[idx].nombre}`); }
 
-// Resto de funciones (sueños, luna, numerología, historial) - ligeramente adaptadas
-function interpretarSueno(){ const t=document.getElementById('dream-text').value.trim(); if(!t){ showToast('✏️ Escribe tu sueño'); return; } const div=document.getElementById('dream-ai-text'); div.style.display='block'; div.innerHTML='<p>🌀 Interpretando...</p>'; (async()=>{ const prompt = `Interpreta este sueño desde una perspectiva psicológica y espiritual: "${t}". Termina con un "Consejo práctico".`; let respuesta = await callAI(prompt); if (!respuesta) { respuesta = `✨ **Interpretación de tu sueño** ✨\n\n"${t}"\n\nEste sueño refleja aspectos de tu subconsciente.\n\n💡 **Consejo:** Lleva un diario de sueños.`; } div.innerHTML = `<strong>✨ Interpretación:</strong><br>${respuesta.replace(/\n/g,'<br>')}`; })(); }
+// Sueños, luna, numerología, historial (versión resumida pero funcional)
+function interpretarSueno() { const t=document.getElementById('dream-text').value.trim(); if(!t){ showToast('✏️ Escribe tu sueño'); return; } const div=document.getElementById('dream-ai-text'); div.style.display='block'; div.innerHTML='<p>🌀 Interpretando...</p>'; (async()=>{ const prompt = `Interpreta este sueño desde una perspectiva psicológica y espiritual: "${t}". Termina con un "Consejo práctico".`; let respuesta = await callAI(prompt); if (!respuesta) { respuesta = `✨ **Interpretación de tu sueño** ✨\n\n"${t}"\n\nEste sueño refleja aspectos de tu subconsciente.\n\n💡 **Consejo:** Lleva un diario de sueños.`; } div.innerHTML = `<strong>✨ Interpretación:</strong><br>${respuesta.replace(/\n/g,'<br>')}`; })(); }
 function escucharSuenoIA() { speakText(document.getElementById('dream-ai-text').innerText); }
 function cargarSuenos() { dreamsData=JSON.parse(localStorage.getItem('tarot_suenos')||'[]'); renderDreamsList(); actualizarGraficoSuenos(); }
 function renderDreamsList(filter='') { const container=document.getElementById('dreams-list'); if(!container) return; let filtered=dreamsData.filter(d=>d.texto.toLowerCase().includes(filter.toLowerCase())); if(filtered.length===0){ container.innerHTML='<p style="text-align:center">No hay sueños</p>'; return; } container.innerHTML=filtered.map((dream,idx)=>`<div class="dream-item"><div class="dream-actions"><button onclick="editDream(${idx})">✏️</button><button onclick="deleteDream(${idx})">🗑️</button></div><strong>${dream.fecha}</strong> ${dream.lunarPhase?`🌙 ${dream.lunarPhase}`:''}<p>${dream.texto}</p>${dream.interpretacion?`<details><summary>✨ Interpretación</summary><p>${dream.interpretacion}</p></details>`:''}</div>`).join(''); }
@@ -789,7 +692,7 @@ function editDream(idx){ const newText=prompt('Edita tu sueño:',dreamsData[idx]
 function deleteDream(idx){ dreamsData.splice(idx,1); saveDreams(); }
 function saveDreams(){ localStorage.setItem('tarot_suenos',JSON.stringify(dreamsData)); cargarSuenos(); }
 function guardarSueno(){ const t=document.getElementById('dream-text').value.trim(); if(!t){ showToast('✏️ Escribe tu sueño'); return; } const mood=document.getElementById('dream-mood').value; const cardId=document.getElementById('dream-card').value; const lunarPhase=getLunarPhase(); const aiText=document.getElementById('dream-ai-text').innerHTML; dreamsData.unshift({fecha:new Date().toLocaleString(),texto:t,emocion:mood,cartaAsociada:cardId,lunarPhase:lunarPhase,interpretacion:aiText}); saveDreams(); document.getElementById('dream-text').value=''; document.getElementById('dream-ai-text').style.display='none'; showToast('🌙 Sueño guardado'); }
-function actualizarGraficoSuenos(){ const emociones={}; dreamsData.forEach(d=>{ if(d.emocion) emociones[d.emocion]=(emociones[d.emocion]||0)+1; }); const ctx=document.getElementById('dreamStatsChart')?.getContext('2d'); if(ctx && Object.keys(emociones).length){ if(dreamChart) dreamChart.destroy(); dreamChart = new Chart(ctx,{type:'bar',data:{labels:Object.keys(emociones),datasets:[{label:'Frecuencia',data:Object.values(emociones),backgroundColor:'var(--gold)'}]},options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{position:'top'},tooltip:{bodyFont:{size:12}}}}}); } }
+function actualizarGraficoSuenos(){ const emociones={}; dreamsData.forEach(d=>{ if(d.emocion) emociones[d.emocion]=(emociones[d.emocion]||0)+1; }); const ctx=document.getElementById('dreamStatsChart')?.getContext('2d'); if(ctx && Object.keys(emociones).length){ if(dreamChart) dreamChart.destroy(); dreamChart = new Chart(ctx,{type:'bar',data:{labels:Object.keys(emociones),datasets:[{label:'Frecuencia',data:Object.values(emociones),backgroundColor:'var(--gold)'}]},options:{responsive:true,maintainAspectRatio:true}}); } }
 function llenarSelectCartas(){ const sel=document.getElementById('dream-card'); if(sel){ sel.innerHTML='<option value="">Asociar carta</option>'; deck.forEach(c=>{ const opt=document.createElement('option'); opt.value=c.id; opt.textContent=c.name; sel.appendChild(opt); }); } }
 function getLunarPhase() { return ['🌑 Nueva','🌒 Creciente','🌓 Cuarto Creciente','🌔 Gibosa','🌕 Llena','🌖 Gibosa Menguante','🌗 Cuarto Menguante','🌘 Menguante'][Math.floor((new Date().getDate()/29.53)*8)%8]; }
 function getSignoLunar() { return ['♈ Aries','♉ Tauro','♊ Géminis','♋ Cáncer','♌ Leo','♍ Virgo','♎ Libra','♏ Escorpio','♐ Sagitario','♑ Capricornio','♒ Acuario','♓ Piscis'][Math.floor((new Date().getDate()/2.5)%12)]; }
