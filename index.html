@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>Susana Tarot · Tirada libre + Numerología</title>
+    <title>Susana Tarot · Runas · Voz Mejorada</title>
     <script src="https://js.puter.com/v2/"></script>
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&display=swap" rel="stylesheet">
@@ -44,6 +44,10 @@
         .tarot-card:hover{transform:translateY(-5px);box-shadow:var(--shadow-lg);border-color:var(--gold)}
         .tarot-card img{width:100%;height:100%;object-fit:cover;display:block}
         .card-badge{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.85));padding:18px 6px 8px;text-align:center;font-size:9px;font-weight:bold;color:white;font-family:'Cinzel',serif}
+        .rune-card{aspect-ratio:5/6;background:var(--bg-card);border-radius:var(--radius-sm);border:1px solid var(--border);overflow:hidden;cursor:pointer;position:relative;box-shadow:var(--shadow-sm);transition:var(--transition);animation:cardReveal 0.4s ease backwards;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px;text-align:center}
+        .rune-card:hover{transform:translateY(-5px);box-shadow:var(--shadow-lg);border-color:var(--gold)}
+        .rune-glyph{font-size:3rem;font-weight:bold;font-family:'Segoe UI','Noto Sans Runic',monospace;background:linear-gradient(135deg,var(--gold),var(--gold-dark));-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:8px}
+        .rune-name{font-size:0.7rem;font-weight:bold;font-family:'Cinzel',serif;color:var(--gold-dark)}
         .selected-dot{position:absolute;top:6px;left:6px;width:20px;height:20px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;color:white;box-shadow:0 2px 8px rgba(0,0,0,0.2)}
         .btn{border:none;border-radius:60px;padding:10px 22px;font-family:'Cinzel',serif;font-weight:500;font-size:0.8rem;cursor:pointer;transition:var(--transition);display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;backdrop-filter:blur(4px)}
         .btn-primary{background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:#fff;box-shadow:0 6px 14px rgba(201,160,61,0.3)}
@@ -61,12 +65,7 @@
         .spread-slot.filled{border-style:solid;border-color:var(--gold)}
         .spread-slot img{width:75px;height:132px;object-fit:cover;border-radius:10px}
         .slot-remove{position:absolute;top:-8px;right:-8px;width:24px;height:24px;background:var(--danger);color:white;border:none;border-radius:50%;font-size:12px;cursor:pointer}
-        .libre-slot-edit{display:flex;flex-direction:column;align-items:center;gap:4px;margin-top:6px}
-        .libre-slot-edit input{width:90px;text-align:center;font-size:10px;padding:2px;background:var(--bg-card);border:1px solid var(--border);border-radius:12px}
-        .libre-slot-actions{display:flex;gap:6px;margin-top:4px}
         .day-card{background:var(--glass-bg);backdrop-filter:blur(16px);border-radius:var(--radius-lg);padding:24px;margin:20px auto;box-shadow:var(--shadow);text-align:center;border:1px solid var(--border);max-width:450px}
-        .day-card .card-img{width:140px;height:246px;margin:0 auto 16px;border-radius:var(--radius-sm);overflow:hidden;box-shadow:var(--shadow-lg);cursor:pointer;transition:0.3s}
-        .day-card .card-img img{width:100%;height:100%;object-fit:cover}
         .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(12px);z-index:200;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:0.2s;padding:20px}
         .modal-overlay.active{opacity:1;visibility:visible}
         .modal-content{background:var(--glass-bg);backdrop-filter:blur(24px);border-radius:var(--radius-lg);width:100%;max-width:550px;max-height:85vh;overflow-y:auto;padding:24px;box-shadow:var(--shadow-lg);border:1px solid var(--border)}
@@ -74,46 +73,28 @@
         .toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:10px 20px;border-radius:60px;font-size:0.8rem;z-index:1100;opacity:0;transition:0.3s;pointer-events:none;white-space:nowrap;font-family:'Cinzel',serif;box-shadow:var(--shadow-lg)}
         .toast.show{opacity:1}
         .inner-section{background:var(--glass-bg);backdrop-filter:blur(8px);border-radius:var(--radius);padding:18px;margin:12px 0;border:1px solid var(--border);box-shadow:var(--shadow-sm)}
-        .dream-item{background:var(--glass-bg);backdrop-filter:blur(8px);border-radius:var(--radius);padding:14px;margin:12px 0;border:1px solid var(--border);position:relative}
-        .dream-actions{position:absolute;top:12px;right:12px;display:flex;gap:8px}
-        .lunar-detail{background:var(--glass-bg);backdrop-filter:blur(8px);border-radius:var(--radius);padding:16px;margin:12px 0}
-        .config-slider{display:flex;align-items:center;gap:12px;justify-content:space-between;flex-wrap:wrap;margin:12px 0}
+        .rune-detail-glyph{font-size:5rem;text-align:center;margin:16px 0;background:linear-gradient(135deg,var(--gold),var(--gold-dark));-webkit-background-clip:text;background-clip:text;color:transparent}
+        .modal-selector-cartas{max-height:60vh;overflow-y:auto;margin-top:12px;display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:8px}
         .historial-cartas{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
-        .historial-cartas img{width:35px;height:60px;object-fit:cover;border-radius:6px;border:1px solid var(--border)}
-        input, select, textarea{background:var(--bg-card);border:1px solid var(--border);border-radius:30px;padding:10px 16px;color:var(--text);font-family:inherit;font-size:0.85rem;width:100%;margin:8px 0}
-        .voice-btn{background:var(--accent);border:1px solid var(--border);border-radius:30px;padding:10px 16px;cursor:pointer;font-size:1.2rem}
+        .saved-card-large{display:inline-block;width:100px;margin:8px;text-align:center;vertical-align:top}
+        .saved-card-large img{width:80px;height:140px;object-fit:cover;border-radius:12px;border:1px solid var(--gold)}
+        .numero-input-group{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+        .numero-resultado{background:var(--bg-card);border-radius:var(--radius);padding:16px;margin-top:16px;border-left:4px solid var(--gold)}
+        .numero-tabla{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin:12px 0}
+        .numero-card{background:var(--glass-bg);border-radius:var(--radius-sm);padding:14px;text-align:center;border:1px solid var(--border)}
+        .numero-card .numero-valor{font-size:2.2rem;font-weight:bold;font-family:'Cinzel',serif;color:var(--gold)}
+        .voice-btn{background:var(--accent);border:1px solid var(--border);border-radius:30px;padding:10px 16px;cursor:pointer;font-size:1.2rem;transition:0.2s}
         .voice-btn.listening{background:var(--danger);color:white;animation:pulseGlow 1.5s infinite}
-        .manual-content{line-height:1.6}
-        .manual-content h3{color:var(--gold-dark);margin:16px 0 8px}
-        .tapete-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(12px); z-index: 300; display: none; align-items: center; justify-content: center; flex-direction: column; padding: 20px; }
-        .tapete-overlay.active { display: flex; }
-        .tapete-cards { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; max-height: 70vh; overflow-y: auto; }
-        .tapete-card { text-align: center; width: 100px; }
-        .tapete-card img { width: 90px; height: 158px; object-fit: cover; border-radius: 12px; }
-        .tapete-close { position: absolute; top: 20px; right: 20px; background: var(--danger); color: white; border: none; border-radius: 50%; width: 40px; height: 40px; font-size: 24px; cursor: pointer; }
-        .emotion-row button { background: var(--bg-card); border: 1px solid var(--border); border-radius: 60px; padding: 6px 14px; font-family: inherit; cursor: pointer; display: inline-flex; gap: 4px; align-items: center; }
-        .emotion-row button:hover { background: var(--gold-light); }
-        .spread-slot .slot-pos { font-weight: bold; font-size: 0.7rem; background: var(--glass-bg); padding: 2px 6px; border-radius: 20px; margin-top: -10px; margin-bottom: 6px; cursor: pointer; }
-        #spread-note, #pregunta-usuario { background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; padding: 8px 12px; color: var(--text); }
-        .modal-selector-cartas { max-height: 60vh; overflow-y: auto; margin-top: 12px; display: grid; grid-template-columns: repeat(auto-fill, minmax(80px,1fr)); gap: 8px; }
-        .modal-selector-cartas .tarot-card { cursor: pointer; margin: 4px; }
-        .saved-card-large { display: inline-block; width: 100px; margin: 8px; text-align: center; vertical-align: top; }
-        .saved-card-large img { width: 80px; height: 140px; object-fit: cover; border-radius: 12px; box-shadow: var(--shadow-sm); border: 1px solid var(--gold); }
-        .saved-card-large p { margin-top: 4px; font-size: 0.7rem; font-weight: bold; }
-        .saved-card-large small { font-size: 0.6rem; color: var(--gold-dark); }
-        /* Numerología */
-        .numero-input-group { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 16px; }
-        .numero-input-group input { flex: 1; min-width: 120px; }
-        .numero-resultado { background: var(--bg-card); border-radius: var(--radius); padding: 16px; margin-top: 16px; border-left: 4px solid var(--gold); }
-        .numero-tabla { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 12px; margin: 12px 0; }
-        .numero-card { background: var(--glass-bg); border-radius: var(--radius-sm); padding: 12px; text-align: center; }
-        .numero-card h4 { color: var(--gold-dark); margin-bottom: 8px; }
-        .numero-card .numero-valor { font-size: 2rem; font-weight: bold; font-family: 'Cinzel', serif; }
+        .voice-selector{background:var(--bg-card);border:1px solid var(--border);border-radius:30px;padding:8px 12px;font-family:inherit;margin:5px 0;width:100%}
+        .config-slider{display:flex;align-items:center;gap:12px;justify-content:space-between;flex-wrap:wrap;margin:12px 0}
+        .libre-slot-actions{display:flex;gap:6px;margin-top:4px}
+        .slot-pos{font-weight:bold;font-size:0.7rem;background:var(--glass-bg);padding:2px 6px;border-radius:20px;margin-top:-10px;margin-bottom:6px;cursor:pointer}
+        .emotion-row button{background:var(--bg-card);border:1px solid var(--border);border-radius:60px;padding:6px 14px;font-family:inherit;cursor:pointer;display:inline-flex;gap:4px;align-items:center}
     </style>
 </head>
 <body>
 <header class="app-header">
-    <h1 class="font-cinzel">🔮 SUSANA TAROT</h1>
+    <h1 class="font-cinzel">🔮 SUSANA TAROT · RUNAS · VOZ</h1>
     <div class="header-actions">
         <button class="icon-btn" id="btn-music" onclick="toggleMusica()">🔇</button>
         <button class="icon-btn" onclick="toggleTema()">🎨</button>
@@ -131,6 +112,7 @@
     <button data-view="mazo"><span class="nav-icon">🃏</span><span>MAZO</span></button>
     <button data-view="hoy"><span class="nav-icon">✨</span><span>HOY</span></button>
     <button data-view="tirada"><span class="nav-icon">🔮</span><span>TIRADA</span></button>
+    <button data-view="runas"><span class="nav-icon">ᚠ</span><span>RUNAS</span></button>
     <button data-view="suenos"><span class="nav-icon">🌙</span><span>SUEÑOS</span></button>
     <button data-view="luna"><span class="nav-icon">🌗</span><span>LUNA</span></button>
     <button data-view="numerologia"><span class="nav-icon">🔢</span><span>NUMEROL.</span></button>
@@ -145,57 +127,260 @@
     <div class="chip-scroll" id="spread-selector"></div>
     <div style="display:flex; gap:8px; margin:8px 0"><textarea id="pregunta-usuario" rows="2" placeholder="✨ Pregunta específica (opcional)" style="flex:1"></textarea><button class="voice-btn" onclick="iniciarDictado('pregunta-usuario',this)">🎤</button></div>
     <div id="spread-content" class="spread-zone"><p style="text-align:center;color:var(--text-soft);padding:40px">👆 Selecciona tipo y pulsa "Generar tirada"</p></div>
-    <div id="libre-panel" style="display:none; margin:12px 0; background:var(--glass-bg); border-radius:var(--radius); padding:12px">
-        <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap">
-            <label>Número de cartas: <input type="number" id="libre-num-cartas" min="1" max="10" value="3" style="width:70px; text-align:center"></label>
-            <button class="btn btn-secondary btn-sm" onclick="configurarTiradaLibre()">Generar slots</button>
-        </div>
-        <p style="font-size:0.7rem; margin-top:8px">💡 Haz clic en "Cambiar" para elegir una carta del mazo. También puedes renombrar cada posición.</p>
-    </div>
+    <div id="libre-panel" style="display:none; margin:12px 0; background:var(--glass-bg); border-radius:var(--radius); padding:12px"><div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap"><label>Número de cartas: <input type="number" id="libre-num-cartas" min="1" max="10" value="3" style="width:70px; text-align:center"></label><button class="btn btn-secondary btn-sm" onclick="configurarTiradaLibre()">Generar slots</button></div><p style="font-size:0.7rem; margin-top:8px">💡 Haz clic en "Cambiar" para elegir una carta del mazo. También puedes renombrar cada posición.</p></div>
     <div class="btn-group"><button class="btn btn-primary" onclick="generarNuevaTirada()">🃏 Generar tirada</button><button class="btn btn-secondary btn-sm" onclick="meditacionGuiada()">🧘 Meditar</button><button class="btn btn-secondary btn-sm" onclick="abrirTapeteExtendido()">🔍 Expandir</button></div>
     <textarea id="spread-note" rows="2" placeholder="✏️ Reflexión personal..." style="width:100%"></textarea>
-    <div class="inner-section">
-        <div id="ai-reading-text" style="font-size:0.85rem; white-space:pre-wrap; max-height:40vh; overflow-y:auto">Pulsa "✨ Generar lectura"</div>
-        <div id="ai-loading" style="display:none; text-align:center; padding:20px">🌀 Conectando con IA...</div>
-        <div class="btn-group"><button class="btn btn-primary" onclick="generarLecturaIA()">✨ Generar lectura</button><button class="btn btn-secondary" onclick="escucharLecturaIA()">🔊</button><button class="btn btn-secondary" onclick="detenerVoz()">⏹️</button><button class="btn btn-secondary btn-sm" onclick="grabarAudio()">🎙️ Grabar</button></div>
-    </div>
+    <div class="inner-section"><div id="ai-reading-text" style="font-size:0.85rem; white-space:pre-wrap; max-height:40vh; overflow-y:auto">Pulsa "✨ Generar lectura"</div><div id="ai-loading" style="display:none; text-align:center; padding:20px">🌀 Conectando con IA...</div><div class="btn-group"><button class="btn btn-primary" onclick="generarLecturaIA()">✨ Generar lectura</button><button class="btn btn-secondary" onclick="escucharLecturaIA()">🔊</button><button class="btn btn-secondary" onclick="detenerVoz()">⏹️</button><button class="btn btn-secondary btn-sm" onclick="grabarAudio()">🎙️ Grabar</button></div></div>
     <div class="btn-group"><button class="btn btn-primary" onclick="guardarTirada()">💾 Guardar</button><button class="btn btn-secondary" onclick="compartirTirada()">📸 Imagen</button><button class="btn btn-secondary" onclick="exportarLecturaPDF()">📄 PDF</button></div>
+</div>
+<div id="view-runas" class="view">
+    <div class="btn-group"><button class="btn btn-secondary btn-sm" onclick="runaDelDia()">🌞 Runa del día</button><button class="btn btn-secondary btn-sm" onclick="generarTiradaRunas()">🎲 Tirada aleatoria</button></div>
+    <div class="chip-scroll" id="runa-tirada-selector"><span class="chip active" data-runa-tirada="1">1 Runa (Guía)</span><span class="chip" data-runa-tirada="3">3 Runas (Pasado/Presente/Futuro)</span><span class="chip" data-runa-tirada="5">5 Runas (Consejo profundo)</span></div>
+    <div style="display:flex; gap:8px; margin:8px 0"><textarea id="pregunta-runas" rows="2" placeholder="✨ Pregunta para las runas (opcional)" style="flex:1"></textarea><button class="voice-btn" onclick="iniciarDictado('pregunta-runas',this)">🎤</button></div>
+    <div id="runas-spread" class="spread-zone" style="min-height:200px;"><p style="text-align:center;color:var(--text-soft);padding:40px">⚡ Selecciona número de runas y pulsa "Generar tirada"</p></div>
+    <div class="btn-group"><button class="btn btn-primary" onclick="generarTiradaRunas()">ᚠ Generar tirada</button><button class="btn btn-primary" onclick="interpretarRunasConIA()">✨ Interpretar con IA</button><button class="btn btn-secondary" onclick="escucharLecturaRunas()">🔊 Escuchar</button></div>
+    <textarea id="nota-runas" rows="2" placeholder="✏️ Notas personales sobre la tirada..." style="width:100%"></textarea>
+    <div class="inner-section"><div id="runas-ai-text" style="font-size:0.85rem; white-space:pre-wrap">Aquí aparecerá la interpretación de las runas</div></div>
+    <div class="btn-group"><button class="btn btn-primary" onclick="guardarTiradaRunas()">💾 Guardar tirada</button><button class="btn btn-secondary btn-sm" onclick="compartirTiradaRunas()">📸 Imagen</button></div>
+    <h3 style="margin-top:20px;">✧ Mazo de Runas (Elder Futhark) ✧</h3>
+    <div class="search-box"><input id="runa-search" placeholder="🔍 Buscar runa..."></div>
+    <div id="runas-grid" class="card-grid" style="grid-template-columns:repeat(auto-fill,minmax(90px,1fr));"></div>
 </div>
 <div id="view-suenos" class="view"><div style="display:flex; gap:8px; margin-bottom:8px"><textarea id="dream-text" rows="3" placeholder="Describe tu sueño..." style="flex:1"></textarea><button class="voice-btn" onclick="iniciarDictado('dream-text',this)">🎤</button></div><div style="display:flex; gap:8px; margin:8px 0"><select id="dream-mood"><option value="">😶 Estado de ánimo</option><option>😊 Alegre</option><option>😢 Triste</option><option>😰 Ansioso</option></select><select id="dream-card"><option value="">Asociar carta</option></select></div><div class="btn-group"><button class="btn btn-primary" onclick="guardarSueno()">💾 Guardar</button><button class="btn btn-secondary" onclick="interpretarSueno()">✨ Interpretar</button><button class="btn btn-secondary btn-sm" onclick="compartirSueno()">📸 Imagen</button><button class="btn btn-secondary btn-sm" onclick="exportarSuenoPDF()">📄 PDF</button><button class="btn btn-secondary btn-sm" onclick="escucharSuenoIA()">🔊</button></div><div id="dream-ai-text" class="inner-section" style="display:none; white-space:pre-wrap"></div><input type="text" id="dream-search" placeholder="🔍 Buscar en sueños..." onkeyup="filtrarSuenos()"><div id="dreams-list"></div><canvas id="dreamStatsChart" width="300" height="150" style="max-width:100%; margin-top:12px"></canvas></div>
 <div id="view-luna" class="view"><div id="lunar-info" class="inner-section"></div><div id="lunar-detail"></div><div id="lunar-calendar"></div><p id="lunar-phase-today" style="text-align:center; font-weight:bold; margin-top:12px"></p></div>
-<div id="view-numerologia" class="view">
-    <div class="inner-section">
-        <h3>🔢 Tu Numerología Personal</h3>
-        <p>Ingresa tu fecha de nacimiento y nombre completo para obtener tus números clave y su significado.</p>
-        <div class="numero-input-group">
-            <input type="date" id="fecha-nacimiento" placeholder="Fecha de nacimiento">
-            <input type="text" id="nombre-completo" placeholder="Nombre completo (opcional)">
-            <button class="btn btn-primary btn-sm" onclick="calcularNumerologia()">🔢 Calcular</button>
-            <button class="btn btn-secondary btn-sm" onclick="interpretarNumerologiaIA()">✨ Interpretación IA</button>
-        </div>
-        <div id="numerologia-resultados" style="margin-top: 16px;"></div>
-        <div id="numerologia-ia-text" class="inner-section" style="display:none; white-space:pre-wrap"></div>
-        <div class="btn-group"><button class="btn btn-secondary btn-sm" onclick="escucharNumerologiaIA()">🔊 Escuchar</button></div>
-    </div>
-</div>
+<div id="view-numerologia" class="view"><div class="inner-section"><h3>🔢 Numerología Personal Mejorada</h3><p>Ingresa tu fecha de nacimiento y nombre completo para descubrir tus números clave. La interpretación detallada se genera con IA.</p><div class="numero-input-group"><input type="date" id="fecha-nacimiento" placeholder="Fecha de nacimiento"><input type="text" id="nombre-completo" placeholder="Nombre completo (opcional pero recomendado)"><button class="btn btn-primary btn-sm" onclick="calcularNumerologia()">🔢 Calcular</button><button class="btn btn-secondary btn-sm" onclick="interpretarNumerologiaIA()">✨ Interpretación IA</button></div><div id="numerologia-resultados" style="margin-top: 16px;"></div><div id="numerologia-ia-text" class="inner-section" style="display:none; white-space:pre-wrap"></div><div class="btn-group"><button class="btn btn-secondary btn-sm" onclick="escucharNumerologiaIA()">🔊 Escuchar</button></div></div></div>
 <div id="view-historial" class="view"><div class="btn-group"><button class="btn btn-secondary btn-sm" onclick="exportAllData()">⬇️ Backup local</button><label class="btn btn-secondary btn-sm" style="cursor:pointer">⬆️ Importar local<input type="file" id="import-file" accept=".json" style="display:none"></label><button class="btn btn-secondary btn-sm" onclick="exportHistorialCSV()">📊 CSV</button><button class="btn btn-secondary btn-sm" onclick="clearAllData()" style="background:var(--danger);color:white">🗑️</button></div><input type="date" id="history-date-filter" onchange="renderDiario()"><div id="historial-container"></div></div>
 
 <!-- MODALES -->
 <div id="modal-carta" class="modal-overlay"><div class="modal-content"><button class="close-btn" onclick="cerrarModal()">✕</button><h2 id="mTitle"></h2><p id="mPos" style="text-align:center;font-weight:bold"></p><div style="width:140px;height:246px;margin:8px auto;border-radius:12px;overflow:hidden;box-shadow:var(--shadow-lg)"><img id="mImg" src="" style="width:100%;height:100%;object-fit:cover;transition:transform 0.4s"></div><p id="sombra-text" style="font-size:0.75rem;color:var(--gold-dark);text-align:center;font-style:italic"></p><div class="btn-group"><button class="btn btn-secondary btn-sm" onclick="toggleInvertirEnModal()">🔄 Invertir</button><button class="btn btn-secondary btn-sm" onclick="borrarNotaCarta()">🗑️ Nota</button></div><div id="meaning-text" class="inner-section"></div><div class="inner-section"><div id="single-ai-text" style="font-size:0.85rem;white-space:pre-wrap;max-height:30vh;overflow-y:auto"></div><div id="single-ai-loading" style="display:none;text-align:center">🌀 Analizando...</div><div class="btn-group"><button class="btn btn-primary btn-sm" onclick="generarLecturaCartaIA()">✨ Interpretar</button><button class="btn btn-secondary btn-sm" onclick="escucharLecturaCartaIA()">🔊</button><button class="btn btn-secondary btn-sm" onclick="escucharSignificadoModal()">🔊 Def.</button></div></div><textarea id="mEditDesc" rows="4" placeholder="Notas personales..." style="width:100%"></textarea><div class="btn-group"><button id="btn-select-personal" class="btn btn-secondary btn-sm">💫 Seleccionar</button><button class="btn btn-primary btn-sm" onclick="guardarNotaCarta()">💾 Guardar nota</button></div></div></div>
+<div id="modal-runa" class="modal-overlay"><div class="modal-content"><button class="close-btn" onclick="cerrarModalRuna()">✕</button><h2 id="runaModalTitle"></h2><div id="runaModalGlyph" class="rune-detail-glyph"></div><p id="runaModalPos"></p><div id="runaMeaning" class="inner-section"></div><div class="inner-section"><div id="runaSingleAI" style="white-space:pre-wrap"></div><div class="btn-group"><button class="btn btn-primary btn-sm" onclick="interpretarRunaIA()">✨ Interpretar IA</button><button class="btn btn-secondary btn-sm" onclick="escucharRunaIA()">🔊 Escuchar</button></div></div><textarea id="runaNotaPersonal" rows="3" placeholder="Notas personales sobre esta runa..."></textarea><div class="btn-group"><button class="btn btn-primary btn-sm" onclick="guardarNotaRuna()">💾 Guardar nota</button></div></div></div>
 <div id="modal-selector-cartas" class="modal-overlay"><div class="modal-content"><button class="close-btn" onclick="cerrarModalSelector()">✕</button><h2>Selecciona una carta</h2><div class="search-box"><input id="selector-search" placeholder="🔍 Buscar carta..."></div><div class="chip-scroll" id="selector-chip-container"></div><div id="selector-grid" class="modal-selector-cartas"></div><div class="btn-group"><button class="btn btn-secondary" onclick="cerrarModalSelector()">Cancelar</button></div></div></div>
 <div id="modal-tirada-guardada" class="modal-overlay"><div class="modal-content"><button class="close-btn" onclick="cerrarTiradaGuardada()">✕</button><h2>📖 Tirada guardada</h2><div id="tirada-guardada-contenido"></div><div class="btn-group"><button class="btn btn-secondary btn-sm" onclick="exportarTiradaGuardadaPDF()">📄 PDF</button></div></div></div>
-<div id="modal-config" class="modal-overlay"><div class="modal-content"><button class="close-btn" onclick="cerrarConfigModal()">✕</button><h2>⚙️ Configuración</h2><div><select id="theme-select"><option value="light">☀️ Claro</option><option value="dark">🌙 Oscuro</option><option value="bosque">🌿 Bosque</option><option value="oceanico">🌊 Oceánico</option><option value="mistico">🔮 Místico</option><option value="calido">🔥 Cálido</option></select><select id="tapete-select"><option value="ninguno">Fondo: Ninguno</option><option value="verde">Verde</option><option value="azul">Azul</option><option value="purpura">Púrpura</option><option value="dorado">Dorado</option></select><div class="config-slider"><label>🗣️ Velocidad voz: <span id="speechRateValue">0.9</span></label><input type="range" id="speechRateSlider" min="0.7" max="1.3" step="0.05" value="0.9"></div><div class="config-slider"><label>📏 Tamaño letra:</label><select id="fontSizeSelect"><option value="small">Pequeño</option><option value="normal" selected>Normal</option><option value="large">Grande</option></select></div><div class="config-slider"><label>✨ Sombras en cartas:</label><input type="checkbox" id="cardShadowsCheckbox" checked></div><div class="config-slider"><label>⏱️ Backup automático (minutos):</label><select id="autoBackupIntervalSelect"><option value="0">Desactivado</option><option value="15">15 min</option><option value="30">30 min</option><option value="60">60 min</option><option value="120">120 min</option></select></div></div></div></div>
-<div id="modal-manual" class="modal-overlay"><div class="modal-content"><button class="close-btn" onclick="cerrarManual()">✕</button><h2>📘 Manual de Susana Tarot</h2><div class="inner-section manual-content"><h3>🔮 Bienvenida</h3><p>Susana Tarot es una aplicación completa de tarot con IA (Puter.ai), sueños, fases lunares y respaldo local.</p><h3>🃏 Mazo</h3><p>78 cartas. Toca cualquier carta para ver su significado en posición derecha e invertida, su "sombra" y añadir notas personales. Filtra por palos o busca por nombre.</p><h3>✨ Carta del día</h3><p>Cada día una carta aleatoria. Registra tu estado de ánimo, recibe una reflexión generada por IA, escúchala y expórtala a PDF/imagen. Se guarda automáticamente en el historial.</p><h3>🔮 Tiradas</h3><p>7 tipos fijos más tirada libre personalizable. Puedes elegir cada carta del mazo.</p><h3>🔢 Numerología</h3><p>Calcula tu número de vida, expresión y otros basados en fecha y nombre. Recibe interpretación con IA.</p><h3>🌙 Luna</h3><p>Fase lunar actual, calendario, rituales y elementos asociados.</p><h3>📖 Historial</h3><p>Backup, importación/exportación, filtro por fecha.</p><p style="margin-top:16px; text-align:center"><strong>Que los arcanos te guíen. 🔮</strong></p></div></div></div>
-<div id="tapete-extendido" class="tapete-overlay"><button class="tapete-close" onclick="cerrarTapeteExtendido()">✕</button><div class="tapete-cards" id="tapete-cards-content"></div><div class="btn-group"><button class="btn btn-primary" onclick="generarLecturaIA()">✨ Interpretar</button></div></div>
+<div id="modal-config" class="modal-overlay"><div class="modal-content"><button class="close-btn" onclick="cerrarConfigModal()">✕</button><h2>⚙️ Configuración</h2><div><select id="theme-select"><option value="light">☀️ Claro</option><option value="dark">🌙 Oscuro</option><option value="bosque">🌿 Bosque</option><option value="oceanico">🌊 Oceánico</option><option value="mistico">🔮 Místico</option><option value="calido">🔥 Cálido</option></select><select id="tapete-select"><option value="ninguno">Fondo: Ninguno</option><option value="verde">Verde</option><option value="azul">Azul</option><option value="purpura">Púrpura</option><option value="dorado">Dorado</option></select><div class="config-slider"><label>🗣️ Velocidad voz: <span id="speechRateValue">0.9</span></label><input type="range" id="speechRateSlider" min="0.7" max="1.3" step="0.05" value="0.9"></div><div class="config-slider"><label>🎵 Tono voz: <span id="speechPitchValue">1.0</span></label><input type="range" id="speechPitchSlider" min="0.5" max="1.5" step="0.05" value="1.0"></div><div class="config-slider"><label>🗣️ Seleccionar voz:</label><select id="voiceSelect" class="voice-selector"></select></div><div class="config-slider"><label>📏 Tamaño letra:</label><select id="fontSizeSelect"><option value="small">Pequeño</option><option value="normal" selected>Normal</option><option value="large">Grande</option></select></div><div class="config-slider"><label>✨ Sombras en cartas:</label><input type="checkbox" id="cardShadowsCheckbox" checked></div><div class="config-slider"><label>⏱️ Backup automático (minutos):</label><select id="autoBackupIntervalSelect"><option value="0">Desactivado</option><option value="15">15 min</option><option value="30">30 min</option><option value="60">60 min</option><option value="120">120 min</option></select></div></div></div></div>
+<div id="modal-manual" class="modal-overlay"><div class="modal-content"><button class="close-btn" onclick="cerrarManual()">✕</button><h2>📘 Manual de Susana Tarot y Runas</h2><div class="inner-section manual-content"><h3>🔮 Bienvenida</h3><p>Susana Tarot ahora incluye RUNAS NÓRDICAS (Elder Futhark) con glifos SVG, tiradas e interpretación con IA.</p><h3>ᚠ Runas</h3><p>24 símbolos mágicos. Cada runa tiene significado derecho e invertido. Puedes hacer tiradas de 1, 3 o 5 runas, guardarlas y recibir análisis profundo de IA.</p><h3>🃏 Mazo</h3><p>78 cartas de tarot completas con imágenes reales.</p><h3>✨ Carta/Runa del día</h3><p>Inspiración diaria.</p><h3>🔮 Tiradas de Tarot y Runas</h3><p>Múltiples esqueletos y libertad total.</p><h3>🔢 Numerología</h3><p>Números de vida, expresión, año personal, etc.</p><h3>🎤 Voz mejorada</h3><p>Puedes elegir la voz, velocidad y tono. Haz clic en cualquier botón 🔊 para escuchar.</p><p style="margin-top:16px; text-align:center"><strong>Que los dioses y los arcanos te guíen. 🔮</strong></p></div></div></div>
+<div id="tapete-extendido" class="modal-overlay" style="background:rgba(0,0,0,0.8); backdrop-filter:blur(12px);"><div class="modal-content" style="max-width:90%"><button class="close-btn" onclick="cerrarTapeteExtendido()">✕</button><h2>🔍 Tirada expandida</h2><div id="tapete-cards-content" style="display:flex; flex-wrap:wrap; gap:16px; justify-content:center"></div><div class="btn-group"><button class="btn btn-primary" onclick="generarLecturaIA(); cerrarTapeteExtendido()">✨ Interpretar</button></div></div></div>
 <div id="toast" class="toast"></div>
 
 <script>
-// ==================== FUNCIONES DE MANUAL ====================
-function abrirManual() { document.getElementById('modal-manual').classList.add('active'); }
-function cerrarManual() { document.getElementById('modal-manual').classList.remove('active'); }
-function mostrarBienvenidaPrimeraVez() { if (!localStorage.getItem('manual_visto')) { setTimeout(() => { abrirManual(); localStorage.setItem('manual_visto', 'true'); }, 500); } }
+// ==================== CONFIGURACIÓN DE VOZ MEJORADA ====================
+let currentUtterance = null;
+let speechRate = 0.9;
+let speechPitch = 1.0;
+let selectedVoiceURI = null;
 
-// ==================== IMÁGENES REALES ====================
+function loadVoices() {
+    const voiceSelect = document.getElementById('voiceSelect');
+    if (!voiceSelect) return;
+    const voices = window.speechSynthesis.getVoices();
+    voiceSelect.innerHTML = '<option value="">Voz por defecto</option>';
+    voices.forEach(voice => {
+        if (voice.lang.startsWith('es') || voice.lang.startsWith('en')) {
+            const option = document.createElement('option');
+            option.value = voice.voiceURI;
+            option.textContent = `${voice.name} (${voice.lang})`;
+            voiceSelect.appendChild(option);
+        }
+    });
+    const savedVoice = localStorage.getItem('selectedVoiceURI');
+    if (savedVoice && [...voices].some(v => v.voiceURI === savedVoice)) {
+        voiceSelect.value = savedVoice;
+        selectedVoiceURI = savedVoice;
+    }
+}
+if (window.speechSynthesis) {
+    window.speechSynthesis.onvoiceschanged = loadVoices;
+    setTimeout(loadVoices, 200);
+}
+
+function speakText(text) {
+    if (!text || !window.speechSynthesis) return;
+    window.speechSynthesis.cancel();
+    let clean = text.replace(/<[^>]*>/g, '').replace(/[\u{1F600}-\u{1F6FF}]/gu, '').replace(/[*#]/g, '').trim();
+    if (!clean) return;
+    const utterance = new SpeechSynthesisUtterance(clean);
+    utterance.lang = 'es-ES';
+    utterance.rate = speechRate;
+    utterance.pitch = speechPitch;
+    if (selectedVoiceURI) {
+        const voices = window.speechSynthesis.getVoices();
+        const selected = voices.find(v => v.voiceURI === selectedVoiceURI);
+        if (selected) utterance.voice = selected;
+    }
+    currentUtterance = utterance;
+    utterance.onend = () => { currentUtterance = null; };
+    window.speechSynthesis.speak(utterance);
+}
+
+function detenerVoz() {
+    if (window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+        currentUtterance = null;
+        showToast('🔇 Voz detenida');
+    }
+}
+
+function iniciarDictado(idElemento, btn) {
+    if (!window.SpeechRecognition && !window.webkitSpeechRecognition) {
+        showToast('❌ Tu navegador no soporta reconocimiento de voz');
+        return;
+    }
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = 'es-ES';
+    recognition.interimResults = false;
+    recognition.continuous = false;
+    recognition.onstart = () => {
+        btn.classList.add('listening');
+        btn.innerHTML = '🎙️🔊 Escuchando...';
+        showToast('🎤 Habla ahora...');
+    };
+    recognition.onresult = (e) => {
+        const transcript = e.results[0][0].transcript;
+        document.getElementById(idElemento).value = transcript;
+        btn.classList.remove('listening');
+        btn.innerHTML = '🎤';
+        showToast('✅ Dictado: "' + transcript.substring(0, 30) + '"');
+    };
+    recognition.onerror = (err) => {
+        console.error(err);
+        btn.classList.remove('listening');
+        btn.innerHTML = '🎤';
+        showToast('❌ Error de micrófono');
+    };
+    recognition.onend = () => {
+        btn.classList.remove('listening');
+        if (btn.innerHTML !== '🎤') btn.innerHTML = '🎤';
+    };
+    recognition.start();
+}
+
+// ==================== TAROT Y RUNAS (CÓDIGO COMPLETO) ====================
+// Runas Nórdicas
+const runasData = [
+    { id: "fehu", glyph: "ᚠ", nombre: "Fehu", significado: "Riqueza, ganado, prosperidad material. Éxito financiero.", significadoInv: "Pérdida, fracaso, avaricia. Cuidado con lo material.", sombra: "Apego al dinero." },
+    { id: "uruz", glyph: "ᚢ", nombre: "Uruz", significado: "Fuerza, salud, vitalidad, cambios positivos.", significadoInv: "Debilidad, falta de motivación, enfermedad.", sombra: "Fuerza mal dirigida." },
+    { id: "thurisaz", glyph: "ᚦ", nombre: "Thurisaz", significado: "Protección, fuerza reactiva, puerta a nuevas oportunidades.", significadoInv: "Traición, conflicto, impulsividad.", sombra: "Agresividad." },
+    { id: "ansuz", glyph: "ᚨ", nombre: "Ansuz", significado: "Comunicación, sabiduría, mensajes divinos.", significadoInv: "Malentendidos, manipulación, silencio.", sombra: "Palabras vacías." },
+    { id: "raidho", glyph: "ᚱ", nombre: "Raidho", significado: "Viaje, movimiento, decisiones justas.", significadoInv: "Estancamiento, retrasos, injusticia.", sombra: "Rutina tóxica." },
+    { id: "kenaz", glyph: "ᚲ", nombre: "Kenaz", significado: "Creatividad, pasión, claridad, antorcha.", significadoInv: "Oscuridad, enfermedad, bloqueo creativo.", sombra: "Obsesión." },
+    { id: "gebo", glyph: "ᚷ", nombre: "Gebo", significado: "Regalo, unión, equilibrio, generosidad.", significadoInv: "Desequilibrio, sacrificio, soledad.", sombra: "Dependencia." },
+    { id: "wunjo", glyph: "ᚹ", nombre: "Wunjo", significado: "Alegría, armonía, éxito, satisfacción.", significadoInv: "Tristeza, discordia, crisis.", sombra: "Felicidad superficial." },
+    { id: "hagalaz", glyph: "ᚺ", nombre: "Hagalaz", significado: "Cambio abrupto, destrucción necesaria, caos.", significadoInv: "Crisis mayor, desastre incontrolable.", sombra: "Resistencia al cambio." },
+    { id: "naudiz", glyph: "ᚾ", nombre: "Naudiz", significado: "Necesidad, resistencia, lecciones duras.", significadoInv: "Desesperación, esclavitud, miseria.", sombra: "Autocompasión." },
+    { id: "isa", glyph: "ᛁ", nombre: "Isa", significado: "Paralización, introspección, espera.", significadoInv: "Frialdad, estancamiento emocional.", sombra: "Inercia." },
+    { id: "jera", glyph: "ᛃ", nombre: "Jera", significado: "Cosecha, resultados, ciclo natural.", significadoInv: "Retraso, falta de recompensa.", sombra: "Impaciencia." },
+    { id: "eihwaz", glyph: "ᛇ", nombre: "Eihwaz", significado: "Resistencia, protección, puente entre mundos.", significadoInv: "Confusión, vulnerabilidad.", sombra: "Miedo a la muerte." },
+    { id: "perthro", glyph: "ᛈ", nombre: "Perthro", significado: "Misterio, destino, lotería, revelación.", significadoInv: "Secreto dañino, mala suerte.", sombra: "Obsesión por el destino." },
+    { id: "algiz", glyph: "ᛉ", nombre: "Algiz", significado: "Protección, defensa, conexión divina.", significadoInv: "Vulnerabilidad, traición.", sombra: "Paranoia." },
+    { id: "sowilo", glyph: "ᛊ", nombre: "Sowilo", significado: "Sol, éxito, energía, claridad, victoria.", significadoInv: "Fracaso, egocentrismo, oscuridad.", sombra: "Arrogancia." },
+    { id: "tiwaz", glyph: "ᛏ", nombre: "Tiwaz", significado: "Justicia, honor, liderazgo, sacrificio.", significadoInv: "Injusticia, deshonor, cobardía.", sombra: "Rigidez." },
+    { id: "berkano", glyph: "ᛒ", nombre: "Berkano", significado: "Nacimiento, crecimiento, fertilidad, hogar.", significadoInv: "Estancamiento familiar, aborto espiritual.", sombra: "Sobreprotección." },
+    { id: "ehwaz", glyph: "ᛖ", nombre: "Ehwaz", significado: "Movimiento, confianza, cooperación, cambio.", significadoInv: "Conflicto, traición, lentitud.", sombra: "Desconfianza." },
+    { id: "mannaz", glyph: "ᛗ", nombre: "Mannaz", significado: "Humanidad, inteligencia, comunidad, apoyo.", significadoInv: "Soledad, alienación, orgullo.", sombra: "Manipulación social." },
+    { id: "laguz", glyph: "ᛚ", nombre: "Laguz", significado: "Flujo, intuición, sueños, sanación.", significadoInv: "Bloqueo emocional, ahogo.", sombra: "Evasión." },
+    { id: "ingwaz", glyph: "ᛜ", nombre: "Ingwaz", significado: "Potencial, fertilidad, familia, heroísmo.", significadoInv: "Falta de propósito, bloqueo creativo.", sombra: "Pereza." },
+    { id: "dagaz", glyph: "ᛞ", nombre: "Dagaz", significado: "Amanecer, transformación, claridad radical.", significadoInv: "Ceguera, final abrupto.", sombra: "Falta de perspectiva." },
+    { id: "othala", glyph: "ᛟ", nombre: "Othala", significado: "Heredad, casa, legado, libertad.", significadoInv: "Pérdida de hogar, esclavitud, desarraigo.", sombra: "Apego al pasado." }
+];
+let currentRunaIdx = null;
+let currentRunaInverted = false;
+let currentSpreadRunas = [];
+let currentRunaTiradaType = '1';
+let runaReadingText = '';
+
+function renderRunasMazo(filter = '') {
+    const grid = document.getElementById('runas-grid');
+    if (!grid) return;
+    const filtered = runasData.filter(r => r.nombre.toLowerCase().includes(filter.toLowerCase()));
+    grid.innerHTML = filtered.map((r, idx) => {
+        const realIdx = runasData.findIndex(x => x.id === r.id);
+        return `<div class="rune-card" onclick="abrirRuna(${realIdx}, false)">
+                    <div class="rune-glyph">${r.glyph}</div>
+                    <div class="rune-name">${r.nombre}</div>
+                </div>`;
+    }).join('');
+}
+
+function abrirRuna(idx, invertida) {
+    currentRunaIdx = idx;
+    currentRunaInverted = invertida;
+    const r = runasData[idx];
+    document.getElementById('runaModalTitle').innerText = `${r.nombre} ${currentRunaInverted ? '(INVERTIDA)' : '(DERECHA)'}`;
+    document.getElementById('runaModalGlyph').innerHTML = `<div style="font-size:5rem;">${r.glyph}</div>`;
+    document.getElementById('runaModalPos').innerHTML = currentRunaInverted ? '▼ Invertida' : '▲ Derecha';
+    const meaning = currentRunaInverted ? (r.significadoInv || r.significado) : r.significado;
+    document.getElementById('runaMeaning').innerHTML = `<strong>Significado:</strong><br>${meaning}<br><br><strong>🌑 Sombra:</strong> ${r.sombra || 'Ninguna'}`;
+    document.getElementById('runaNotaPersonal').value = localStorage.getItem(`runa_nota_${r.id}`) || '';
+    document.getElementById('runaSingleAI').innerHTML = '';
+    document.getElementById('modal-runa').classList.add('active');
+}
+function cerrarModalRuna() { document.getElementById('modal-runa').classList.remove('active'); currentRunaIdx = null; }
+function guardarNotaRuna() { if(currentRunaIdx !== null) { const r = runasData[currentRunaIdx]; localStorage.setItem(`runa_nota_${r.id}`, document.getElementById('runaNotaPersonal').value); showToast('📝 Nota guardada'); } }
+async function interpretarRunaIA() { if(currentRunaIdx === null) return; const r = runasData[currentRunaIdx]; const div = document.getElementById('runaSingleAI'); div.innerHTML = '🌀 Invocando a Odín...'; const prompt = `Interpreta la runa nórdica ${r.nombre} (${currentRunaInverted ? 'invertida' : 'derecha'}). Significado: ${currentRunaInverted ? r.significadoInv : r.significado}. Incluye mensaje espiritual y consejo práctico.`; let resp = await callAI(prompt); if(!resp) resp = `✨ **${r.nombre}** ✨\n\n${currentRunaInverted ? r.significadoInv : r.significado}\n\n💡 Consejo: Medita sobre este símbolo hoy.`; div.innerHTML = resp.replace(/\n/g,'<br>'); }
+function escucharRunaIA() { speakText(document.getElementById('runaSingleAI').innerText); }
+function generarTiradaRunas() {
+    const num = parseInt(currentRunaTiradaType);
+    if(isNaN(num)) return;
+    const posiciones = num === 1 ? ['Guía'] : (num === 3 ? ['Pasado', 'Presente', 'Futuro'] : ['Situación', 'Obstáculo', 'Acción', 'Resultado', 'Consejo']);
+    const nuevas = [];
+    for(let i = 0; i < num; i++) {
+        const rand = Math.floor(Math.random() * runasData.length);
+        nuevas.push({ runa: runasData[rand], invertida: Math.random() < 0.25, posicion: posiciones[i] || `Runa ${i+1}` });
+    }
+    currentSpreadRunas = nuevas;
+    renderTiradaRunas();
+}
+function renderTiradaRunas() {
+    const container = document.getElementById('runas-spread');
+    if(!container) return;
+    if(!currentSpreadRunas.length) { container.innerHTML = '<p style="text-align:center;color:var(--text-soft);padding:40px">⚡ Selecciona número de runas y pulsa "Generar tirada"</p>'; return; }
+    container.innerHTML = currentSpreadRunas.map((item, i) => `
+        <div class="spread-slot filled" style="width:110px; cursor:pointer" onclick="abrirRuna(${runasData.findIndex(r=>r.id===item.runa.id)}, ${item.invertida})">
+            <p class="slot-pos">${item.posicion}</p>
+            <div class="rune-glyph" style="font-size:3rem; transform:${item.invertida ? 'rotate(180deg)' : 'none'}">${item.runa.glyph}</div>
+            <p style="font-size:9px; font-weight:bold">${item.runa.nombre}</p>
+            <button class="slot-remove" onclick="event.stopPropagation(); currentSpreadRunas.splice(${i},1); renderTiradaRunas()">×</button>
+        </div>
+    `).join('');
+}
+async function interpretarRunasConIA() {
+    if(!currentSpreadRunas.length) { showToast('Genera una tirada primero'); return; }
+    const div = document.getElementById('runas-ai-text');
+    div.innerHTML = '🌀 Conectando con el poder de las runas...';
+    const pregunta = document.getElementById('pregunta-runas').value.trim();
+    let prompt = `Eres una völva (experta en runas) nórdica. Realiza una lectura de ${currentSpreadRunas.length} runas.\n`;
+    if(pregunta) prompt += `Pregunta del consultante: "${pregunta}"\n`;
+    prompt += currentSpreadRunas.map(r => `${r.posicion}: ${r.runa.nombre} (${r.invertida ? 'INVERTIDA' : 'DERECHA'}) - Significado: ${r.invertida ? r.runa.significadoInv : r.runa.significado}`).join('\n');
+    prompt += `\nDa una interpretación holística, conectando las runas entre sí y ofreciendo un consejo final. Termina con "⚡ Consejo práctico:".`;
+    let resp = await callAI(prompt);
+    if(!resp) {
+        resp = `✨ **Lectura de Runas** ✨\n\n${currentSpreadRunas.map(r => `${r.posicion}: ${r.runa.nombre} - ${r.invertida ? r.runa.significadoInv : r.runa.significado}`).join('\n\n')}\n\n⚡ Consejo práctico: Observa los patrones y confía en tu intuición.`;
+    }
+    runaReadingText = resp;
+    div.innerHTML = resp.replace(/\n/g,'<br>');
+}
+function escucharLecturaRunas() { speakText(runaReadingText); }
+function guardarTiradaRunas() {
+    if(!currentSpreadRunas.length) { showToast('No hay tirada activa'); return; }
+    const nota = document.getElementById('nota-runas').value.trim();
+    const hoy = new Date().toLocaleDateString('es-ES');
+    const tiradaObj = {
+        ts: Date.now(),
+        fecha: hoy,
+        tipo: `Runas ${currentSpreadRunas.length}`,
+        nota: nota,
+        aiReading: runaReadingText,
+        runas: currentSpreadRunas.map(r => ({ nombre: r.runa.nombre, glyph: r.runa.glyph, invertida: r.invertida, posicion: r.posicion }))
+    };
+    let tiradas = JSON.parse(localStorage.getItem('tarot_tiradas') || '[]');
+    tiradas.unshift(tiradaObj);
+    localStorage.setItem('tarot_tiradas', JSON.stringify(tiradas));
+    showToast('💾 Tirada de runas guardada');
+    renderDiario();
+}
+function compartirTiradaRunas() { if(!currentSpreadRunas.length) return; const div = document.createElement('div'); div.style.background='white'; div.style.padding='20px'; div.innerHTML = `<h2>ᚠ Tirada de Runas</h2>${currentSpreadRunas.map(r=>`<p><strong>${r.posicion}</strong>: ${r.runa.nombre} (${r.invertida?'Inv':'Der'})</p>`).join('')}<p>${new Date().toLocaleDateString()}</p>`; document.body.appendChild(div); html2canvas(div,{scale:2}).then(canvas=>{const a=document.createElement('a'); a.download='runas.png'; a.href=canvas.toDataURL(); a.click(); document.body.removeChild(div);}); }
+function runaDelDia() { const idx = Math.floor(Math.random() * runasData.length); const inv = Math.random() < 0.25; abrirRuna(idx, inv); showToast(`🌞 Runa del día: ${runasData[idx].nombre}`); }
+
+// Tarot
 const IMG_BASE = "https://www.sacred-texts.com/tarot/pkt/img/";
 const ASES_MAP = {'wa1':'waac.jpg','cu1':'cuac.jpg','sw1':'swac.jpg','pe1':'peac.jpg'};
 function getCardImageUrl(card) {
@@ -215,7 +400,6 @@ function getFallbackSVG(card) {
 }
 function getCardImage(card) { const url = getCardImageUrl(card); return url ? url : getFallbackSVG(card); }
 
-// ==================== DECK ====================
 const MAJOR_MEANINGS = {
 "El Loco":{up:"Nuevos comienzos llenos de fe y espontaneidad.",rev:"Imprudencia temeraria, falta de dirección.",sombra:"Miedo a lo desconocido."},
 "El Mago":{up:"Poder personal, manifestación.",rev:"Manipulación, talento desperdiciado.",sombra:"Ego inflado."},
@@ -252,17 +436,15 @@ function buildDeck() {
 }
 buildDeck();
 
-// ==================== VARIABLES GLOBALES ====================
 let currentView = 'mazo', currentIdx = null, currentInverted = false;
 let currentSpreadCards = [], currentSpreadType = 'triada';
-let aiReadingText = '', personalAiText = '', singleAiText = '';
+let aiReadingText = '', singleAiText = '';
 let cartasSeleccionadas = [];
 let currentFilter = '', currentChip = 'todos';
 let userGender = 'neutro', currentTapete = localStorage.getItem('tapete')||'ninguno';
 let musicaActiva = false, audioCtx = null, musicInterval = null;
 let tiradaGuardadaActual = null;
 let mediaRecorder = null, audioChunks = [];
-let speechRate = 0.9, fontSize = 'normal', showCardShadows = true;
 let backupInterval = null;
 let dreamsData = JSON.parse(localStorage.getItem('tarot_suenos')||'[]');
 let tiradasData = JSON.parse(localStorage.getItem('tarot_tiradas')||'[]');
@@ -275,10 +457,8 @@ function showToast(msg) { const t=document.getElementById('toast'); t.innerText=
 function loadNotas() { const saved=localStorage.getItem('tarot_notas'); if(saved) try{JSON.parse(saved).forEach(n=>{const c=deck.find(x=>x.id===n.id);if(c)c.nota=n.nota;});}catch(e){} }
 function saveNotas() { localStorage.setItem('tarot_notas',JSON.stringify(deck.map(c=>({id:c.id,nota:c.nota||''})))); }
 
-// ==================== PUTER (IA) ====================
-let puterAvailable = true;
 async function callAI(prompt) {
-    if (window.location.protocol === 'file:' || typeof puter === 'undefined') return null;
+    if (window.location.protocol === 'file:' || typeof puter === 'undefined' || !puter.ai) return null;
     try {
         const response = await puter.ai.chat(prompt, { model: 'gpt-3.5-turbo', stream: false, temperature: 0.8 });
         if (response && response.message?.content) return response.message.content;
@@ -299,7 +479,6 @@ function generarInterpretacionLocal(cartasConPosiciones, pregunta = '') {
     return texto;
 }
 
-// ==================== MAZO ====================
 function getFilteredCards() { return deck.filter(c=>{ if(currentChip==='mayores' && c.arcano!=='mayor') return false; if(['bastos','copas','espadas','oros'].includes(currentChip) && c.palo?.toLowerCase()!==currentChip) return false; if(currentFilter && !c.name.toLowerCase().includes(currentFilter.toLowerCase())) return false; return true; }); }
 function renderMazo() { const g=document.getElementById('mazo-grid'); if(!g) return; const f=getFilteredCards(); g.innerHTML=f.length?f.map((card,i)=>{ const idx=deck.findIndex(c=>c.id===card.id); const selected=cartasSeleccionadas.some(s=>s.idx===idx); return `<div class="tarot-card" style="animation-delay:${i*0.02}s" onclick="abrirCarta(${idx}, false)"><img src="${getCardImage(card)}" alt="${card.name}" onerror="this.src='${getFallbackSVG(card)}'"><div class="card-badge">${card.name}</div>${selected?'<div class="selected-dot">✓</div>':''}</div>`; }).join(''):'<p style="text-align:center;padding:40px;">🔍 No se encontraron cartas</p>'; }
 function abrirCarta(idx, invertida) { 
@@ -326,18 +505,14 @@ function guardarNotaCarta() { if(currentIdx!==null){ deck[currentIdx].nota=docum
 function borrarNotaCarta() { if(currentIdx!==null){ deck[currentIdx].nota=''; document.getElementById('mEditDesc').value=''; saveNotas(); showToast('🗑️ Nota borrada'); } }
 function toggleInvertirEnModal() { if(currentIdx===null) return; currentInverted=!currentInverted; const img=document.getElementById('mImg'); img.style.transform=currentInverted?'rotate(180deg)':''; const c=deck[currentIdx]; document.getElementById('mPos').innerText=currentInverted?'▼ INVERTIDA':'▲ DERECHA'; document.getElementById('meaning-text').innerHTML=`<strong>${currentInverted?'⬇️ Invertido:':'⬆️ Derecho:'}</strong><br><br>${currentInverted?c.meaningRev:c.meaningUp}`; }
 function seleccionarParaLectura() { if(currentIdx===null) return; const exist=cartasSeleccionadas.find(s=>s.idx===currentIdx); if(exist){ cartasSeleccionadas=cartasSeleccionadas.filter(s=>s.idx!==currentIdx); }else{ if(cartasSeleccionadas.length>=10){ showToast('⚠️ Máximo 10 cartas'); return; } cartasSeleccionadas.push({idx:currentIdx,invertida:currentInverted}); } renderMazo(); actualizarSeleccionUI(); cerrarModal(); }
-function actualizarSeleccionUI() { const l=document.getElementById('seleccionadas-list'), t=document.getElementById('seleccionadas-text'); if(!l) return; if(!cartasSeleccionadas.length){ l.innerHTML=''; if(t)t.style.display='block'; return; } if(t)t.style.display='none'; l.innerHTML=cartasSeleccionadas.map((s,i)=>`<div style="position:relative;width:60px;margin:4px"><img src="${getCardImage(deck[s.idx])}" style="width:52px;height:90px;object-fit:cover;border-radius:8px;border:2px solid var(--gold);transform:${s.invertida?'rotate(180deg)':''}" onerror="this.src='${getFallbackSVG(deck[s.idx])}'"><button onclick="toggleSeleccionInvertir(${i})" style="position:absolute;bottom:-5px;right:-5px;background:var(--gold);border:none;border-radius:50%;width:18px;height:18px;font-size:9px">🔄</button><button onclick="quitarSeleccion(${i})" style="position:absolute;top:-5px;right:-5px;background:var(--danger);color:white;border:none;border-radius:50%;width:16px;height:16px;font-size:8px">×</button></div>`).join(''); }
+function actualizarSeleccionUI() { const l=document.getElementById('seleccionadas-list'); if(!l) return; if(!cartasSeleccionadas.length){ l.innerHTML=''; return; } l.innerHTML=cartasSeleccionadas.map((s,i)=>`<div style="position:relative;width:60px;margin:4px"><img src="${getCardImage(deck[s.idx])}" style="width:52px;height:90px;object-fit:cover;border-radius:8px;border:2px solid var(--gold);transform:${s.invertida?'rotate(180deg)':''}" onerror="this.src='${getFallbackSVG(deck[s.idx])}'"><button onclick="toggleSeleccionInvertir(${i})" style="position:absolute;bottom:-5px;right:-5px;background:var(--gold);border:none;border-radius:50%;width:18px;height:18px;font-size:9px">🔄</button><button onclick="quitarSeleccion(${i})" style="position:absolute;top:-5px;right:-5px;background:var(--danger);color:white;border:none;border-radius:50%;width:16px;height:16px;font-size:8px">×</button></div>`).join(''); }
 function toggleSeleccionInvertir(i){ if(i>=0&&i<cartasSeleccionadas.length){ cartasSeleccionadas[i].invertida=!cartasSeleccionadas[i].invertida; actualizarSeleccionUI(); } }
 function quitarSeleccion(i){ if(i>=0&&i<cartasSeleccionadas.length){ cartasSeleccionadas.splice(i,1); actualizarSeleccionUI(); renderMazo(); } }
 function limpiarSeleccion(){ cartasSeleccionadas=[]; actualizarSeleccionUI(); renderMazo(); }
 function seleccionarAleatorias(){ cartasSeleccionadas=[]; const u=new Set(); for(let i=0;i<5;i++){ let r; do{ r=Math.floor(Math.random()*deck.length); }while(u.has(r)); u.add(r); cartasSeleccionadas.push({idx:r,invertida:Math.random()<0.25}); } actualizarSeleccionUI(); renderMazo(); }
 
-// ==================== TIRADAS (normales) ====================
 function generarNuevaTirada() { 
-    if (currentSpreadType === 'libre') {
-        configurarTiradaLibre();
-        return;
-    }
+    if (currentSpreadType === 'libre') { configurarTiradaLibre(); return; }
     const config={ triada:[3,['Pasado','Presente','Futuro']], amor:[5,['Tu energía','Del otro','Conexión','Obstáculo','Consejo']], sino:[1,['Respuesta']], herradura:[7,['Pasado','Presente','Futuro','Obstáculo','Ayuda','Resultado','Consejo']], piramide:[6,['Base','Presente','Futuro','Acción','Resultado','Consejo']], meses12:[12,['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic']], cuadratura:[4,['Tierra','Aire','Fuego','Agua']] }; 
     const [count,pos]=config[currentSpreadType]||[3,['Pasado','Presente','Futuro']]; 
     const idxs=[]; while(idxs.length<count){ const r=Math.floor(Math.random()*deck.length); if(!idxs.includes(r)) idxs.push(r); } 
@@ -349,10 +524,7 @@ function generarNuevaTirada() {
 function renderizarSpread() { 
     const cont=document.getElementById('spread-content'); if(!cont) return; 
     cont.className='spread-zone'+(currentSpreadCards.length?' has-cards':''); 
-    if (currentSpreadType === 'libre') {
-        renderizarSpreadLibre();
-        return;
-    }
+    if (currentSpreadType === 'libre') { renderizarSpreadLibre(); return; }
     cont.innerHTML=currentSpreadCards.map((sc,i)=>{ 
         const c=deck[sc.idx]; 
         return `<div class="spread-slot filled" onclick="abrirCarta(${sc.idx},${sc.invertida})">
@@ -364,32 +536,6 @@ function renderizarSpread() {
         </div>`; 
     }).join(''); 
 }
-function meditacionGuiada() { if(!currentSpreadCards.length){ showToast('⚠️ Genera una tirada'); return; } const nombres=currentSpreadCards.map(sc=>deck[sc.idx].name).join(', '); speakText(`Bienvenida a tu meditación. Las cartas son: ${nombres}. Respira profundamente.`); showToast('🧘 Meditación iniciada'); }
-async function generarLecturaIA() { 
-    if(!currentSpreadCards.length){ showToast('⚠️ Genera una tirada'); return; } 
-    const le=document.getElementById('ai-loading'), te=document.getElementById('ai-reading-text'); 
-    le.style.display='block'; te.innerHTML='<p>🌀 Conectando con IA...</p>'; 
-    const prompt = `Eres Susana, una tarotista espiritual. Realiza una lectura de Tarot para ${userGender==='hombre'?'un hombre':userGender==='mujer'?'una mujer':'una persona'}.\nTirada: ${currentSpreadType.toUpperCase()}\nCartas:\n${currentSpreadCards.map(sc=>`${sc.posicion}: ${deck[sc.idx].name} (${sc.invertida?'INVERTIDA':'DERECHA'}) - Significado: ${sc.invertida?deck[sc.idx].meaningRev:deck[sc.idx].meaningUp}`).join('\n')}\n${document.getElementById('pregunta-usuario').value.trim()?`Pregunta específica: ${document.getElementById('pregunta-usuario').value}`:''}\nDa una interpretación completa, distinguiendo entre cartas derechas e invertidas. Termina con un "Consejo práctico" en negrita.`; 
-    let respuesta = await callAI(prompt); 
-    if (!respuesta) { respuesta = generarInterpretacionLocal(currentSpreadCards.map(sc=>({carta:deck[sc.idx], posicion:sc.posicion, invertida:sc.invertida})), document.getElementById('pregunta-usuario').value.trim()); } 
-    aiReadingText = respuesta; te.innerHTML = respuesta.replace(/\n/g,'<br>').replace(/\*\*(.+?)\*\*/g,'<strong style="color:var(--gold-dark)">$1</strong>'); 
-    le.style.display='none'; 
-}
-function escucharLecturaIA() { speakText(aiReadingText); }
-function guardarTirada() { 
-    const nota=document.getElementById('spread-note').value.trim(); 
-    if(!nota){ showToast('✏️ Escribe una reflexión'); return; } 
-    if(!currentSpreadCards.length){ showToast('⚠️ Genera una tirada'); return; } 
-    const ca=currentSpreadCards.map(sc=>({id:deck[sc.idx].id,nombre:deck[sc.idx].name,invertida:sc.invertida,posicion:sc.posicion})); 
-    const hoy=new Date().toLocaleDateString('es-ES'); 
-    tiradasData.unshift({ts:Date.now(),fecha:hoy,nota,tipo:currentSpreadType,aiReading:aiReadingText,cartas:ca}); 
-    localStorage.setItem('tarot_tiradas',JSON.stringify(tiradasData)); showToast('💾 Tirada guardada'); renderDiario(); 
-}
-function aplicarTapete() { const sc=document.getElementById('spread-content'); if(!sc) return; if(currentTapete && currentTapete!=='ninguno') sc.style.background=`rgba(${currentTapete==='verde'?'46,125,50':currentTapete==='azul'?'2,119,189':currentTapete==='purpura'?'187,134,252':'201,160,61'},0.08)`; else sc.style.background=''; }
-function abrirTapeteExtendido() { if(!currentSpreadCards.length){ showToast('⚠️ Genera una tirada'); return; } const cont=document.getElementById('tapete-cards-content'); cont.innerHTML=currentSpreadCards.map(sc=>`<div class="tapete-card"><p style="font-family:Cinzel;color:var(--gold-dark);font-size:0.8rem">${sc.posicion}</p><img src="${getCardImage(deck[sc.idx])}" style="transform:${sc.invertida?'rotate(180deg)':''}" onerror="this.src='${getFallbackSVG(deck[sc.idx])}'"><p>${deck[sc.idx].name}</p></div>`).join(''); document.getElementById('tapete-extendido').classList.add('active'); }
-function cerrarTapeteExtendido() { document.getElementById('tapete-extendido').classList.remove('active'); }
-
-// ==================== TIRADA LIBRE ====================
 function configurarTiradaLibre() {
     const num = parseInt(document.getElementById('libre-num-cartas').value);
     if (isNaN(num) || num < 1 || num > 10) { showToast('Número inválido'); return; }
@@ -423,96 +569,26 @@ function renderizarSpreadLibre() {
         </div>`;
     }).join('');
 }
-function editarPosicionLibre(i) {
-    const nuevo = prompt('Edita el nombre de esta posición:', currentSpreadCards[i].posicion);
-    if (nuevo !== null && nuevo.trim() !== '') {
-        currentSpreadCards[i].posicion = nuevo.trim();
-        renderizarSpreadLibre();
-    }
-}
-function cambiarCartaAleatoriaLibre(i) {
-    const nuevoIdx = Math.floor(Math.random() * deck.length);
-    currentSpreadCards[i].idx = nuevoIdx;
-    currentSpreadCards[i].invertida = Math.random() < 0.25;
-    renderizarSpreadLibre();
-}
-function seleccionarCartaParaLibre(i) {
-    pendingLibreSlotIndex = i;
-    abrirSelectorCartas((idx, invertida) => {
-        if (pendingLibreSlotIndex !== null) {
-            currentSpreadCards[pendingLibreSlotIndex].idx = idx;
-            currentSpreadCards[pendingLibreSlotIndex].invertida = invertida;
-            renderizarSpreadLibre();
-            pendingLibreSlotIndex = null;
-            showToast('✅ Carta asignada');
-        }
-        cerrarModalSelector();
-    });
-}
-function eliminarCartaLibre(i) {
-    currentSpreadCards.splice(i, 1);
-    if (currentSpreadCards.length === 0) {
-        document.getElementById('spread-content').innerHTML = '<p style="text-align:center;color:var(--text-soft);padding:40px">Tirada libre vacía. Ajusta el número de cartas y genera de nuevo.</p>';
-        document.getElementById('spread-content').classList.remove('has-cards');
-    } else {
-        renderizarSpreadLibre();
-    }
-}
-function asignarCartaATiradaLibre(idx, invertida) {
-    if (pendingLibreSlotIndex !== null) {
-        currentSpreadCards[pendingLibreSlotIndex].idx = idx;
-        currentSpreadCards[pendingLibreSlotIndex].invertida = invertida;
-        renderizarSpreadLibre();
-        pendingLibreSlotIndex = null;
-        cerrarModal();
-        showToast('✅ Carta asignada a la tirada libre');
-    }
-}
-// Selector visual de cartas (mazo emergente)
+function editarPosicionLibre(i) { const nuevo = prompt('Edita el nombre de esta posición:', currentSpreadCards[i].posicion); if (nuevo !== null && nuevo.trim() !== '') { currentSpreadCards[i].posicion = nuevo.trim(); renderizarSpreadLibre(); } }
+function cambiarCartaAleatoriaLibre(i) { const nuevoIdx = Math.floor(Math.random() * deck.length); currentSpreadCards[i].idx = nuevoIdx; currentSpreadCards[i].invertida = Math.random() < 0.25; renderizarSpreadLibre(); }
+function seleccionarCartaParaLibre(i) { pendingLibreSlotIndex = i; abrirSelectorCartas((idx, invertida) => { if (pendingLibreSlotIndex !== null) { currentSpreadCards[pendingLibreSlotIndex].idx = idx; currentSpreadCards[pendingLibreSlotIndex].invertida = invertida; renderizarSpreadLibre(); pendingLibreSlotIndex = null; showToast('✅ Carta asignada'); } cerrarModalSelector(); }); }
+function eliminarCartaLibre(i) { currentSpreadCards.splice(i, 1); if (currentSpreadCards.length === 0) { document.getElementById('spread-content').innerHTML = '<p style="text-align:center;color:var(--text-soft);padding:40px">Tirada libre vacía. Ajusta el número de cartas y genera de nuevo.</p>'; document.getElementById('spread-content').classList.remove('has-cards'); } else { renderizarSpreadLibre(); } }
+function asignarCartaATiradaLibre(idx, invertida) { if (pendingLibreSlotIndex !== null) { currentSpreadCards[pendingLibreSlotIndex].idx = idx; currentSpreadCards[pendingLibreSlotIndex].invertida = invertida; renderizarSpreadLibre(); pendingLibreSlotIndex = null; cerrarModal(); showToast('✅ Carta asignada a la tirada libre'); } }
 let currentSelectorFilter = '';
 let currentSelectorChip = 'todos';
-function abrirSelectorCartas(callback) {
-    selectorCallback = callback;
-    renderSelectorMazo();
-    document.getElementById('modal-selector-cartas').classList.add('active');
-    const searchInput = document.getElementById('selector-search');
-    searchInput.value = '';
-    searchInput.oninput = (e) => { currentSelectorFilter = e.target.value; renderSelectorMazo(); };
-    const chipsContainer = document.getElementById('selector-chip-container');
-    const chips = [['todos','🌐 Todos'],['mayores','🔮 Mayores'],['bastos','🪵 Bastos'],['copas','🏆 Copas'],['espadas','⚔️ Espadas'],['oros','🪙 Oros']];
-    chipsContainer.innerHTML = chips.map(([id,label]) => `<span class="chip ${currentSelectorChip===id?'active':''}" onclick="setSelectorChip('${id}')">${label}</span>`).join('');
-}
-function setSelectorChip(chip) { currentSelectorChip = chip; renderSelectorMazo(); document.querySelectorAll('#selector-chip-container .chip').forEach(c=>c.classList.remove('active')); event.target.classList.add('active'); }
-function renderSelectorMazo() {
-    const grid = document.getElementById('selector-grid');
-    let filtered = deck.filter(c=>{
-        if(currentSelectorChip==='mayores' && c.arcano!=='mayor') return false;
-        if(['bastos','copas','espadas','oros'].includes(currentSelectorChip) && c.palo?.toLowerCase()!==currentSelectorChip) return false;
-        if(currentSelectorFilter && !c.name.toLowerCase().includes(currentSelectorFilter.toLowerCase())) return false;
-        return true;
-    });
-    grid.innerHTML = filtered.map((card,idx)=>{
-        const realIdx = deck.findIndex(c=>c.id===card.id);
-        return `<div class="tarot-card" onclick="seleccionarCartaDesdeSelector(${realIdx})">
-            <img src="${getCardImage(card)}" onerror="this.src='${getFallbackSVG(card)}'">
-            <div class="card-badge">${card.name}</div>
-        </div>`;
-    }).join('');
-}
+function abrirSelectorCartas(callback) { selectorCallback = callback; renderSelectorMazo(); document.getElementById('modal-selector-cartas').classList.add('active'); const searchInput = document.getElementById('selector-search'); if(searchInput){ searchInput.value = ''; searchInput.oninput = (e) => { currentSelectorFilter = e.target.value; renderSelectorMazo(); }; } const chipsContainer = document.getElementById('selector-chip-container'); if(chipsContainer){ const chips = [['todos','🌐 Todos'],['mayores','🔮 Mayores'],['bastos','🪵 Bastos'],['copas','🏆 Copas'],['espadas','⚔️ Espadas'],['oros','🪙 Oros']]; chipsContainer.innerHTML = chips.map(([id,label]) => `<span class="chip ${currentSelectorChip===id?'active':''}" onclick="setSelectorChip('${id}')">${label}</span>`).join(''); } }
+function setSelectorChip(chip) { currentSelectorChip = chip; renderSelectorMazo(); document.querySelectorAll('#selector-chip-container .chip').forEach(c=>c.classList.remove('active')); if(event && event.target) event.target.classList.add('active'); }
+function renderSelectorMazo() { const grid = document.getElementById('selector-grid'); if(!grid) return; let filtered = deck.filter(c=>{ if(currentSelectorChip==='mayores' && c.arcano!=='mayor') return false; if(['bastos','copas','espadas','oros'].includes(currentSelectorChip) && c.palo?.toLowerCase()!==currentSelectorChip) return false; if(currentSelectorFilter && !c.name.toLowerCase().includes(currentSelectorFilter.toLowerCase())) return false; return true; }); grid.innerHTML = filtered.map((card,idx)=>{ const realIdx = deck.findIndex(c=>c.id===card.id); return `<div class="tarot-card" onclick="seleccionarCartaDesdeSelector(${realIdx})"><img src="${getCardImage(card)}" onerror="this.src='${getFallbackSVG(card)}'"><div class="card-badge">${card.name}</div></div>`; }).join(''); }
 let tempSelectedIdx = null;
-function seleccionarCartaDesdeSelector(idx) {
-    tempSelectedIdx = idx;
-    const invertida = confirm('¿Carta invertida?') ? true : false;
-    if (selectorCallback) selectorCallback(tempSelectedIdx, invertida);
-    else cerrarModalSelector();
-}
-function cerrarModalSelector() {
-    document.getElementById('modal-selector-cartas').classList.remove('active');
-    selectorCallback = null;
-    tempSelectedIdx = null;
-}
-
-// ==================== CARTA DEL DÍA ====================
+function seleccionarCartaDesdeSelector(idx) { tempSelectedIdx = idx; const invertida = confirm('¿Carta invertida?') ? true : false; if (selectorCallback) selectorCallback(tempSelectedIdx, invertida); else cerrarModalSelector(); }
+function cerrarModalSelector() { document.getElementById('modal-selector-cartas').classList.remove('active'); selectorCallback = null; tempSelectedIdx = null; }
+async function generarLecturaIA() { if(!currentSpreadCards.length){ showToast('⚠️ Genera una tirada'); return; } const le=document.getElementById('ai-loading'), te=document.getElementById('ai-reading-text'); le.style.display='block'; te.innerHTML='<p>🌀 Conectando con IA...</p>'; const prompt = `Eres Susana, una tarotista espiritual. Realiza una lectura de Tarot para ${userGender==='hombre'?'un hombre':userGender==='mujer'?'una mujer':'una persona'}.\nTirada: ${currentSpreadType.toUpperCase()}\nCartas:\n${currentSpreadCards.map(sc=>`${sc.posicion}: ${deck[sc.idx].name} (${sc.invertida?'INVERTIDA':'DERECHA'}) - Significado: ${sc.invertida?deck[sc.idx].meaningRev:deck[sc.idx].meaningUp}`).join('\n')}\n${document.getElementById('pregunta-usuario').value.trim()?`Pregunta específica: ${document.getElementById('pregunta-usuario').value}`:''}\nDa una interpretación completa, distinguiendo entre cartas derechas e invertidas. Termina con un "Consejo práctico" en negrita.`; let respuesta = await callAI(prompt); if (!respuesta) { respuesta = generarInterpretacionLocal(currentSpreadCards.map(sc=>({carta:deck[sc.idx], posicion:sc.posicion, invertida:sc.invertida})), document.getElementById('pregunta-usuario').value.trim()); } aiReadingText = respuesta; te.innerHTML = respuesta.replace(/\n/g,'<br>').replace(/\*\*(.+?)\*\*/g,'<strong style="color:var(--gold-dark)">$1</strong>'); le.style.display='none'; }
+function escucharLecturaIA() { speakText(aiReadingText); }
+function guardarTirada() { const nota=document.getElementById('spread-note').value.trim(); if(!nota){ showToast('✏️ Escribe una reflexión'); return; } if(!currentSpreadCards.length){ showToast('⚠️ Genera una tirada'); return; } const ca=currentSpreadCards.map(sc=>({id:deck[sc.idx].id,nombre:deck[sc.idx].name,invertida:sc.invertida,posicion:sc.posicion})); const hoy=new Date().toLocaleDateString('es-ES'); tiradasData.unshift({ts:Date.now(),fecha:hoy,nota,tipo:currentSpreadType,aiReading:aiReadingText,cartas:ca}); localStorage.setItem('tarot_tiradas',JSON.stringify(tiradasData)); showToast('💾 Tirada guardada'); renderDiario(); }
+function aplicarTapete() { const sc=document.getElementById('spread-content'); if(!sc) return; if(currentTapete && currentTapete!=='ninguno') sc.style.background=`rgba(${currentTapete==='verde'?'46,125,50':currentTapete==='azul'?'2,119,189':currentTapete==='purpura'?'187,134,252':'201,160,61'},0.08)`; else sc.style.background=''; }
+function abrirTapeteExtendido() { if(!currentSpreadCards.length){ showToast('⚠️ Genera una tirada'); return; } const cont=document.getElementById('tapete-cards-content'); cont.innerHTML=currentSpreadCards.map(sc=>`<div class="tapete-card"><p style="font-family:Cinzel;color:var(--gold-dark);font-size:0.8rem">${sc.posicion}</p><img src="${getCardImage(deck[sc.idx])}" style="transform:${sc.invertida?'rotate(180deg)':''}" width="80" onerror="this.src='${getFallbackSVG(deck[sc.idx])}'"><p>${deck[sc.idx].name}</p></div>`).join(''); document.getElementById('tapete-extendido').classList.add('active'); }
+function cerrarTapeteExtendido() { document.getElementById('tapete-extendido').classList.remove('active'); }
+function meditacionGuiada() { if(!currentSpreadCards.length){ showToast('⚠️ Genera una tirada'); return; } const nombres=currentSpreadCards.map(sc=>deck[sc.idx].name).join(', '); speakText(`Bienvenida a tu meditación. Las cartas son: ${nombres}. Respira profundamente.`); showToast('🧘 Meditación iniciada'); }
 function getDailyCard() { const today=new Date().toLocaleDateString('es-ES'); if(dailyCardData && dailyCardData.fecha===today) return dailyCardData; const stored=localStorage.getItem('daily_card'); if(stored){ const data=JSON.parse(stored); if(data.fecha===today){ dailyCardData=data; return data; } } const idx=Math.floor(Math.random()*deck.length); const invertida=Math.random()<0.25; const card={fecha:today,idx,invertida}; localStorage.setItem('daily_card',JSON.stringify(card)); dailyCardData=card; return card; }
 function renderCartaDelDia() { const cardData=getDailyCard(); const c=deck[cardData.idx]; const cont=document.getElementById('carta-dia-container'); cont.innerHTML=`<div class="day-card"><div class="card-img" onclick="abrirCarta(${cardData.idx},${cardData.invertida})"><img src="${getCardImage(c)}" style="transform:${cardData.invertida?'rotate(180deg)':''}" onerror="this.src='${getFallbackSVG(c)}'"></div><h3>${c.name}</h3><p style="font-weight:bold;color:var(--gold-dark)">${cardData.invertida?'▼ INVERTIDA':'▲ DERECHA'}</p><p>${cardData.invertida?c.meaningRev:c.meaningUp}</p><p style="font-size:0.75rem;margin-top:8px">🌙 ${getLunarPhase()} en ${getSignoLunar()}</p></div>`; updateStreak(); guardarCartaDelDiaAuto(); }
 function updateStreak() { const today=new Date().toLocaleDateString('es-ES'); const yesterday=new Date(Date.now()-86400000).toLocaleDateString('es-ES'); if(streakData.lastDate!==today){ if(streakData.lastDate===yesterday) streakData.count++; else streakData.count=1; streakData.lastDate=today; localStorage.setItem('daily_streak',JSON.stringify(streakData)); } const badge=document.getElementById('streak-badge'); if(streakData.count>=2){ badge.style.display='flex'; document.getElementById('streak-count').innerText=streakData.count; }else badge.style.display='none'; }
@@ -522,8 +598,6 @@ async function generarReflexionDiaria() { const c=deck[dailyCardData.idx]; const
 function escucharReflexionDiaria() { speakText(document.getElementById('daily-ai-text').innerText); }
 function exportarCartaDiaPDF() { const c=deck[dailyCardData.idx]; const inv=dailyCardData.invertida; const imgSrc=getCardImage(c); const h=`<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:Georgia;text-align:center;padding:20px}h1{color:#c9a03d}img{width:200px}</style></head><body><h1>✨ Carta del Día</h1><p>${new Date().toLocaleDateString()}</p><img src="${imgSrc}" style="transform:${inv?'rotate(180deg)':'none'}"><h2>${c.name}</h2><p>${inv?'▼ INVERTIDA':'▲ DERECHA'}</p><p>${inv?c.meaningRev:c.meaningUp}</p></body></html>`; const w=window.open('','_blank'); w.document.write(h); w.document.close(); setTimeout(()=>w.print(),500); }
 function compartirCartaDia() { exportarCartaDiaPDF(); }
-
-// ==================== SUEÑOS ====================
 async function interpretarSueno(){ const t=document.getElementById('dream-text').value.trim(); if(!t){ showToast('✏️ Escribe tu sueño'); return; } const div=document.getElementById('dream-ai-text'); div.style.display='block'; div.innerHTML='<p>🌀 Interpretando...</p>'; const prompt = `Interpreta este sueño desde una perspectiva psicológica y espiritual: "${t}". Termina con un "Consejo práctico".`; let respuesta = await callAI(prompt); if (!respuesta) { respuesta = `✨ **Interpretación de tu sueño** ✨\n\n"${t}"\n\nEste sueño refleja aspectos de tu subconsciente.\n\n💡 **Consejo:** Lleva un diario de sueños.`; } div.innerHTML = `<strong>✨ Interpretación:</strong><br>${respuesta.replace(/\n/g,'<br>')}`; }
 function escucharSuenoIA() { speakText(document.getElementById('dream-ai-text').innerText); }
 function cargarSuenos() { dreamsData=JSON.parse(localStorage.getItem('tarot_suenos')||'[]'); renderDreamsList(); actualizarGraficoSuenos(); }
@@ -535,228 +609,53 @@ function saveDreams(){ localStorage.setItem('tarot_suenos',JSON.stringify(dreams
 function guardarSueno(){ const t=document.getElementById('dream-text').value.trim(); if(!t){ showToast('✏️ Escribe tu sueño'); return; } const mood=document.getElementById('dream-mood').value; const cardId=document.getElementById('dream-card').value; const lunarPhase=getLunarPhase(); const aiText=document.getElementById('dream-ai-text').innerText; dreamsData.unshift({fecha:new Date().toLocaleString(),texto:t,emocion:mood,cartaAsociada:cardId,lunarPhase:lunarPhase,interpretacion:aiText}); saveDreams(); document.getElementById('dream-text').value=''; document.getElementById('dream-ai-text').style.display='none'; showToast('🌙 Sueño guardado'); }
 function actualizarGraficoSuenos(){ const emociones={}; dreamsData.forEach(d=>{ if(d.emocion) emociones[d.emocion]=(emociones[d.emocion]||0)+1; }); const ctx=document.getElementById('dreamStatsChart')?.getContext('2d'); if(ctx && Object.keys(emociones).length){ new Chart(ctx,{type:'bar',data:{labels:Object.keys(emociones),datasets:[{label:'Frecuencia',data:Object.values(emociones),backgroundColor:'var(--gold)'}]},options:{responsive:true,maintainAspectRatio:true}}); } }
 function llenarSelectCartas(){ const sel=document.getElementById('dream-card'); if(sel){ sel.innerHTML='<option value="">Asociar carta</option>'; deck.forEach(c=>{ const opt=document.createElement('option'); opt.value=c.id; opt.textContent=c.name; sel.appendChild(opt); }); } }
-
-// ==================== LUNA ====================
 function getLunarPhase() { return ['🌑 Nueva','🌒 Creciente','🌓 Cuarto Creciente','🌔 Gibosa','🌕 Llena','🌖 Gibosa Menguante','🌗 Cuarto Menguante','🌘 Menguante'][Math.floor((new Date().getDate()/29.53)*8)%8]; }
 function getSignoLunar() { return ['♈ Aries','♉ Tauro','♊ Géminis','♋ Cáncer','♌ Leo','♍ Virgo','♎ Libra','♏ Escorpio','♐ Sagitario','♑ Capricornio','♒ Acuario','♓ Piscis'][Math.floor((new Date().getDate()/2.5)%12)]; }
 function updateMoonBadge() { document.getElementById('moon-badge').innerHTML='🌙 '+getLunarPhase(); }
 function renderLunarCalendar() { const c=document.getElementById('lunar-calendar'); if(!c) return; const t=new Date(), y=t.getFullYear(), m=t.getMonth(); const fd=new Date(y,m,1).getDay(), dim=new Date(y,m+1,0).getDate(); let h='<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center">'; ['D','L','M','M','J','V','S'].forEach(d=>h+=`<div style="font-weight:bold">${d}</div>`); for(let i=0;i<fd;i++) h+='<div></div>'; for(let d=1;d<=dim;d++){ const pi=Math.floor((d/29.53)*8)%8; h+=`<div style="padding:4px;border-radius:50%;background:${d===t.getDate()?'var(--gold)':'var(--chip-bg)'}">${d}<br>${['🌑','🌒','🌓','🌔','🌕','🌖','🌗','🌘'][pi]}</div>`; } h+='</div>'; c.innerHTML=h; document.getElementById('lunar-phase-today').innerHTML='🌙 Hoy: <strong>'+getLunarPhase()+'</strong> en '+getSignoLunar(); }
 function renderLunarInfo() { const div=document.getElementById('lunar-info'); const pi=Math.floor((new Date().getDate()/29.53)*8)%8; div.innerHTML=`<h3>${['🌑','🌒','🌓','🌔','🌕','🌖','🌗','🌘'][pi]} ${['Nueva','Creciente','Cuarto Creciente','Gibosa Creciente','Llena','Gibosa Menguante','Cuarto Menguante','Menguante'][pi]} en ${getSignoLunar()}</h3>`; renderLunarDetail(); }
-function getLunarDetails(phaseIndex){ 
-    const phases = [
-        { name: 'Luna Nueva', ritual: '🌑 **Ritual de siembra**: Enciende una vela blanca, siembra una intención en un papel. Escribe qué deseas atraer y entiérralo en una maceta. Medita 5 minutos en silencio.', colores: 'Negro, blanco, plateado', cristales: 'Obsidiana, cuarzo claro, selenita', amor: 'Nuevos comienzos, soltar el pasado', trabajo: 'Planificación, nuevos proyectos', salud: 'Descanso, limpieza energética' },
-        { name: 'Luna Creciente', ritual: '🌒 **Ritual de acción**: Enciende una vela naranja. Visualiza tu objetivo como si ya estuviera cumplido. Da un paso pequeño pero firme hacia él.', colores: 'Verde, azul turquesa', cristales: 'Jade, aventurina', amor: 'Atracción, coqueteo', trabajo: 'Impulso, networking', salud: 'Energía, movimiento' },
-        { name: 'Cuarto Creciente', ritual: '🌓 **Ritual de decisión**: Enciende una vela roja. Toma una decisión importante que venías posponiendo.', colores: 'Rojo, dorado', cristales: 'Granate, cornalina', amor: 'Pasión, declaraciones', trabajo: 'Ejecución, liderazgo', salud: 'Vitalidad, fuerza' },
-        { name: 'Gibosa Creciente', ritual: '🌔 **Ritual de refinamiento**: Enciende una vela amarilla. Revisa tus planes y ajusta detalles. Agradece los logros parciales.', colores: 'Amarillo, marfil', cristales: 'Citrino, topacio', amor: 'Compromiso, planes juntos', trabajo: 'Ajustes finos', salud: 'Fortalecimiento' },
-        { name: 'Luna Llena', ritual: '🌕 **Ritual de celebración**: Enciende velas blancas y plateadas. Escribe lo que deseas liberar, quema el papel con seguridad y agradece. Luego celebra con un baño de sal marina.', colores: 'Blanco, plateado, morado', cristales: 'Cuarzo cristal, selenita', amor: 'Cumplimiento, agradecimiento', trabajo: 'Logros, reconocimiento', salud: 'Plenitud, sanación' },
-        { name: 'Gibosa Menguante', ritual: '🌖 **Ritual de gratitud**: Enciende una vela violeta. Haz una lista de todo lo que estás agradecido. Comparte algo con alguien.', colores: 'Morado, índigo', cristales: 'Amatista, fluorita', amor: 'Reflexión, perdón', trabajo: 'Balance, compartir', salud: 'Desintoxicación' },
-        { name: 'Cuarto Menguante', ritual: '🌗 **Ritual de perdón**: Enciende una vela marrón. Escribe una carta de perdón hacia alguien o hacia ti mismo.', colores: 'Marrón, gris, negro', cristales: 'Jaspe, hematita', amor: 'Cierre de ciclos', trabajo: 'Reestructuración', salud: 'Limpieza profunda' },
-        { name: 'Luna Menguante', ritual: '🌘 **Ritual de descanso**: Enciende una vela negra (opcional). Realiza una meditación pasiva, permítete no hacer nada.', colores: 'Negro, azul noche', cristales: 'Ónix, lapislázuli', amor: 'Introspección', trabajo: 'Análisis, pausa', salud: 'Reposo, recarga' }
-    ];
-    return phases[phaseIndex];
-}
-function renderLunarDetail(){ const phaseIdx=Math.floor((new Date().getDate()/29.53)*8)%8; const detail=getLunarDetails(phaseIdx); const div=document.getElementById('lunar-detail'); if(div) div.innerHTML = `<div class="lunar-detail"><h3>🌙 Ritual para ${detail.name}</h3><p>${detail.ritual}</p></div><div class="lunar-detail"><h4>Elementos asociados</h4><p><strong>Colores:</strong> ${detail.colores}<br><strong>Cristales:</strong> ${detail.cristales}</p></div><div class="lunar-detail"><h4>Influencias</h4><p>💖 Amor: ${detail.amor}<br>💼 Trabajo: ${detail.trabajo}<br>🌿 Salud: ${detail.salud}</p></div><div class="lunar-detail"><h4>Próximas fases</h4><p>🌕 Próxima Luna Llena: ~${(15-(new Date().getDate()%30))} días<br>🌑 Próxima Luna Nueva: ~${(29-(new Date().getDate()%30))} días</p></div>`; }
-
-// ==================== HISTORIAL (con cartas grandes) ====================
-function renderDiario() { 
-    let tiradas = tiradasData; const df = document.getElementById('history-date-filter').value; if (df) { const filterDate = new Date(df).toLocaleDateString('es-ES'); tiradas = tiradas.filter(t => t.fecha === filterDate); } 
-    const container = document.getElementById('historial-container'); if (!container) return; 
-    if (tiradas.length === 0) { container.innerHTML = '<div class="inner-section" style="text-align:center">📭 No hay tiradas guardadas.</div>'; return; }
-    container.innerHTML = tiradas.map(t => { let cartasHtml = ''; if (t.cartas && t.cartas.length) { t.cartas.forEach(ca => { const card = deck.find(x => x.id === ca.id); if (card) cartasHtml += `<img src="${getCardImage(card)}" style="width:35px;height:60px;object-fit:cover;border-radius:6px;transform:${ca.invertida?'rotate(180deg)':''}" onerror="this.src='${getFallbackSVG(card)}'" title="${ca.posicion||''}: ${card.name}">`; }); } return `<div class="inner-section" style="cursor:pointer; margin-bottom:12px" onclick="abrirTiradaGuardada('${t.ts}')"><strong style="color:var(--gold-dark)">${t.tipo || 'Tirada'}</strong> <span style="font-size:0.7rem">${t.fecha}</span><p style="font-size:0.8rem; margin-top:4px">${t.nota ? t.nota.substring(0,80) + (t.nota.length>80?'…':'') : 'Sin reflexión'}</p><div class="historial-cartas">${cartasHtml}</div></div>`; }).join(''); 
-}
-function abrirTiradaGuardada(ts) {
-    const t = tiradasData.find(x => x.ts == ts);
-    if (!t) return;
-    tiradaGuardadaActual = t;
-    let h = `<p><strong>${t.tipo}</strong> - ${t.fecha}</p>`;
-    if (t.nota) h += `<p><em>${t.nota}</em></p>`;
-    h += `<div style="display:flex; flex-wrap:wrap; justify-content:center; gap:12px; margin:16px 0;">`;
-    if (t.cartas && t.cartas.length) {
-        t.cartas.forEach(c => {
-            const card = deck.find(x => x.id === c.id);
-            if (card) {
-                h += `<div class="saved-card-large">
-                        <img src="${getCardImage(card)}" style="transform:${c.invertida ? 'rotate(180deg)' : 'none'}" onerror="this.src='${getFallbackSVG(card)}'">
-                        <p>${card.name}</p>
-                        <small>${c.posicion || ''}</small>
-                    </div>`;
-            }
-        });
-    } else {
-        h += `<p style="text-align:center;">No hay cartas registradas.</p>`;
-    }
-    h += `</div>`;
-    if (t.aiReading) h += `<div class="inner-section" style="margin-top:12px;">${t.aiReading.replace(/\n/g, '<br>')}</div>`;
-    document.getElementById('tirada-guardada-contenido').innerHTML = h;
-    document.getElementById('modal-tirada-guardada').classList.add('active');
-}
+function getLunarDetails(phaseIndex){ const phases = [{ name: 'Luna Nueva', ritual: '🌑 **Ritual de siembra**: Enciende una vela blanca, siembra una intención en un papel.', colores: 'Negro, blanco', cristales: 'Obsidiana', amor: 'Nuevos comienzos', trabajo: 'Planificación', salud: 'Descanso' },{ name: 'Luna Creciente', ritual: '🌒 **Ritual de acción**: Enciende una vela naranja.', colores: 'Verde', cristales: 'Jade', amor: 'Atracción', trabajo: 'Impulso', salud: 'Energía' },{ name: 'Cuarto Creciente', ritual: '🌓 **Ritual de decisión**: Enciende una vela roja.', colores: 'Rojo', cristales: 'Granate', amor: 'Pasión', trabajo: 'Ejecución', salud: 'Vitalidad' },{ name: 'Gibosa Creciente', ritual: '🌔 **Ritual de refinamiento**: Enciende una vela amarilla.', colores: 'Amarillo', cristales: 'Citrino', amor: 'Compromiso', trabajo: 'Ajustes', salud: 'Fortalecimiento' },{ name: 'Luna Llena', ritual: '🌕 **Ritual de celebración**: Enciende velas blancas.', colores: 'Blanco', cristales: 'Cuarzo', amor: 'Cumplimiento', trabajo: 'Logros', salud: 'Plenitud' },{ name: 'Gibosa Menguante', ritual: '🌖 **Ritual de gratitud**: Enciende una vela violeta.', colores: 'Morado', cristales: 'Amatista', amor: 'Reflexión', trabajo: 'Balance', salud: 'Desintoxicación' },{ name: 'Cuarto Menguante', ritual: '🌗 **Ritual de perdón**: Enciende una vela marrón.', colores: 'Marrón', cristales: 'Jaspe', amor: 'Cierre', trabajo: 'Reestructuración', salud: 'Limpieza' },{ name: 'Luna Menguante', ritual: '🌘 **Ritual de descanso**: Enciende una vela negra.', colores: 'Negro', cristales: 'Ónix', amor: 'Introspección', trabajo: 'Análisis', salud: 'Reposo' }]; return phases[phaseIndex]; }
+function renderLunarDetail(){ const phaseIdx=Math.floor((new Date().getDate()/29.53)*8)%8; const detail=getLunarDetails(phaseIdx); const div=document.getElementById('lunar-detail'); if(div) div.innerHTML = `<div class="lunar-detail"><h3>🌙 Ritual para ${detail.name}</h3><p>${detail.ritual}</p></div><div class="lunar-detail"><h4>Elementos asociados</h4><p><strong>Colores:</strong> ${detail.colores}<br><strong>Cristales:</strong> ${detail.cristales}</p></div><div class="lunar-detail"><h4>Influencias</h4><p>💖 Amor: ${detail.amor}<br>💼 Trabajo: ${detail.trabajo}<br>🌿 Salud: ${detail.salud}</p></div>`; }
+function renderDiario() { let tiradas = tiradasData; const df = document.getElementById('history-date-filter').value; if (df) { const filterDate = new Date(df).toLocaleDateString('es-ES'); tiradas = tiradas.filter(t => t.fecha === filterDate); } const container = document.getElementById('historial-container'); if (!container) return; if (tiradas.length === 0) { container.innerHTML = '<div class="inner-section" style="text-align:center">📭 No hay tiradas guardadas.</div>'; return; } container.innerHTML = tiradas.map(t => { let cartasHtml = ''; if (t.cartas && t.cartas.length) { t.cartas.forEach(ca => { const card = deck.find(x => x.id === ca.id); if (card) cartasHtml += `<img src="${getCardImage(card)}" style="width:35px;height:60px;object-fit:cover;border-radius:6px;transform:${ca.invertida?'rotate(180deg)':''}" onerror="this.src='${getFallbackSVG(card)}'" title="${ca.posicion||''}: ${card.name}">`; }); } else if (t.runas && t.runas.length) { t.runas.forEach(r => { cartasHtml += `<div style="display:inline-block; margin:2px; font-size:1.5rem;">${r.glyph}</div>`; }); } return `<div class="inner-section" style="cursor:pointer; margin-bottom:12px" onclick="abrirTiradaGuardada('${t.ts}')"><strong style="color:var(--gold-dark)">${t.tipo || 'Tirada'}</strong> <span style="font-size:0.7rem">${t.fecha}</span><p style="font-size:0.8rem; margin-top:4px">${t.nota ? t.nota.substring(0,80) + (t.nota.length>80?'…':'') : 'Sin reflexión'}</p><div class="historial-cartas">${cartasHtml}</div></div>`; }).join(''); }
+function abrirTiradaGuardada(ts) { const t = tiradasData.find(x => x.ts == ts); if (!t) return; tiradaGuardadaActual = t; let h = `<p><strong>${t.tipo}</strong> - ${t.fecha}</p>`; if (t.nota) h += `<p><em>${t.nota}</em></p>`; h += `<div style="display:flex; flex-wrap:wrap; justify-content:center; gap:12px; margin:16px 0;">`; if (t.cartas && t.cartas.length) { t.cartas.forEach(c => { const card = deck.find(x => x.id === c.id); if (card) { h += `<div class="saved-card-large"><img src="${getCardImage(card)}" style="transform:${c.invertida ? 'rotate(180deg)' : 'none'}" onerror="this.src='${getFallbackSVG(card)}'"><p>${card.name}</p><small>${c.posicion || ''}</small></div>`; } }); } else if (t.runas && t.runas.length) { t.runas.forEach(r => { h += `<div style="text-align:center; margin:8px;"><div style="font-size:3rem;">${r.glyph}</div><p><strong>${r.posicion}</strong><br>${r.nombre} (${r.invertida?'Inv':'Der'})</p></div>`; }); } h += `</div>`; if (t.aiReading) h += `<div class="inner-section" style="margin-top:12px;">${t.aiReading.replace(/\n/g, '<br>')}</div>`; document.getElementById('tirada-guardada-contenido').innerHTML = h; document.getElementById('modal-tirada-guardada').classList.add('active'); }
 function cerrarTiradaGuardada(){ document.getElementById('modal-tirada-guardada').classList.remove('active'); tiradaGuardadaActual=null; }
-function exportarTiradaGuardadaPDF(){ if(!tiradaGuardadaActual) return; const t=tiradaGuardadaActual; const cartasHTML=t.cartas?.map(c=>{ const card=deck.find(x=>x.id===c.id); if(!card) return ''; return `<div style="display:inline-block;width:80px;margin:4px;text-align:center"><img src="${getCardImage(card)}" style="width:60px;height:105px;transform:${c.invertida?'rotate(180deg)':'none'}"><p>${c.posicion||''}</p><p>${card.name}</p></div>`; }).join('')||''; const h=`<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:Georgia;padding:15px}</style></head><body><h1>🔮 SUSANA TAROT</h1><p>${t.fecha}</p><h2>${t.tipo}</h2>${cartasHTML}${t.nota?`<h2>Reflexión</h2><p>${t.nota}</p>`:''}<h2>Interpretación</h2><p>${t.aiReading||''}</p></body></html>`; const w=window.open('','_blank'); w.document.write(h); w.document.close(); setTimeout(()=>w.print(),500); }
+function exportarTiradaGuardadaPDF(){ if(!tiradaGuardadaActual) return; const t=tiradaGuardadaActual; let cartasHTML = ''; if(t.cartas) cartasHTML = t.cartas.map(c=>{ const card=deck.find(x=>x.id===c.id); if(!card) return ''; return `<div style="display:inline-block;width:80px;margin:4px;text-align:center"><img src="${getCardImage(card)}" style="width:60px;height:105px;transform:${c.invertida?'rotate(180deg)':'none'}"><p>${c.posicion||''}</p><p>${card.name}</p></div>`; }).join(''); else if(t.runas) cartasHTML = t.runas.map(r=>`<div style="display:inline-block;margin:8px;text-align:center"><div style="font-size:4rem;">${r.glyph}</div><p>${r.posicion}<br>${r.nombre}</p></div>`).join(''); const h=`<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:Georgia;padding:15px}</style></head><body><h1>🔮 SUSANA TAROT · ${t.tipo}</h1><p>${t.fecha}</p>${cartasHTML}${t.nota?`<h2>Reflexión</h2><p>${t.nota}</p>`:''}<h2>Interpretación</h2><p>${t.aiReading||''}</p></body></html>`; const w=window.open('','_blank'); w.document.write(h); w.document.close(); setTimeout(()=>w.print(),500); }
 function exportAllData(){ const d={tiradas:tiradasData,suenos:dreamsData,notas:deck.map(c=>({id:c.id,nota:c.nota})),config:{speechRate,fontSize,showCardShadows,theme:document.documentElement.getAttribute('data-theme')}}; const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([JSON.stringify(d)],{type:'application/json'})); a.download='susana_backup_'+new Date().toISOString().split('T')[0]+'.json'; a.click(); showToast('📦 Backup descargado'); }
 function exportHistorialCSV(){ let csv='Fecha,Tipo,Nota\n'; tiradasData.forEach(t=>{ csv+=`"${t.fecha}","${t.tipo||''}","${(t.nota||'').replace(/"/g,'""')}"\n`; }); const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'})); a.download='historial.csv'; a.click(); }
 function clearAllData(){ if(confirm('⚠️ ¿Borrar TODO?')){ localStorage.clear(); location.reload(); } }
 document.getElementById('import-file')?.addEventListener('change',e=>{ const f=e.target.files[0]; if(!f) return; const r=new FileReader(); r.onload=ev=>{ try{ const d=JSON.parse(ev.target.result); if(d.tiradas) localStorage.setItem('tarot_tiradas',JSON.stringify(d.tiradas)); if(d.suenos) localStorage.setItem('tarot_suenos',JSON.stringify(d.suenos)); if(d.notas) localStorage.setItem('tarot_notas',JSON.stringify(d.notas)); if(d.config){ if(d.config.speechRate) localStorage.setItem('speechRate',d.config.speechRate); if(d.config.fontSize) localStorage.setItem('fontSize',d.config.fontSize); if(d.config.showCardShadows!==undefined) localStorage.setItem('showCardShadows',d.config.showCardShadows); if(d.config.theme) document.documentElement.setAttribute('data-theme',d.config.theme); applyConfig(); } showToast('✅ Datos importados'); location.reload(); }catch(err){ showToast('❌ Archivo inválido'); } }; r.readAsText(f); this.value=''; });
-
-// ==================== CONFIGURACIÓN ====================
-function applyConfig(){ speechRate=parseFloat(localStorage.getItem('speechRate')||'0.9'); fontSize=localStorage.getItem('fontSize')||'normal'; showCardShadows=localStorage.getItem('showCardShadows')!=='false'; document.getElementById('speechRateSlider').value=speechRate; document.getElementById('speechRateValue').innerText=speechRate; document.getElementById('fontSizeSelect').value=fontSize; document.getElementById('cardShadowsCheckbox').checked=showCardShadows; const sizes={small:'14px',normal:'16px',large:'20px'}; document.documentElement.style.setProperty('--font-size-base',sizes[fontSize]||'16px'); document.querySelectorAll('.tarot-card').forEach(c=>{ if(showCardShadows) c.style.boxShadow='var(--shadow-lg)'; else c.style.boxShadow='none'; }); let autoInt=parseInt(localStorage.getItem('autoBackupInterval')||'0'); if(autoInt>0) startAutoBackup(autoInt); document.getElementById('autoBackupIntervalSelect').value = autoInt; }
-function saveConfig(){ localStorage.setItem('speechRate',speechRate); localStorage.setItem('fontSize',fontSize); localStorage.setItem('showCardShadows',showCardShadows); applyConfig(); }
+function applyConfig(){ speechRate=parseFloat(localStorage.getItem('speechRate')||'0.9'); speechPitch=parseFloat(localStorage.getItem('speechPitch')||'1.0'); fontSize=localStorage.getItem('fontSize')||'normal'; showCardShadows=localStorage.getItem('showCardShadows')!=='false'; document.getElementById('speechRateSlider').value=speechRate; document.getElementById('speechRateValue').innerText=speechRate; document.getElementById('speechPitchSlider').value=speechPitch; document.getElementById('speechPitchValue').innerText=speechPitch; document.getElementById('fontSizeSelect').value=fontSize; document.getElementById('cardShadowsCheckbox').checked=showCardShadows; const sizes={small:'14px',normal:'16px',large:'20px'}; document.documentElement.style.setProperty('--font-size-base',sizes[fontSize]||'16px'); document.querySelectorAll('.tarot-card').forEach(c=>{ if(showCardShadows) c.style.boxShadow='var(--shadow-lg)'; else c.style.boxShadow='none'; }); let autoInt=parseInt(localStorage.getItem('autoBackupInterval')||'0'); if(autoInt>0) startAutoBackup(autoInt); document.getElementById('autoBackupIntervalSelect').value = autoInt; }
+function saveConfig(){ localStorage.setItem('speechRate',speechRate); localStorage.setItem('speechPitch',speechPitch); localStorage.setItem('fontSize',fontSize); localStorage.setItem('showCardShadows',showCardShadows); applyConfig(); }
 function startAutoBackup(minutes){ if(backupInterval) clearInterval(backupInterval); if(minutes>0){ backupInterval=setInterval(()=>{ exportAllData(); showToast('💾 Backup automático'); },minutes*60*1000); localStorage.setItem('autoBackupInterval',minutes); }else{ localStorage.removeItem('autoBackupInterval'); } }
-function cambiarTemaSelect(){ const v=document.getElementById('theme-select').value; if(v) document.documentElement.setAttribute('data-theme',v); }
+function cambiarTemaSelect(){ const v=document.getElementById('theme-select').value; if(v) document.documentElement.setAttribute('data-theme',v); localStorage.setItem('susana_theme',v); }
 function cambiarTapete(){ currentTapete=document.getElementById('tapete-select').value; localStorage.setItem('tapete',currentTapete); aplicarTapete(); }
-
-// ==================== VOZ Y MÚSICA ====================
-function speakText(text){ if(!text||!window.speechSynthesis) return; window.speechSynthesis.cancel(); let clean=text.replace(/<[^>]*>/g,'').replace(/[\u{1F600}-\u{1F6FF}]/gu,'').replace(/[*#]/g,'').trim(); if(!clean) return; const u=new SpeechSynthesisUtterance(clean); u.lang='es-ES'; u.rate=speechRate; window.speechSynthesis.speak(u); }
-function detenerVoz(){ window.speechSynthesis.cancel(); }
-function iniciarDictado(idElemento,btn){ if(!window.SpeechRecognition && !window.webkitSpeechRecognition){ showToast('❌ Tu navegador no soporta dictado'); return; } const recognition=new (window.SpeechRecognition||window.webkitSpeechRecognition)(); recognition.lang='es-ES'; recognition.interimResults=false; recognition.onstart=()=>{ btn.classList.add('listening'); showToast('🎤 Escuchando...'); }; recognition.onresult=e=>{ document.getElementById(idElemento).value=e.results[0][0].transcript; btn.classList.remove('listening'); showToast('✅ Dictado completado'); }; recognition.onerror=()=>{ btn.classList.remove('listening'); showToast('🎤 Error'); }; recognition.onend=()=>btn.classList.remove('listening'); recognition.start(); }
 function grabarAudio(){ if(mediaRecorder && mediaRecorder.state==='recording'){ mediaRecorder.stop(); showToast('⏹️ Grabación detenida'); return; } navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{ mediaRecorder=new MediaRecorder(stream); audioChunks=[]; mediaRecorder.ondataavailable=e=>audioChunks.push(e.data); mediaRecorder.onstop=()=>{ const blob=new Blob(audioChunks,{type:'audio/webm'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='lectura_'+Date.now()+'.webm'; a.click(); stream.getTracks().forEach(t=>t.stop()); mediaRecorder=null; showToast('🎙️ Audio guardado'); }; mediaRecorder.start(); showToast('🎙️ Grabando...'); }).catch(()=>showToast('🎤 Permite el micrófono')); }
-function toggleMusica(){ const btn=document.getElementById('btn-music'); if(musicaActiva){ if(musicInterval) clearInterval(musicInterval); if(audioCtx){ audioCtx.close(); audioCtx=null; } btn.innerHTML='🔇'; btn.classList.remove('active'); musicaActiva=false; }else{ if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)(); if(audioCtx.state==='suspended') audioCtx.resume(); musicaActiva=true; btn.innerHTML='🎵'; btn.classList.add('active'); if(musicInterval) clearInterval(musicInterval);
-        musicInterval = setInterval(() => {
-            if(!musicaActiva) return;
-            const now = audioCtx.currentTime;
-            const notes = [261.63, 329.63, 392, 261.63];
-            notes.forEach((freq, idx) => {
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.type = 'sine';
-                osc.frequency.value = freq;
-                gain.gain.value = 0.05;
-                gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.5);
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.start(now + idx * 0.4);
-                osc.stop(now + 1.5);
-            });
-        }, 6000);
-    } localStorage.setItem('susana_musica',musicaActiva?'1':'0'); }
-
-// ==================== NUMEROLOGÍA ====================
-function reducirNumero(num) {
-    while (num > 9 && num !== 11 && num !== 22 && num !== 33) {
-        let s = 0;
-        while (num > 0) { s += num % 10; num = Math.floor(num / 10); }
-        num = s;
-    }
-    return num;
-}
-function calcularNumerologia() {
-    const fechaStr = document.getElementById('fecha-nacimiento').value;
-    const nombre = document.getElementById('nombre-completo').value.trim();
-    if (!fechaStr) { showToast('Ingresa tu fecha de nacimiento'); return; }
-    const fecha = new Date(fechaStr);
-    const dia = fecha.getDate();
-    const mes = fecha.getMonth() + 1;
-    const anio = fecha.getFullYear();
-    const sumaFecha = dia + mes + anio;
-    let numeroVida = reducirNumero(sumaFecha);
-    let numeroExpresion = null;
-    if (nombre) {
-        const valorLetras = { a:1, b:2, c:3, d:4, e:5, f:6, g:7, h:8, i:9, j:1, k:2, l:3, m:4, n:5, o:6, p:7, q:8, r:9, s:1, t:2, u:3, v:4, w:5, x:6, y:7, z:8 };
-        let sumaNombre = 0;
-        for (let letra of nombre.toLowerCase()) {
-            if (valorLetras[letra]) sumaNombre += valorLetras[letra];
-        }
-        numeroExpresion = reducirNumero(sumaNombre);
-    }
-    const significados = {
-        1: "Liderazgo, independencia, iniciativa.",
-        2: "Cooperación, diplomacia, sensibilidad.",
-        3: "Creatividad, comunicación, optimismo.",
-        4: "Estabilidad, orden, trabajo duro.",
-        5: "Libertad, aventura, versatilidad.",
-        6: "Armonía, responsabilidad, amor.",
-        7: "Análisis, sabiduría, introspección.",
-        8: "Poder, abundancia, ambición.",
-        9: "Humanitarismo, compasión, idealismo.",
-        11: "Intuición, iluminación, espiritualidad (maestro).",
-        22: "Constructor maestro, grandes logros.",
-        33: "Maestro sanador, servicio."
-    };
-    let html = `<div class="numero-resultado"><h4>🔢 Números Clave</h4>`;
-    html += `<div class="numero-tabla">`;
-    html += `<div class="numero-card"><h4>Número de Vida</h4><div class="numero-valor">${numeroVida}</div><p>${significados[numeroVida] || 'Significado profundo'}</p></div>`;
-    if (numeroExpresion) html += `<div class="numero-card"><h4>Número de Expresión</h4><div class="numero-valor">${numeroExpresion}</div><p>${significados[numeroExpresion] || 'Talento y propósito'}</p></div>`;
-    html += `</div>`;
-    if (nombre) html += `<p><strong>Interpretación breve:</strong> Tu número de vida ${numeroVida} indica tu camino principal. ${numeroExpresion ? 'Tu expresión ' + numeroExpresion + ' refleja tu forma de actuar.' : ''}</p>`;
-    else html += `<p>💡 Para más precisión, ingresa tu nombre completo.</p>`;
-    html += `<div class="btn-group"><button class="btn btn-secondary btn-sm" onclick="interpretarNumerologiaIA()">✨ Interpretación IA</button></div>`;
-    html += `</div>`;
-    document.getElementById('numerologia-resultados').innerHTML = html;
-    window.numerologiaData = { fecha: fechaStr, nombre: nombre, vida: numeroVida, expresion: numeroExpresion };
-}
-async function interpretarNumerologiaIA() {
-    if (!window.numerologiaData) { showToast('Primero calcula tus números'); return; }
-    const div = document.getElementById('numerologia-ia-text');
-    div.style.display = 'block';
-    div.innerHTML = '<p>🌀 Consultando a la IA...</p>';
-    const prompt = `Realiza una interpretación numerológica profunda para una persona con:
-- Fecha de nacimiento: ${window.numerologiaData.fecha}
-- Número de vida: ${window.numerologiaData.vida}
-${window.numerologiaData.expresion ? `- Número de expresión: ${window.numerologiaData.expresion}` : ''}
-${window.numerologiaData.nombre ? `- Nombre: ${window.numerologiaData.nombre}` : ''}
-Explica el significado de estos números, sus dones y desafíos, y da un consejo práctico.`;
-    let respuesta = await callAI(prompt);
-    if (!respuesta) respuesta = `✨ **Interpretación numerológica** ✨\n\nTu número de vida ${window.numerologiaData.vida} representa ${window.numerologiaData.vida===1?'iniciativa y liderazgo':window.numerologiaData.vida===2?'cooperación y equilibrio':window.numerologiaData.vida===3?'creatividad y expresión':window.numerologiaData.vida===4?'estructura y trabajo':window.numerologiaData.vida===5?'cambio y libertad':window.numerologiaData.vida===6?'amor y responsabilidad':window.numerologiaData.vida===7?'sabiduría y análisis':window.numerologiaData.vida===8?'poder y abundancia':'compasión y servicio'}. Reflexiona sobre cómo estos números se manifiestan en tu día a día.`;
-    div.innerHTML = respuesta.replace(/\n/g,'<br>');
-}
-function escucharNumerologiaIA() {
-    const texto = document.getElementById('numerologia-ia-text').innerText;
-    if (texto && !texto.includes('🌀')) speakText(texto);
-    else showToast('Genera interpretación primero');
-}
-
-// ==================== INDICADOR CONEXIÓN IA ====================
-function verificarConexionIA() {
-    const led = document.getElementById('ai-led');
-    const texto = document.getElementById('ai-status-text');
-    const disponible = (typeof puter !== 'undefined' && puter.ai && typeof puter.ai.chat === 'function');
-    if (disponible) {
-        led.className = 'status-led green';
-        texto.innerText = 'Conectada';
-    } else {
-        led.className = 'status-led red';
-        texto.innerText = 'Sin conexión';
-    }
-}
-setInterval(verificarConexionIA, 30000);
-
-// ==================== VISTAS Y NAVEGACIÓN ====================
-function changeView(view){ 
-    currentView = view; 
-    document.querySelectorAll('.view').forEach(v => v.classList.remove('active')); 
-    document.getElementById(`view-${view}`).classList.add('active'); 
-    document.querySelectorAll('.bottom-nav button').forEach(b => b.classList.remove('active')); 
-    document.querySelector(`.bottom-nav button[data-view="${view}"]`).classList.add('active'); 
-    if(view === 'mazo') renderMazo(); 
-    if(view === 'hoy') renderCartaDelDia(); 
-    if(view === 'tirada') { aplicarTapete(); if (currentSpreadType !== 'libre') document.getElementById('libre-panel').style.display = 'none'; else document.getElementById('libre-panel').style.display = 'block'; } 
-    if(view === 'suenos'){ cargarSuenos(); llenarSelectCartas(); } 
-    if(view === 'luna'){ renderLunarCalendar(); renderLunarInfo(); } 
-    if(view === 'historial') renderDiario(); 
-}
+function toggleMusica(){ const btn=document.getElementById('btn-music'); if(musicaActiva){ if(musicInterval) clearInterval(musicInterval); if(audioCtx){ audioCtx.close(); audioCtx=null; } btn.innerHTML='🔇'; btn.classList.remove('active'); musicaActiva=false; }else{ if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)(); if(audioCtx.state==='suspended') audioCtx.resume(); musicaActiva=true; btn.innerHTML='🎵'; btn.classList.add('active'); if(musicInterval) clearInterval(musicInterval); musicInterval = setInterval(() => { if(!musicaActiva) return; const now = audioCtx.currentTime; const notes = [261.63, 329.63, 392, 261.63]; notes.forEach((freq, idx) => { const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain(); osc.type = 'sine'; osc.frequency.value = freq; gain.gain.value = 0.05; gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.5); osc.connect(gain); gain.connect(audioCtx.destination); osc.start(now + idx * 0.4); osc.stop(now + 1.5); }); }, 6000); } localStorage.setItem('susana_musica',musicaActiva?'1':'0'); }
+function reducirNumero(num, master = true) { if (master && (num === 11 || num === 22 || num === 33)) return num; while (num > 9 && num !== 11 && num !== 22 && num !== 33) { let s = 0; while (num > 0) { s += num % 10; num = Math.floor(num / 10); } num = s; } return num; }
+function valorLetra(letra) { const mapa = { 'a':1,'b':2,'c':3,'d':4,'e':5,'f':6,'g':7,'h':8,'i':9,'j':1,'k':2,'l':3,'m':4,'n':5,'ñ':5,'o':6,'p':7,'q':8,'r':9,'s':1,'t':2,'u':3,'v':4,'w':5,'x':6,'y':7,'z':8 }; return mapa[letra] || 0; }
+function calcularNumerologia() { const fechaStr = document.getElementById('fecha-nacimiento').value; const nombreCompleto = document.getElementById('nombre-completo').value.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""); if (!fechaStr) { showToast('Ingresa tu fecha de nacimiento'); return; } const fecha = new Date(fechaStr); const dia = fecha.getDate(); const mes = fecha.getMonth() + 1; const anio = fecha.getFullYear(); const sumaFecha = dia + mes + anio; let numeroVida = reducirNumero(sumaFecha); let numeroExpresion = null, numeroAlma = null, numeroPersonalidad = null; if (nombreCompleto) { let sumaConsonantes = 0, sumaVocales = 0; const vocales = new Set(['a','e','i','o','u']); for (let letra of nombreCompleto) { let val = valorLetra(letra); if (val === 0) continue; if (vocales.has(letra)) sumaVocales += val; else sumaConsonantes += val; } const sumaTotal = sumaVocales + sumaConsonantes; numeroExpresion = reducirNumero(sumaTotal); numeroAlma = reducirNumero(sumaVocales); numeroPersonalidad = reducirNumero(sumaConsonantes); } const digitos = new Set(dia.toString()+mes.toString()+anio.toString()); let karmico = []; for (let i=1; i<=9; i++) if (!digitos.has(i.toString())) karmico.push(i); let numeroKarmico = karmico.length ? karmico.join(', ') : 'Ninguno'; let numeroSuerte = reducirNumero(dia, false); const hoy = new Date(); const anioActual = hoy.getFullYear(); let mesActual = hoy.getMonth() + 1; let diaActual = hoy.getDate(); let edad = anioActual - anio; if (mesActual < mes || (mesActual === mes && diaActual < dia)) edad--; const anioPersonalBase = reducirNumero(anioActual + numeroVida); let anioPersonal = anioPersonalBase; let mesPersonal = reducirNumero(anioPersonal + mesActual); const significados = { 1: "Liderazgo, independencia, iniciativa.", 2: "Cooperación, diplomacia, sensibilidad.", 3: "Creatividad, comunicación, optimismo.", 4: "Estabilidad, orden, trabajo duro.", 5: "Libertad, aventura, versatilidad.", 6: "Armonía, responsabilidad, amor.", 7: "Análisis, sabiduría, introspección.", 8: "Poder, abundancia, ambición.", 9: "Humanitarismo, compasión, idealismo.", 11: "Intuición, iluminación, espiritualidad.", 22: "Constructor maestro, grandes logros.", 33: "Maestro sanador, servicio compasivo." }; const consejos = { 1: "Toma la iniciativa, pero permite colaborar.", 2: "Escucha activamente, evita la codependencia.", 3: "Haz algo creativo cada día.", 4: "Organiza tu entorno, respeta los procesos.", 5: "Sal de tu zona de confort.", 6: "Establece límites sanos.", 7: "Dedica tiempo a la meditación.", 8: "Administra tus recursos.", 9: "Practica el desapego.", 11: "Confía en tus corazonadas.", 22: "Construye algo que perdure.", 33: "Comparte tu mensaje." }; let html = `<div class="numero-resultado"><h3>✨ Tus Números Clave ✨</h3><div class="numero-tabla">`; html += `<div class="numero-card"><h4>🔢 Número de Vida</h4><div class="numero-valor">${numeroVida}</div><p>${significados[numeroVida] || 'Camino de vida'}</p><div class="numero-consejo">💡 ${consejos[numeroVida] || 'Confía'}</div></div>`; if (numeroExpresion) html += `<div class="numero-card"><h4>✍️ Expresión</h4><div class="numero-valor">${numeroExpresion}</div><p>${significados[numeroExpresion]}</p></div>`; if (numeroAlma) html += `<div class="numero-card"><h4>❤️ Alma</h4><div class="numero-valor">${numeroAlma}</div><p>${significados[numeroAlma]}</p></div>`; if (numeroPersonalidad) html += `<div class="numero-card"><h4>🎭 Personalidad</h4><div class="numero-valor">${numeroPersonalidad}</div><p>${significados[numeroPersonalidad]}</p></div>`; html += `<div class="numero-card"><h4>📿 Lección Kármica</h4><div class="numero-valor">${numeroKarmico}</div><p>Dígitos ausentes en tu fecha. Trabájalos.</p></div>`; html += `<div class="numero-card"><h4>🍀 Número de la Suerte</h4><div class="numero-valor">${numeroSuerte}</div><p>Tu día de nacimiento simplificado.</p></div>`; html += `<div class="numero-card"><h4>📆 Año Personal</h4><div class="numero-valor">${anioPersonal}</div><p>Desde tu cumpleaños. Energía anual.</p><div class="numero-consejo">💡 ${consejos[anioPersonal] || 'Alinear acciones'}</div></div>`; html += `<div class="numero-card"><h4>🌙 Mes Personal</h4><div class="numero-valor">${mesPersonal}</div><p>Vibración del mes actual.</p></div>`; html += `</div><p class="numero-consejo" style="text-align:center">✨ Para una interpretación detallada, pulsa "Interpretación IA". ✨</p></div>`; document.getElementById('numerologia-resultados').innerHTML = html; window.numerologiaData = { fecha: fechaStr, nombre: nombreCompleto, vida: numeroVida, expresion: numeroExpresion, alma: numeroAlma, personalidad: numeroPersonalidad, karmico: numeroKarmico, suerte: numeroSuerte, anioPersonal, mesPersonal }; }
+async function interpretarNumerologiaIA() { if (!window.numerologiaData) { showToast('Primero calcula tus números'); return; } const div = document.getElementById('numerologia-ia-text'); div.style.display = 'block'; div.innerHTML = '<p>🌀 Consultando a la IA...</p>'; const prompt = `Realiza una interpretación numerológica profunda y cálida para una persona con: - Fecha: ${window.numerologiaData.fecha} - Número de Vida: ${window.numerologiaData.vida} ${window.numerologiaData.expresion ? `- Expresión: ${window.numerologiaData.expresion}` : ''} ${window.numerologiaData.alma ? `- Alma: ${window.numerologiaData.alma}` : ''} - Lección Kármica: ${window.numerologiaData.karmico} - Número de la Suerte: ${window.numerologiaData.suerte} - Año Personal: ${window.numerologiaData.anioPersonal} - Mes Personal: ${window.numerologiaData.mesPersonal}. Explica cada número, integración, y consejo espiritual.`; let respuesta = await callAI(prompt); if (!respuesta) { respuesta = `✨ **Tu Numerología Personal** ✨\n\nTu Número de Vida ${window.numerologiaData.vida} representa tu camino principal. Actualmente estás en un Año Personal ${window.numerologiaData.anioPersonal}, que te invita a reflexionar y actuar según su vibración. Tu Lección Kármica son los dígitos ${window.numerologiaData.karmico}; intégralos con consciencia. Confía en tu proceso.`; } div.innerHTML = respuesta.replace(/\n/g,'<br>'); }
+function escucharNumerologiaIA() { const texto = document.getElementById('numerologia-ia-text').innerText; if (texto && !texto.includes('🌀')) speakText(texto); else showToast('Genera interpretación primero'); }
+function verificarConexionIA() { const led = document.getElementById('ai-led'); const texto = document.getElementById('ai-status-text'); const disponible = (typeof puter !== 'undefined' && puter.ai && typeof puter.ai.chat === 'function'); if (disponible) { led.className = 'status-led green'; texto.innerText = 'Conectada'; } else { led.className = 'status-led red'; texto.innerText = 'Sin conexión'; } }
+function changeView(view){ currentView = view; document.querySelectorAll('.view').forEach(v => v.classList.remove('active')); document.getElementById(`view-${view}`).classList.add('active'); document.querySelectorAll('.bottom-nav button').forEach(b => b.classList.remove('active')); document.querySelector(`.bottom-nav button[data-view="${view}"]`).classList.add('active'); if(view === 'mazo') renderMazo(); if(view === 'hoy') renderCartaDelDia(); if(view === 'tirada') { aplicarTapete(); if (currentSpreadType !== 'libre') document.getElementById('libre-panel').style.display = 'none'; else document.getElementById('libre-panel').style.display = 'block'; } if(view === 'runas') renderRunasMazo(); if(view === 'suenos'){ cargarSuenos(); llenarSelectCartas(); } if(view === 'luna'){ renderLunarCalendar(); renderLunarInfo(); } if(view === 'historial') renderDiario(); }
 function toggleTema(){ const themes=['light','dark','bosque','oceanico','mistico','calido']; const cur=document.documentElement.getAttribute('data-theme')||'light'; const next=themes[(themes.indexOf(cur)+1)%themes.length]; document.documentElement.setAttribute('data-theme',next); localStorage.setItem('susana_theme',next); showToast('🎨 '+next); }
-function abrirConfigModal(){ document.getElementById('modal-config').classList.add('active'); applyConfig(); }
+function abrirConfigModal(){ document.getElementById('modal-config').classList.add('active'); applyConfig(); loadVoices(); }
 function cerrarConfigModal(){ document.getElementById('modal-config').classList.remove('active'); saveConfig(); }
+function abrirManual(){ document.getElementById('modal-manual').classList.add('active'); }
+function cerrarManual(){ document.getElementById('modal-manual').classList.remove('active'); }
 function initChips(){ const c=document.getElementById('chip-container'); const chips=[['todos','🌐 Todos'],['mayores','🔮 Mayores'],['bastos','🪵 Bastos'],['copas','🏆 Copas'],['espadas','⚔️ Espadas'],['oros','🪙 Oros']]; c.innerHTML=chips.map(([id,label])=>`<span class="chip${currentChip===id?' active':''}" onclick="setChip('${id}')">${label}</span>`).join(''); }
-function setChip(chip){ currentChip=chip; renderMazo(); document.querySelectorAll('#chip-container .chip').forEach(c=>c.classList.remove('active')); event.target.classList.add('active'); }
+function setChip(chip){ currentChip=chip; renderMazo(); document.querySelectorAll('#chip-container .chip').forEach(c=>c.classList.remove('active')); if(event && event.target) event.target.classList.add('active'); }
 function loadSpreadTypes(){ const c=document.getElementById('spread-selector'); const s=[['triada','🃏 Tríada'],['amor','💕 Amor'],['sino','🎯 Sí/No'],['herradura','🐎 Herradura'],['piramide','🔺 Pirámide'],['meses12','📅 12 Meses'],['cuadratura','🟧 Cuadratura'],['libre','✨ Libre (personalizada)']]; c.innerHTML=s.map(([id,label])=>`<span class="chip${currentSpreadType===id?' active':''}" onclick="setSpreadType('${id}'); if(id==='libre') document.getElementById('libre-panel').style.display='block'; else document.getElementById('libre-panel').style.display='none'">${label}</span>`).join(''); }
 function setSpreadType(type){ currentSpreadType=type; loadSpreadTypes(); if(type === 'libre') document.getElementById('libre-panel').style.display = 'block'; else document.getElementById('libre-panel').style.display = 'none'; }
 function generarLecturaCartaIA(){ if(currentIdx===null) return; const c=deck[currentIdx]; const le=document.getElementById('single-ai-loading'), te=document.getElementById('single-ai-text'); le.style.display='block'; (async () => { const prompt = `Interpreta la carta "${c.name}" del Tarot en posición ${currentInverted?'invertida':'derecha'}. Da su significado, la sombra y un consejo práctico.`; let respuesta = await callAI(prompt); if (!respuesta) { respuesta = `✨ **Interpretación de ${c.name}** ✨\n\n${currentInverted?c.meaningRev:c.meaningUp}\n\n🌑 **Sombra:** ${c.sombra}\n\n💡 **Consejo:** Confía en tu intuición.`; } singleAiText = respuesta; te.innerHTML = respuesta.replace(/\n/g,'<br>'); le.style.display='none'; })(); }
 function escucharLecturaCartaIA(){ speakText(singleAiText); }
 function escucharSignificadoModal(){ speakText(document.getElementById('meaning-text').innerText); }
 function exportarLecturaPDF(){ if(!currentSpreadCards.length || !aiReadingText){ showToast('⚠️ Genera tirada y lectura'); return; } const tipo=currentSpreadType; const nota=document.getElementById('spread-note').value; const cartasHTML=currentSpreadCards.map(sc=>{ const c=deck[sc.idx]; return `<div style="display:inline-block;width:80px;margin:6px;text-align:center"><img src="${getCardImage(c)}" style="width:70px;height:123px;transform:${sc.invertida?'rotate(180deg)':'none'}"><p>${sc.posicion}</p><p>${c.name}</p></div>`; }).join(''); const h=`<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:Georgia;padding:15px}</style></head><body><h1>🔮 Tirada ${tipo}</h1><p>${new Date().toLocaleDateString()}</p>${cartasHTML}${nota?`<h2>Reflexión</h2><p>${nota}</p>`:''}<h2>Interpretación</h2><p>${aiReadingText}</p></body></html>`; const w=window.open('','_blank'); w.document.write(h); w.document.close(); setTimeout(()=>w.print(),500); }
-async function compartirTirada() {
-    if(!currentSpreadCards.length) { showToast('⚠️ Genera una tirada'); return; }
-    const div = document.createElement('div');
-    div.style.background = 'white'; div.style.padding = '20px'; div.style.borderRadius = '16px';
-    div.innerHTML = `<h2 style="color:var(--gold)">🔮 Tirada ${currentSpreadType}</h2>${currentSpreadCards.map(sc=>`<div style="margin:10px"><strong>${sc.posicion}</strong><br><img src="${getCardImage(deck[sc.idx])}" width="80"><p>${deck[sc.idx].name}</p></div>`).join('')}<p>${new Date().toLocaleDateString()}</p>`;
-    document.body.appendChild(div);
-    try { const canvas = await html2canvas(div, { scale: 2 }); const imgData = canvas.toDataURL('image/png'); const link = document.createElement('a'); link.download = 'tirada.png'; link.href = imgData; link.click(); } catch(e){ showToast('Error al generar imagen'); }
-    document.body.removeChild(div);
-}
+async function compartirTirada() { if(!currentSpreadCards.length) { showToast('⚠️ Genera una tirada'); return; } const div = document.createElement('div'); div.style.background = 'white'; div.style.padding = '20px'; div.style.borderRadius = '16px'; div.innerHTML = `<h2 style="color:var(--gold)">🔮 Tirada ${currentSpreadType}</h2>${currentSpreadCards.map(sc=>`<div style="margin:10px"><strong>${sc.posicion}</strong><br><img src="${getCardImage(deck[sc.idx])}" width="80"><p>${deck[sc.idx].name}</p></div>`).join('')}<p>${new Date().toLocaleDateString()}</p>`; document.body.appendChild(div); try { const canvas = await html2canvas(div, { scale: 2 }); const imgData = canvas.toDataURL('image/png'); const link = document.createElement('a'); link.download = 'tirada.png'; link.href = imgData; link.click(); } catch(e){ showToast('Error al generar imagen'); } document.body.removeChild(div); }
 function exportarSuenoPDF(){ const text=document.getElementById('dream-ai-text').innerText; if(!text) return; const h=`<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:Georgia;padding:20px}</style></head><body><h1>🌙 Sueño</h1><p>${text.replace(/\n/g,'<br>')}</p></body></html>`; const w=window.open('','_blank'); w.document.write(h); w.document.close(); setTimeout(()=>w.print(),500); }
 function compartirSueno(){ exportarSuenoPDF(); }
+function mostrarBienvenidaPrimeraVez() { if (!localStorage.getItem('manual_visto')) { setTimeout(() => { abrirManual(); localStorage.setItem('manual_visto', 'true'); }, 500); } }
 
-// ==================== INICIALIZACIÓN ====================
 document.addEventListener('DOMContentLoaded',()=>{
     const savedTheme=localStorage.getItem('susana_theme')||'light';
     document.documentElement.setAttribute('data-theme',savedTheme);
@@ -775,47 +674,20 @@ document.addEventListener('DOMContentLoaded',()=>{
     document.getElementById('search-input').addEventListener('input',e=>{ currentFilter=e.target.value; renderMazo(); });
     document.querySelectorAll('.gender-btn').forEach(b=>b.addEventListener('click',function(){ userGender=this.dataset.gender; document.querySelectorAll('.gender-btn').forEach(x=>x.classList.remove('active')); this.classList.add('active'); }));
     document.getElementById('speechRateSlider').addEventListener('input',function(){ speechRate=parseFloat(this.value); document.getElementById('speechRateValue').innerText=speechRate; saveConfig(); });
+    document.getElementById('speechPitchSlider').addEventListener('input',function(){ speechPitch=parseFloat(this.value); document.getElementById('speechPitchValue').innerText=speechPitch; saveConfig(); });
+    document.getElementById('voiceSelect').addEventListener('change',function(){ selectedVoiceURI=this.value; localStorage.setItem('selectedVoiceURI',selectedVoiceURI); });
     document.getElementById('fontSizeSelect').addEventListener('change',function(){ fontSize=this.value; saveConfig(); });
     document.getElementById('cardShadowsCheckbox').addEventListener('change',function(){ showCardShadows=this.checked; saveConfig(); });
     document.getElementById('autoBackupIntervalSelect').addEventListener('change',function(){ startAutoBackup(parseInt(this.value)); });
     document.getElementById('theme-select').addEventListener('change',cambiarTemaSelect);
     document.getElementById('tapete-select').addEventListener('change',cambiarTapete);
+    document.querySelectorAll('[data-runa-tirada]').forEach(el => { el.addEventListener('click', function() { document.querySelectorAll('[data-runa-tirada]').forEach(c => c.classList.remove('active')); this.classList.add('active'); currentRunaTiradaType = this.getAttribute('data-runa-tirada'); }); });
+    document.getElementById('runa-search')?.addEventListener('input', e => renderRunasMazo(e.target.value));
     mostrarBienvenidaPrimeraVez();
     verificarConexionIA();
     // Exponer funciones globales
-    window.abrirCarta = abrirCarta; window.cerrarModal = cerrarModal; window.guardarNotaCarta = guardarNotaCarta;
-    window.borrarNotaCarta = borrarNotaCarta; window.toggleInvertirEnModal = toggleInvertirEnModal;
-    window.generarLecturaCartaIA = generarLecturaCartaIA; window.escucharLecturaCartaIA = escucharLecturaCartaIA;
-    window.escucharSignificadoModal = escucharSignificadoModal; window.toggleSeleccionInvertir = toggleSeleccionInvertir;
-    window.quitarSeleccion = quitarSeleccion; window.limpiarSeleccion = limpiarSeleccion; window.seleccionarAleatorias = seleccionarAleatorias;
-    window.generarLecturaIA = generarLecturaIA; window.escucharLecturaIA = escucharLecturaIA;
-    window.guardarTirada = guardarTirada; window.compartirTirada = compartirTirada; window.exportarLecturaPDF = exportarLecturaPDF;
-    window.abrirTapeteExtendido = abrirTapeteExtendido; window.cerrarTapeteExtendido = cerrarTapeteExtendido;
-    window.abrirTiradaGuardada = abrirTiradaGuardada; window.cerrarTiradaGuardada = cerrarTiradaGuardada;
-    window.exportarTiradaGuardadaPDF = exportarTiradaGuardadaPDF;
-    window.generarReflexionDiaria = generarReflexionDiaria; window.escucharReflexionDiaria = escucharReflexionDiaria;
-    window.exportarCartaDiaPDF = exportarCartaDiaPDF; window.compartirCartaDia = compartirCartaDia;
-    window.registrarEmocion = registrarEmocion; window.guardarSueno = guardarSueno; window.interpretarSueno = interpretarSueno;
-    window.escucharSuenoIA = escucharSuenoIA; window.filtrarSuenos = filtrarSuenos; window.editDream = editDream; window.deleteDream = deleteDream;
-    window.exportAllData = exportAllData; window.exportHistorialCSV = exportHistorialCSV; window.clearAllData = clearAllData;
-    window.toggleTema = toggleTema; window.abrirConfigModal = abrirConfigModal; window.cerrarConfigModal = cerrarConfigModal;
-    window.abrirManual = abrirManual; window.cerrarManual = cerrarManual; window.setChip = setChip; window.setSpreadType = setSpreadType;
-    window.toggleMusica = toggleMusica; window.detenerVoz = detenerVoz; window.iniciarDictado = iniciarDictado; window.grabarAudio = grabarAudio;
-    window.renderDiario = renderDiario; window.changeView = changeView;
-    window.configurarTiradaLibre = configurarTiradaLibre;
-    window.editarPosicionLibre = editarPosicionLibre;
-    window.cambiarCartaAleatoriaLibre = cambiarCartaAleatoriaLibre;
-    window.seleccionarCartaParaLibre = seleccionarCartaParaLibre;
-    window.eliminarCartaLibre = eliminarCartaLibre;
-    window.asignarCartaATiradaLibre = asignarCartaATiradaLibre;
-    window.abrirSelectorCartas = abrirSelectorCartas;
-    window.setSelectorChip = setSelectorChip;
-    window.seleccionarCartaDesdeSelector = seleccionarCartaDesdeSelector;
-    window.cerrarModalSelector = cerrarModalSelector;
-    window.calcularNumerologia = calcularNumerologia;
-    window.interpretarNumerologiaIA = interpretarNumerologiaIA;
-    window.escucharNumerologiaIA = escucharNumerologiaIA;
-    console.log('✅ App completa con numerología e indicador IA');
+    window.abrirRuna = abrirRuna; window.cerrarModalRuna = cerrarModalRuna; window.guardarNotaRuna = guardarNotaRuna; window.interpretarRunaIA = interpretarRunaIA; window.escucharRunaIA = escucharRunaIA; window.generarTiradaRunas = generarTiradaRunas; window.interpretarRunasConIA = interpretarRunasConIA; window.escucharLecturaRunas = escucharLecturaRunas; window.guardarTiradaRunas = guardarTiradaRunas; window.compartirTiradaRunas = compartirTiradaRunas; window.runaDelDia = runaDelDia;
+    window.abrirCarta = abrirCarta; window.cerrarModal = cerrarModal; window.guardarNotaCarta = guardarNotaCarta; window.borrarNotaCarta = borrarNotaCarta; window.toggleInvertirEnModal = toggleInvertirEnModal; window.generarLecturaCartaIA = generarLecturaCartaIA; window.escucharLecturaCartaIA = escucharLecturaCartaIA; window.escucharSignificadoModal = escucharSignificadoModal; window.generarLecturaIA = generarLecturaIA; window.escucharLecturaIA = escucharLecturaIA; window.guardarTirada = guardarTirada; window.compartirTirada = compartirTirada; window.exportarLecturaPDF = exportarLecturaPDF; window.abrirTapeteExtendido = abrirTapeteExtendido; window.cerrarTapeteExtendido = cerrarTapeteExtendido; window.abrirTiradaGuardada = abrirTiradaGuardada; window.cerrarTiradaGuardada = cerrarTiradaGuardada; window.exportarTiradaGuardadaPDF = exportarTiradaGuardadaPDF; window.generarReflexionDiaria = generarReflexionDiaria; window.escucharReflexionDiaria = escucharReflexionDiaria; window.exportarCartaDiaPDF = exportarCartaDiaPDF; window.compartirCartaDia = compartirCartaDia; window.registrarEmocion = registrarEmocion; window.guardarSueno = guardarSueno; window.interpretarSueno = interpretarSueno; window.escucharSuenoIA = escucharSuenoIA; window.filtrarSuenos = filtrarSuenos; window.editDream = editDream; window.deleteDream = deleteDream; window.exportAllData = exportAllData; window.exportHistorialCSV = exportHistorialCSV; window.clearAllData = clearAllData; window.toggleTema = toggleTema; window.abrirConfigModal = abrirConfigModal; window.cerrarConfigModal = cerrarConfigModal; window.abrirManual = abrirManual; window.cerrarManual = cerrarManual; window.setChip = setChip; window.setSpreadType = setSpreadType; window.toggleMusica = toggleMusica; window.detenerVoz = detenerVoz; window.iniciarDictado = iniciarDictado; window.grabarAudio = grabarAudio; window.renderDiario = renderDiario; window.changeView = changeView; window.configurarTiradaLibre = configurarTiradaLibre; window.editarPosicionLibre = editarPosicionLibre; window.cambiarCartaAleatoriaLibre = cambiarCartaAleatoriaLibre; window.seleccionarCartaParaLibre = seleccionarCartaParaLibre; window.eliminarCartaLibre = eliminarCartaLibre; window.asignarCartaATiradaLibre = asignarCartaATiradaLibre; window.abrirSelectorCartas = abrirSelectorCartas; window.setSelectorChip = setSelectorChip; window.seleccionarCartaDesdeSelector = seleccionarCartaDesdeSelector; window.cerrarModalSelector = cerrarModalSelector; window.calcularNumerologia = calcularNumerologia; window.interpretarNumerologiaIA = interpretarNumerologiaIA; window.escucharNumerologiaIA = escucharNumerologiaIA;
 });
 </script>
 </body>
