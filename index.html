@@ -3,93 +3,741 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>Susana Tarot · Runas · Voz Mejorada</title>
+    <title>Susana Tarot · Runas · Gráficos Optimizados</title>
     <script src="https://js.puter.com/v2/"></script>
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
-        *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-        :root{--bg:#f8f5f0;--bg-card:rgba(255,255,255,0.85);--glass-bg:rgba(255,255,255,0.5);--gold:#c9a03d;--gold-dark:#a67c2e;--gold-light:#f0e4c8;--text:#2e241f;--text-soft:#6b5e52;--border:rgba(180,150,100,0.25);--shadow-sm:0 8px 20px rgba(0,0,0,0.05);--shadow:0 12px 28px rgba(0,0,0,0.1);--shadow-lg:0 20px 40px rgba(0,0,0,0.15);--radius-sm:16px;--radius:24px;--radius-lg:32px;--font-size-base:16px;--nav-height:70px;--header-height:60px;--danger:#c0392b;--success:#2e7d32;--transition:all 0.25s cubic-bezier(0.2,0.9,0.4,1.1)}
-        [data-theme="dark"]{--bg:#121212;--bg-card:rgba(30,30,35,0.85);--glass-bg:rgba(20,20,25,0.6);--gold:#d4a843;--gold-dark:#b89030;--gold-light:#3a3020;--text:#e8e0d5;--text-soft:#a09888;--border:rgba(180,150,100,0.2);--shadow:0 12px 28px rgba(0,0,0,0.4);--shadow-lg:0 20px 40px rgba(0,0,0,0.5)}
-        [data-theme="bosque"]{--bg:#e8f5e9;--bg-card:rgba(255,255,255,0.85);--glass-bg:rgba(255,255,255,0.6);--gold:#2e7d32;--gold-dark:#1b5e20;--gold-light:#c8e6c9;--text:#1a2e1a;--text-soft:#3a5e3a}
-        [data-theme="oceanico"]{--bg:#e0f7fa;--bg-card:rgba(255,255,255,0.85);--glass-bg:rgba(255,255,255,0.6);--gold:#0277bd;--gold-dark:#01579b;--gold-light:#b3e5fc;--text:#0d1b2a;--text-soft:#1b3a4b}
-        [data-theme="mistico"]{--bg:#1a1025;--bg-card:rgba(45,27,61,0.85);--glass-bg:rgba(45,27,61,0.6);--gold:#bb86fc;--gold-dark:#9c64e0;--gold-light:#3a2a4a;--text:#e0d0f0;--text-soft:#b0a0c0}
-        [data-theme="calido"]{--bg:#fff3e0;--bg-card:rgba(255,255,255,0.85);--glass-bg:rgba(255,255,255,0.6);--gold:#e65100;--gold-dark:#bf360c;--gold-light:#ffe0b2;--text:#3e2723;--text-soft:#5d4037}
-        body{background:var(--bg);color:var(--text);font-family:'Cormorant Garamond',serif;font-size:var(--font-size-base);padding-bottom:calc(var(--nav-height) + 20px);transition:var(--transition);overflow-x:hidden;min-height:100vh;line-height:1.5}
-        .font-cinzel{font-family:'Cinzel',serif}
-        .view{display:none;animation:fadeSlide 0.25s ease}.view.active{display:block}
-        @keyframes fadeSlide{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-        @keyframes cardReveal{from{opacity:0;transform:scale(0.92) rotateY(10deg)}to{opacity:1;transform:scale(1) rotateY(0)}}
-        @keyframes pulseGlow{0%{box-shadow:0 0 0 0 rgba(201,160,61,0.4)}70%{box-shadow:0 0 0 12px rgba(201,160,61,0)}100%{box-shadow:0 0 0 0 rgba(201,160,61,0)}}
-        .app-header{position:sticky;top:0;z-index:100;background:var(--glass-bg);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--shadow-sm);height:var(--header-height)}
-        .app-header h1{font-size:1.2rem;background:linear-gradient(135deg,var(--gold),var(--gold-dark));-webkit-background-clip:text;background-clip:text;color:transparent}
-        .header-actions{display:flex;gap:10px;align-items:center}
-        .icon-btn{width:40px;height:40px;border-radius:40px;background:var(--bg-card);border:1px solid var(--border);color:var(--text-soft);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.2rem;transition:var(--transition);box-shadow:var(--shadow-sm)}
-        .icon-btn:hover{background:var(--gold-light);color:var(--gold-dark);transform:translateY(-2px)}.icon-btn.active{background:var(--gold);color:white}
-        .info-bar{display:flex;gap:12px;padding:12px 20px;overflow-x:auto;flex-wrap:wrap;justify-content:center;background:var(--glass-bg);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
-        .info-pill{background:var(--bg-card);border-radius:60px;padding:6px 16px;font-size:0.7rem;border:1px solid var(--border);display:flex;align-items:center;gap:8px;font-family:'Cinzel',serif;font-weight:500;box-shadow:var(--shadow-sm)}
-        .info-pill .status-led{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:6px}
-        .status-led.green{background-color:#2ecc71;box-shadow:0 0 4px #2ecc71}
-        .status-led.red{background-color:#e74c3c;box-shadow:0 0 4px #e74c3c}
-        .bottom-nav{position:fixed;bottom:16px;left:16px;right:16px;z-index:100;background:var(--glass-bg);backdrop-filter:blur(24px);border-radius:60px;border:1px solid var(--border);box-shadow:var(--shadow-lg);display:flex;flex-wrap:wrap;justify-content:center;align-items:center;padding:6px 8px;gap:4px}
-        .bottom-nav button{background:none;border:none;display:inline-flex;flex-direction:column;align-items:center;gap:2px;color:var(--text-soft);cursor:pointer;font-family:'Cinzel',serif;font-size:9px;padding:6px 8px;border-radius:40px;transition:var(--transition);flex-shrink:0}
-        .bottom-nav button.active{color:var(--gold-dark);background:var(--gold-light);transform:translateY(-2px)}
-        .bottom-nav button .nav-icon{font-size:1.3rem;transition:var(--transition)}
-        .bottom-nav button.active .nav-icon{transform:scale(1.05)}
-        @media (max-width: 480px){.bottom-nav button .nav-icon{font-size:1.2rem}.bottom-nav button{font-size:8px;padding:4px 6px}}
-        .card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(85px,1fr));gap:14px;padding:8px}
-        @media(min-width:768px){.card-grid{grid-template-columns:repeat(auto-fill,minmax(105px,1fr));gap:18px;padding:12px}}
-        .tarot-card{aspect-ratio:5/8.8;background:var(--bg-card);border-radius:var(--radius-sm);border:1px solid var(--border);overflow:hidden;cursor:pointer;position:relative;box-shadow:var(--shadow-sm);transition:var(--transition);animation:cardReveal 0.4s ease backwards}
-        .tarot-card:hover{transform:translateY(-5px);box-shadow:var(--shadow-lg);border-color:var(--gold)}
-        .tarot-card img{width:100%;height:100%;object-fit:cover;display:block}
-        .card-badge{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.85));padding:18px 6px 8px;text-align:center;font-size:9px;font-weight:bold;color:white;font-family:'Cinzel',serif}
-        .rune-card{aspect-ratio:5/6;background:var(--bg-card);border-radius:var(--radius-sm);border:1px solid var(--border);overflow:hidden;cursor:pointer;position:relative;box-shadow:var(--shadow-sm);transition:var(--transition);animation:cardReveal 0.4s ease backwards;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px;text-align:center}
-        .rune-card:hover{transform:translateY(-5px);box-shadow:var(--shadow-lg);border-color:var(--gold)}
-        .rune-glyph{font-size:3rem;font-weight:bold;font-family:'Segoe UI','Noto Sans Runic',monospace;background:linear-gradient(135deg,var(--gold),var(--gold-dark));-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:8px}
-        .rune-name{font-size:0.7rem;font-weight:bold;font-family:'Cinzel',serif;color:var(--gold-dark)}
-        .selected-dot{position:absolute;top:6px;left:6px;width:20px;height:20px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;color:white;box-shadow:0 2px 8px rgba(0,0,0,0.2)}
-        .btn{border:none;border-radius:60px;padding:10px 22px;font-family:'Cinzel',serif;font-weight:500;font-size:0.8rem;cursor:pointer;transition:var(--transition);display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;backdrop-filter:blur(4px)}
-        .btn-primary{background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:#fff;box-shadow:0 6px 14px rgba(201,160,61,0.3)}
-        .btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 20px rgba(201,160,61,0.4)}
-        .btn-secondary{background:var(--bg-card);color:var(--text);border:1px solid var(--border)}
-        .btn-secondary:hover{background:var(--accent);transform:translateY(-1px)}
-        .btn-sm{padding:6px 14px;font-size:0.7rem;min-height:34px}
-        .btn-group{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:12px 0}
-        .chip-scroll{display:flex;gap:8px;padding:8px 0;overflow-x:auto;flex-wrap:wrap;justify-content:center}
-        .chip{padding:6px 14px;border-radius:40px;font-family:'Cinzel',serif;font-size:0.7rem;cursor:pointer;background:var(--bg-card);color:var(--text-soft);border:1px solid var(--border);white-space:nowrap;transition:0.2s}
-        .chip.active{background:var(--gold);color:white;border-color:var(--gold-dark)}
-        .spread-zone{display:flex;flex-wrap:wrap;justify-content:center;gap:16px;padding:20px;min-height:220px;border-radius:var(--radius);background:var(--glass-bg);backdrop-filter:blur(8px);margin:12px 0;border:2px dashed var(--border);transition:0.3s}
-        .spread-zone.has-cards{border-style:solid;border-color:var(--gold)}
-        .spread-slot{width:100px;min-height:190px;border-radius:var(--radius-sm);display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--bg-card);border:2px dashed var(--border);cursor:pointer;position:relative;box-shadow:var(--shadow-sm);padding:10px}
-        .spread-slot.filled{border-style:solid;border-color:var(--gold)}
-        .spread-slot img{width:75px;height:132px;object-fit:cover;border-radius:10px}
-        .slot-remove{position:absolute;top:-8px;right:-8px;width:24px;height:24px;background:var(--danger);color:white;border:none;border-radius:50%;font-size:12px;cursor:pointer}
-        .day-card{background:var(--glass-bg);backdrop-filter:blur(16px);border-radius:var(--radius-lg);padding:24px;margin:20px auto;box-shadow:var(--shadow);text-align:center;border:1px solid var(--border);max-width:450px}
-        .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(12px);z-index:200;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:0.2s;padding:20px}
-        .modal-overlay.active{opacity:1;visibility:visible}
-        .modal-content{background:var(--glass-bg);backdrop-filter:blur(24px);border-radius:var(--radius-lg);width:100%;max-width:550px;max-height:85vh;overflow-y:auto;padding:24px;box-shadow:var(--shadow-lg);border:1px solid var(--border)}
-        .close-btn{float:right;background:var(--btn-secondary-bg);border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px}
-        .toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:10px 20px;border-radius:60px;font-size:0.8rem;z-index:1100;opacity:0;transition:0.3s;pointer-events:none;white-space:nowrap;font-family:'Cinzel',serif;box-shadow:var(--shadow-lg)}
-        .toast.show{opacity:1}
-        .inner-section{background:var(--glass-bg);backdrop-filter:blur(8px);border-radius:var(--radius);padding:18px;margin:12px 0;border:1px solid var(--border);box-shadow:var(--shadow-sm)}
-        .rune-detail-glyph{font-size:5rem;text-align:center;margin:16px 0;background:linear-gradient(135deg,var(--gold),var(--gold-dark));-webkit-background-clip:text;background-clip:text;color:transparent}
-        .modal-selector-cartas{max-height:60vh;overflow-y:auto;margin-top:12px;display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:8px}
-        .historial-cartas{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
-        .saved-card-large{display:inline-block;width:100px;margin:8px;text-align:center;vertical-align:top}
-        .saved-card-large img{width:80px;height:140px;object-fit:cover;border-radius:12px;border:1px solid var(--gold)}
-        .numero-input-group{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
-        .numero-resultado{background:var(--bg-card);border-radius:var(--radius);padding:16px;margin-top:16px;border-left:4px solid var(--gold)}
-        .numero-tabla{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin:12px 0}
-        .numero-card{background:var(--glass-bg);border-radius:var(--radius-sm);padding:14px;text-align:center;border:1px solid var(--border)}
-        .numero-card .numero-valor{font-size:2.2rem;font-weight:bold;font-family:'Cinzel',serif;color:var(--gold)}
-        .voice-btn{background:var(--accent);border:1px solid var(--border);border-radius:30px;padding:10px 16px;cursor:pointer;font-size:1.2rem;transition:0.2s}
-        .voice-btn.listening{background:var(--danger);color:white;animation:pulseGlow 1.5s infinite}
-        .voice-selector{background:var(--bg-card);border:1px solid var(--border);border-radius:30px;padding:8px 12px;font-family:inherit;margin:5px 0;width:100%}
-        .config-slider{display:flex;align-items:center;gap:12px;justify-content:space-between;flex-wrap:wrap;margin:12px 0}
-        .libre-slot-actions{display:flex;gap:6px;margin-top:4px}
-        .slot-pos{font-weight:bold;font-size:0.7rem;background:var(--glass-bg);padding:2px 6px;border-radius:20px;margin-top:-10px;margin-bottom:6px;cursor:pointer}
-        .emotion-row button{background:var(--bg-card);border:1px solid var(--border);border-radius:60px;padding:6px 14px;font-family:inherit;cursor:pointer;display:inline-flex;gap:4px;align-items:center}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        :root {
+            --bg: #f8f5f0;
+            --bg-card: rgba(255, 255, 255, 0.85);
+            --glass-bg: rgba(255, 255, 255, 0.5);
+            --gold: #c9a03d;
+            --gold-dark: #a67c2e;
+            --gold-light: #f0e4c8;
+            --text: #2e241f;
+            --text-soft: #6b5e52;
+            --border: rgba(180, 150, 100, 0.25);
+            --shadow-sm: 0 8px 20px rgba(0, 0, 0, 0.05);
+            --shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.15);
+            --radius-sm: 16px;
+            --radius: 24px;
+            --radius-lg: 32px;
+            --font-size-base: 16px;
+            --nav-height: 70px;
+            --header-height: 60px;
+            --danger: #c0392b;
+            --success: #2e7d32;
+            --transition: all 0.25s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+        [data-theme="dark"] {
+            --bg: #121212;
+            --bg-card: rgba(30, 30, 35, 0.85);
+            --glass-bg: rgba(20, 20, 25, 0.6);
+            --gold: #d4a843;
+            --gold-dark: #b89030;
+            --gold-light: #3a3020;
+            --text: #e8e0d5;
+            --text-soft: #a09888;
+            --border: rgba(180, 150, 100, 0.2);
+            --shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.5);
+        }
+        [data-theme="bosque"] {
+            --bg: #e8f5e9;
+            --bg-card: rgba(255, 255, 255, 0.85);
+            --glass-bg: rgba(255, 255, 255, 0.6);
+            --gold: #2e7d32;
+            --gold-dark: #1b5e20;
+            --gold-light: #c8e6c9;
+            --text: #1a2e1a;
+            --text-soft: #3a5e3a;
+        }
+        [data-theme="oceanico"] {
+            --bg: #e0f7fa;
+            --bg-card: rgba(255, 255, 255, 0.85);
+            --glass-bg: rgba(255, 255, 255, 0.6);
+            --gold: #0277bd;
+            --gold-dark: #01579b;
+            --gold-light: #b3e5fc;
+            --text: #0d1b2a;
+            --text-soft: #1b3a4b;
+        }
+        [data-theme="mistico"] {
+            --bg: #1a1025;
+            --bg-card: rgba(45, 27, 61, 0.85);
+            --glass-bg: rgba(45, 27, 61, 0.6);
+            --gold: #bb86fc;
+            --gold-dark: #9c64e0;
+            --gold-light: #3a2a4a;
+            --text: #e0d0f0;
+            --text-soft: #b0a0c0;
+        }
+        [data-theme="calido"] {
+            --bg: #fff3e0;
+            --bg-card: rgba(255, 255, 255, 0.85);
+            --glass-bg: rgba(255, 255, 255, 0.6);
+            --gold: #e65100;
+            --gold-dark: #bf360c;
+            --gold-light: #ffe0b2;
+            --text: #3e2723;
+            --text-soft: #5d4037;
+        }
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: var(--font-size-base);
+            padding-bottom: calc(var(--nav-height) + 20px);
+            transition: var(--transition);
+            overflow-x: hidden;
+            min-height: 100vh;
+            line-height: 1.5;
+        }
+        .font-cinzel {
+            font-family: 'Cinzel', serif;
+        }
+        .view {
+            display: none;
+            animation: fadeSlide 0.25s ease;
+        }
+        .view.active {
+            display: block;
+        }
+        @keyframes fadeSlide {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes cardReveal {
+            from {
+                opacity: 0;
+                transform: scale(0.92) rotateY(10deg);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) rotateY(0);
+            }
+        }
+        @keyframes pulseGlow {
+            0% {
+                box-shadow: 0 0 0 0 rgba(201, 160, 61, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 12px rgba(201, 160, 61, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(201, 160, 61, 0);
+            }
+        }
+        .app-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow-sm);
+            height: var(--header-height);
+        }
+        .app-header h1 {
+            font-size: 1.2rem;
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .icon-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 40px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-soft);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: var(--transition);
+            box-shadow: var(--shadow-sm);
+        }
+        .icon-btn:hover {
+            background: var(--gold-light);
+            color: var(--gold-dark);
+            transform: translateY(-2px);
+        }
+        .icon-btn.active {
+            background: var(--gold);
+            color: white;
+        }
+        .info-bar {
+            display: flex;
+            gap: 12px;
+            padding: 12px 20px;
+            overflow-x: auto;
+            flex-wrap: wrap;
+            justify-content: center;
+            background: var(--glass-bg);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border);
+        }
+        .info-pill {
+            background: var(--bg-card);
+            border-radius: 60px;
+            padding: 6px 16px;
+            font-size: 0.7rem;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Cinzel', serif;
+            font-weight: 500;
+            box-shadow: var(--shadow-sm);
+        }
+        .info-pill .status-led {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 6px;
+        }
+        .status-led.green {
+            background-color: #2ecc71;
+            box-shadow: 0 0 4px #2ecc71;
+        }
+        .status-led.red {
+            background-color: #e74c3c;
+            box-shadow: 0 0 4px #e74c3c;
+        }
+        .bottom-nav {
+            position: fixed;
+            bottom: 16px;
+            left: 16px;
+            right: 16px;
+            z-index: 100;
+            background: var(--glass-bg);
+            backdrop-filter: blur(24px);
+            border-radius: 60px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            padding: 6px 8px;
+            gap: 4px;
+        }
+        .bottom-nav button {
+            background: none;
+            border: none;
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            color: var(--text-soft);
+            cursor: pointer;
+            font-family: 'Cinzel', serif;
+            font-size: 9px;
+            padding: 6px 8px;
+            border-radius: 40px;
+            transition: var(--transition);
+            flex-shrink: 0;
+        }
+        .bottom-nav button.active {
+            color: var(--gold-dark);
+            background: var(--gold-light);
+            transform: translateY(-2px);
+        }
+        .bottom-nav button .nav-icon {
+            font-size: 1.3rem;
+            transition: var(--transition);
+        }
+        .bottom-nav button.active .nav-icon {
+            transform: scale(1.05);
+        }
+        @media (max-width: 480px) {
+            .bottom-nav button .nav-icon {
+                font-size: 1.2rem;
+            }
+            .bottom-nav button {
+                font-size: 8px;
+                padding: 4px 6px;
+            }
+        }
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(85px, 1fr));
+            gap: 14px;
+            padding: 8px;
+        }
+        @media (min-width: 768px) {
+            .card-grid {
+                grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
+                gap: 18px;
+                padding: 12px;
+            }
+        }
+        .tarot-card {
+            aspect-ratio: 5 / 8.8;
+            background: var(--bg-card);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            animation: cardReveal 0.4s ease backwards;
+        }
+        .tarot-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--gold);
+        }
+        .tarot-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .card-badge {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.85));
+            padding: 18px 6px 8px;
+            text-align: center;
+            font-size: 9px;
+            font-weight: bold;
+            color: white;
+            font-family: 'Cinzel', serif;
+        }
+        .rune-card {
+            aspect-ratio: 5 / 6;
+            background: var(--bg-card);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            animation: cardReveal 0.4s ease backwards;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+            text-align: center;
+        }
+        .rune-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--gold);
+        }
+        .rune-glyph {
+            font-size: 3rem;
+            font-weight: bold;
+            font-family: 'Segoe UI', 'Noto Sans Runic', monospace;
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 8px;
+        }
+        .rune-name {
+            font-size: 0.7rem;
+            font-weight: bold;
+            font-family: 'Cinzel', serif;
+            color: var(--gold-dark);
+        }
+        .selected-dot {
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            width: 20px;
+            height: 20px;
+            background: var(--gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            color: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        .btn {
+            border: none;
+            border-radius: 60px;
+            padding: 10px 22px;
+            font-family: 'Cinzel', serif;
+            font-weight: 500;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 44px;
+            backdrop-filter: blur(4px);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: #fff;
+            box-shadow: 0 6px 14px rgba(201, 160, 61, 0.3);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(201, 160, 61, 0.4);
+        }
+        .btn-secondary {
+            background: var(--bg-card);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        .btn-secondary:hover {
+            background: var(--accent);
+            transform: translateY(-1px);
+        }
+        .btn-sm {
+            padding: 6px 14px;
+            font-size: 0.7rem;
+            min-height: 34px;
+        }
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin: 12px 0;
+        }
+        .chip-scroll {
+            display: flex;
+            gap: 8px;
+            padding: 8px 0;
+            overflow-x: auto;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .chip {
+            padding: 6px 14px;
+            border-radius: 40px;
+            font-family: 'Cinzel', serif;
+            font-size: 0.7rem;
+            cursor: pointer;
+            background: var(--bg-card);
+            color: var(--text-soft);
+            border: 1px solid var(--border);
+            white-space: nowrap;
+            transition: 0.2s;
+        }
+        .chip.active {
+            background: var(--gold);
+            color: white;
+            border-color: var(--gold-dark);
+        }
+        .spread-zone {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 16px;
+            padding: 20px;
+            min-height: 220px;
+            border-radius: var(--radius);
+            background: var(--glass-bg);
+            backdrop-filter: blur(8px);
+            margin: 12px 0;
+            border: 2px dashed var(--border);
+            transition: 0.3s;
+        }
+        .spread-zone.has-cards {
+            border-style: solid;
+            border-color: var(--gold);
+        }
+        .spread-slot {
+            width: 100px;
+            min-height: 190px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-card);
+            border: 2px dashed var(--border);
+            cursor: pointer;
+            position: relative;
+            box-shadow: var(--shadow-sm);
+            padding: 10px;
+        }
+        .spread-slot.filled {
+            border-style: solid;
+            border-color: var(--gold);
+        }
+        .spread-slot img {
+            width: 75px;
+            height: 132px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+        .slot-remove {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            width: 24px;
+            height: 24px;
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        .day-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            margin: 20px auto;
+            box-shadow: var(--shadow);
+            text-align: center;
+            border: 1px solid var(--border);
+            max-width: 450px;
+        }
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(12px);
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.2s;
+            padding: 20px;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            background: var(--glass-bg);
+            backdrop-filter: blur(24px);
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 550px;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 24px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border);
+        }
+        .close-btn {
+            float: right;
+            background: var(--btn-secondary-bg);
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--text);
+            color: var(--bg);
+            padding: 10px 20px;
+            border-radius: 60px;
+            font-size: 0.8rem;
+            z-index: 1100;
+            opacity: 0;
+            transition: 0.3s;
+            pointer-events: none;
+            white-space: nowrap;
+            font-family: 'Cinzel', serif;
+            box-shadow: var(--shadow-lg);
+        }
+        .toast.show {
+            opacity: 1;
+        }
+        .inner-section {
+            background: var(--glass-bg);
+            backdrop-filter: blur(8px);
+            border-radius: var(--radius);
+            padding: 18px;
+            margin: 12px 0;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+        }
+        .rune-detail-glyph {
+            font-size: 5rem;
+            text-align: center;
+            margin: 16px 0;
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .modal-selector-cartas {
+            max-height: 60vh;
+            overflow-y: auto;
+            margin-top: 12px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 8px;
+        }
+        .historial-cartas {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin: 8px 0;
+        }
+        .saved-card-large {
+            display: inline-block;
+            width: 100px;
+            margin: 8px;
+            text-align: center;
+            vertical-align: top;
+        }
+        .saved-card-large img {
+            width: 80px;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 12px;
+            border: 1px solid var(--gold);
+        }
+        .numero-input-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+        .numero-resultado {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 16px;
+            margin-top: 16px;
+            border-left: 4px solid var(--gold);
+        }
+        .numero-tabla {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin: 12px 0;
+        }
+        .numero-card {
+            background: var(--glass-bg);
+            border-radius: var(--radius-sm);
+            padding: 14px;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+        .numero-card .numero-valor {
+            font-size: 2.2rem;
+            font-weight: bold;
+            font-family: 'Cinzel', serif;
+            color: var(--gold);
+        }
+        .voice-btn {
+            background: var(--accent);
+            border: 1px solid var(--border);
+            border-radius: 30px;
+            padding: 10px 16px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: 0.2s;
+        }
+        .voice-btn.listening {
+            background: var(--danger);
+            color: white;
+            animation: pulseGlow 1.5s infinite;
+        }
+        .voice-selector {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 30px;
+            padding: 8px 12px;
+            font-family: inherit;
+            margin: 5px 0;
+            width: 100%;
+        }
+        .config-slider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin: 12px 0;
+        }
+        .libre-slot-actions {
+            display: flex;
+            gap: 6px;
+            margin-top: 4px;
+        }
+        .slot-pos {
+            font-weight: bold;
+            font-size: 0.7rem;
+            background: var(--glass-bg);
+            padding: 2px 6px;
+            border-radius: 20px;
+            margin-top: -10px;
+            margin-bottom: 6px;
+            cursor: pointer;
+        }
+        .emotion-row button {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 60px;
+            padding: 6px 14px;
+            font-family: inherit;
+            cursor: pointer;
+            display: inline-flex;
+            gap: 4px;
+            align-items: center;
+        }
+        canvas {
+            max-width: 100%;
+            height: auto;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+        }
     </style>
 </head>
 <body>
@@ -104,7 +752,7 @@
 </header>
 <div class="info-bar">
     <div class="info-pill" id="moon-badge">🌙 Cargando...</div>
-    <div class="info-pill" id="streak-badge" style="display:none">🔥 <span id="streak-count">0</span> días</div>
+    <div class="info-pill" id="streak-badge" style="display: none">🔥 <span id="streak-count">0</span> días</div>
     <div class="info-pill" id="ai-status-pill">🤖 IA <span id="ai-led" class="status-led"></span> <span id="ai-status-text">Verificando...</span></div>
 </div>
 
@@ -120,8 +768,33 @@
 </nav>
 
 <!-- VISTAS -->
-<div id="view-mazo" class="view"><div class="search-box"><input id="search-input" placeholder="🔍 Buscar carta..."></div><div class="chip-scroll" id="chip-container"></div><div id="mazo-grid" class="card-grid"></div></div>
-<div id="view-hoy" class="view"><div id="carta-dia-container"></div><div class="inner-section"><p style="text-align:center">¿Cómo te sientes hoy?</p><div class="emotion-row" style="display:flex; gap:8px; flex-wrap:wrap; justify-content:center"><button class="emotion-btn" onclick="registrarEmocion('😊 Feliz')">😊<span>Feliz</span></button><button class="emotion-btn" onclick="registrarEmocion('😢 Triste')">😢<span>Triste</span></button><button class="emotion-btn" onclick="registrarEmocion('😰 Ansioso')">😰<span>Ansioso</span></button><button class="emotion-btn" onclick="registrarEmocion('😌 En paz')">😌<span>En paz</span></button><button class="emotion-btn" onclick="registrarEmocion('🤔 Reflexivo')">🤔<span>Reflexivo</span></button><button class="emotion-btn" onclick="registrarEmocion('🔥 Energético')">🔥<span>Energético</span></button></div><p id="emocion-registrada" style="font-size:0.7rem; text-align:center; margin-top:8px"></p></div><div class="btn-group"><button class="btn btn-primary" onclick="generarReflexionDiaria()">✨ Reflexión IA</button><button class="btn btn-secondary" onclick="escucharReflexionDiaria()">🔊 Escuchar</button><button class="btn btn-secondary btn-sm" onclick="exportarCartaDiaPDF()">📄 PDF</button><button class="btn btn-secondary btn-sm" onclick="compartirCartaDia()">📸 Imagen</button></div><div id="daily-ai-text" class="inner-section" style="display:none; white-space:pre-wrap"></div></div>
+<div id="view-mazo" class="view">
+    <div class="search-box"><input id="search-input" placeholder="🔍 Buscar carta..."></div>
+    <div class="chip-scroll" id="chip-container"></div>
+    <div id="mazo-grid" class="card-grid"></div>
+</div>
+<div id="view-hoy" class="view">
+    <div id="carta-dia-container"></div>
+    <div class="inner-section">
+        <p style="text-align:center">¿Cómo te sientes hoy?</p>
+        <div class="emotion-row" style="display:flex; gap:8px; flex-wrap:wrap; justify-content:center">
+            <button class="emotion-btn" onclick="registrarEmocion('😊 Feliz')">😊<span>Feliz</span></button>
+            <button class="emotion-btn" onclick="registrarEmocion('😢 Triste')">😢<span>Triste</span></button>
+            <button class="emotion-btn" onclick="registrarEmocion('😰 Ansioso')">😰<span>Ansioso</span></button>
+            <button class="emotion-btn" onclick="registrarEmocion('😌 En paz')">😌<span>En paz</span></button>
+            <button class="emotion-btn" onclick="registrarEmocion('🤔 Reflexivo')">🤔<span>Reflexivo</span></button>
+            <button class="emotion-btn" onclick="registrarEmocion('🔥 Energético')">🔥<span>Energético</span></button>
+        </div>
+        <p id="emocion-registrada" style="font-size:0.7rem; text-align:center; margin-top:8px"></p>
+    </div>
+    <div class="btn-group">
+        <button class="btn btn-primary" onclick="generarReflexionDiaria()">✨ Reflexión IA</button>
+        <button class="btn btn-secondary" onclick="escucharReflexionDiaria()">🔊 Escuchar</button>
+        <button class="btn btn-secondary btn-sm" onclick="exportarCartaDiaPDF()">📄 PDF</button>
+        <button class="btn btn-secondary btn-sm" onclick="compartirCartaDia()">📸 Imagen</button>
+    </div>
+    <div id="daily-ai-text" class="inner-section" style="display:none; white-space:pre-wrap"></div>
+</div>
 <div id="view-tirada" class="view">
     <div class="btn-group"><button class="btn btn-secondary btn-sm gender-btn active" data-gender="neutro">✨ Neutro</button><button class="btn btn-secondary btn-sm gender-btn" data-gender="hombre">👨 Hombre</button><button class="btn btn-secondary btn-sm gender-btn" data-gender="mujer">👩 Mujer</button></div>
     <div class="chip-scroll" id="spread-selector"></div>
@@ -141,21 +814,56 @@
     <div class="btn-group"><button class="btn btn-primary" onclick="generarTiradaRunas()">ᚠ Generar tirada</button><button class="btn btn-primary" onclick="interpretarRunasConIA()">✨ Interpretar con IA</button><button class="btn btn-secondary" onclick="escucharLecturaRunas()">🔊 Escuchar</button></div>
     <textarea id="nota-runas" rows="2" placeholder="✏️ Notas personales sobre la tirada..." style="width:100%"></textarea>
     <div class="inner-section"><div id="runas-ai-text" style="font-size:0.85rem; white-space:pre-wrap">Aquí aparecerá la interpretación de las runas</div></div>
-    <div class="btn-group"><button class="btn btn-primary" onclick="guardarTiradaRunas()">💾 Guardar tirada</button><button class="btn btn-secondary btn-sm" onclick="compartirTiradaRunas()">📸 Imagen</button></div>
+    <div class="btn-group"><button class="btn btn-primary" onclick="guardarTiradaRunas()">💾 Guardar tirada</button><button class="btn btn-secondary btn-sm" onclick="compartirTiradaRunas()">📸 Imagen</button><button class="btn btn-secondary btn-sm" onclick="exportarTiradaRunasPDF()">📄 PDF</button></div>
     <h3 style="margin-top:20px;">✧ Mazo de Runas (Elder Futhark) ✧</h3>
     <div class="search-box"><input id="runa-search" placeholder="🔍 Buscar runa..."></div>
     <div id="runas-grid" class="card-grid" style="grid-template-columns:repeat(auto-fill,minmax(90px,1fr));"></div>
 </div>
-<div id="view-suenos" class="view"><div style="display:flex; gap:8px; margin-bottom:8px"><textarea id="dream-text" rows="3" placeholder="Describe tu sueño..." style="flex:1"></textarea><button class="voice-btn" onclick="iniciarDictado('dream-text',this)">🎤</button></div><div style="display:flex; gap:8px; margin:8px 0"><select id="dream-mood"><option value="">😶 Estado de ánimo</option><option>😊 Alegre</option><option>😢 Triste</option><option>😰 Ansioso</option></select><select id="dream-card"><option value="">Asociar carta</option></select></div><div class="btn-group"><button class="btn btn-primary" onclick="guardarSueno()">💾 Guardar</button><button class="btn btn-secondary" onclick="interpretarSueno()">✨ Interpretar</button><button class="btn btn-secondary btn-sm" onclick="compartirSueno()">📸 Imagen</button><button class="btn btn-secondary btn-sm" onclick="exportarSuenoPDF()">📄 PDF</button><button class="btn btn-secondary btn-sm" onclick="escucharSuenoIA()">🔊</button></div><div id="dream-ai-text" class="inner-section" style="display:none; white-space:pre-wrap"></div><input type="text" id="dream-search" placeholder="🔍 Buscar en sueños..." onkeyup="filtrarSuenos()"><div id="dreams-list"></div><canvas id="dreamStatsChart" width="300" height="150" style="max-width:100%; margin-top:12px"></canvas></div>
+<div id="view-suenos" class="view">
+    <div style="display:flex; gap:8px; margin-bottom:8px"><textarea id="dream-text" rows="3" placeholder="Describe tu sueño..." style="flex:1"></textarea><button class="voice-btn" onclick="iniciarDictado('dream-text',this)">🎤</button></div>
+    <div style="display:flex; gap:8px; margin:8px 0"><select id="dream-mood"><option value="">😶 Estado de ánimo</option><option>😊 Alegre</option><option>😢 Triste</option><option>😰 Ansioso</option></select><select id="dream-card"><option value="">Asociar carta</option></select></div>
+    <div class="btn-group"><button class="btn btn-primary" onclick="guardarSueno()">💾 Guardar</button><button class="btn btn-secondary" onclick="interpretarSueno()">✨ Interpretar</button><button class="btn btn-secondary btn-sm" onclick="compartirSueno()">📸 Imagen</button><button class="btn btn-secondary btn-sm" onclick="exportarSuenoPDF()">📄 PDF</button><button class="btn btn-secondary btn-sm" onclick="escucharSuenoIA()">🔊</button></div>
+    <div id="dream-ai-text" class="inner-section" style="display:none; white-space:pre-wrap"></div>
+    <input type="text" id="dream-search" placeholder="🔍 Buscar en sueños..." onkeyup="filtrarSuenos()">
+    <div id="dreams-list"></div>
+    <div class="chart-container"><canvas id="dreamStatsChart" width="400" height="250" style="max-width:100%; height:auto; margin-top:12px"></canvas></div>
+</div>
 <div id="view-luna" class="view"><div id="lunar-info" class="inner-section"></div><div id="lunar-detail"></div><div id="lunar-calendar"></div><p id="lunar-phase-today" style="text-align:center; font-weight:bold; margin-top:12px"></p></div>
-<div id="view-numerologia" class="view"><div class="inner-section"><h3>🔢 Numerología Personal Mejorada</h3><p>Ingresa tu fecha de nacimiento y nombre completo para descubrir tus números clave. La interpretación detallada se genera con IA.</p><div class="numero-input-group"><input type="date" id="fecha-nacimiento" placeholder="Fecha de nacimiento"><input type="text" id="nombre-completo" placeholder="Nombre completo (opcional pero recomendado)"><button class="btn btn-primary btn-sm" onclick="calcularNumerologia()">🔢 Calcular</button><button class="btn btn-secondary btn-sm" onclick="interpretarNumerologiaIA()">✨ Interpretación IA</button></div><div id="numerologia-resultados" style="margin-top: 16px;"></div><div id="numerologia-ia-text" class="inner-section" style="display:none; white-space:pre-wrap"></div><div class="btn-group"><button class="btn btn-secondary btn-sm" onclick="escucharNumerologiaIA()">🔊 Escuchar</button></div></div></div>
-<div id="view-historial" class="view"><div class="btn-group"><button class="btn btn-secondary btn-sm" onclick="exportAllData()">⬇️ Backup local</button><label class="btn btn-secondary btn-sm" style="cursor:pointer">⬆️ Importar local<input type="file" id="import-file" accept=".json" style="display:none"></label><button class="btn btn-secondary btn-sm" onclick="exportHistorialCSV()">📊 CSV</button><button class="btn btn-secondary btn-sm" onclick="clearAllData()" style="background:var(--danger);color:white">🗑️</button></div><input type="date" id="history-date-filter" onchange="renderDiario()"><div id="historial-container"></div></div>
+<div id="view-numerologia" class="view">
+    <div class="inner-section">
+        <h3>🔢 Numerología Personal Mejorada</h3>
+        <p>Ingresa tu fecha de nacimiento y nombre completo para descubrir tus números clave. La interpretación detallada se genera con IA.</p>
+        <div class="numero-input-group">
+            <input type="date" id="fecha-nacimiento" placeholder="Fecha de nacimiento">
+            <input type="text" id="nombre-completo" placeholder="Nombre completo (opcional pero recomendado)">
+            <button class="btn btn-primary btn-sm" onclick="calcularNumerologia()">🔢 Calcular</button>
+            <button class="btn btn-secondary btn-sm" onclick="interpretarNumerologiaIA()">✨ Interpretación IA</button>
+        </div>
+        <div id="numerologia-resultados" style="margin-top: 16px;"></div>
+        <div id="numerologia-ia-text" class="inner-section" style="display:none; white-space:pre-wrap"></div>
+        <div class="btn-group">
+            <button class="btn btn-secondary btn-sm" onclick="escucharNumerologiaIA()">🔊 Escuchar</button>
+            <button class="btn btn-secondary btn-sm" onclick="exportarNumerologiaImagen()">📸 Imagen</button>
+            <button class="btn btn-secondary btn-sm" onclick="exportarNumerologiaPDF()">📄 PDF</button>
+        </div>
+    </div>
+</div>
+<div id="view-historial" class="view">
+    <div class="btn-group">
+        <button class="btn btn-secondary btn-sm" onclick="exportAllData()">⬇️ Backup local</button>
+        <label class="btn btn-secondary btn-sm" style="cursor:pointer">⬆️ Importar local<input type="file" id="import-file" accept=".json" style="display:none"></label>
+        <button class="btn btn-secondary btn-sm" onclick="exportHistorialCSV()">📊 CSV</button>
+        <button class="btn btn-secondary btn-sm" onclick="clearAllData()" style="background:var(--danger);color:white">🗑️</button>
+    </div>
+    <input type="date" id="history-date-filter" onchange="renderDiario()">
+    <div id="historial-container"></div>
+</div>
 
 <!-- MODALES -->
 <div id="modal-carta" class="modal-overlay"><div class="modal-content"><button class="close-btn" onclick="cerrarModal()">✕</button><h2 id="mTitle"></h2><p id="mPos" style="text-align:center;font-weight:bold"></p><div style="width:140px;height:246px;margin:8px auto;border-radius:12px;overflow:hidden;box-shadow:var(--shadow-lg)"><img id="mImg" src="" style="width:100%;height:100%;object-fit:cover;transition:transform 0.4s"></div><p id="sombra-text" style="font-size:0.75rem;color:var(--gold-dark);text-align:center;font-style:italic"></p><div class="btn-group"><button class="btn btn-secondary btn-sm" onclick="toggleInvertirEnModal()">🔄 Invertir</button><button class="btn btn-secondary btn-sm" onclick="borrarNotaCarta()">🗑️ Nota</button></div><div id="meaning-text" class="inner-section"></div><div class="inner-section"><div id="single-ai-text" style="font-size:0.85rem;white-space:pre-wrap;max-height:30vh;overflow-y:auto"></div><div id="single-ai-loading" style="display:none;text-align:center">🌀 Analizando...</div><div class="btn-group"><button class="btn btn-primary btn-sm" onclick="generarLecturaCartaIA()">✨ Interpretar</button><button class="btn btn-secondary btn-sm" onclick="escucharLecturaCartaIA()">🔊</button><button class="btn btn-secondary btn-sm" onclick="escucharSignificadoModal()">🔊 Def.</button></div></div><textarea id="mEditDesc" rows="4" placeholder="Notas personales..." style="width:100%"></textarea><div class="btn-group"><button id="btn-select-personal" class="btn btn-secondary btn-sm">💫 Seleccionar</button><button class="btn btn-primary btn-sm" onclick="guardarNotaCarta()">💾 Guardar nota</button></div></div></div>
 <div id="modal-runa" class="modal-overlay"><div class="modal-content"><button class="close-btn" onclick="cerrarModalRuna()">✕</button><h2 id="runaModalTitle"></h2><div id="runaModalGlyph" class="rune-detail-glyph"></div><p id="runaModalPos"></p><div id="runaMeaning" class="inner-section"></div><div class="inner-section"><div id="runaSingleAI" style="white-space:pre-wrap"></div><div class="btn-group"><button class="btn btn-primary btn-sm" onclick="interpretarRunaIA()">✨ Interpretar IA</button><button class="btn btn-secondary btn-sm" onclick="escucharRunaIA()">🔊 Escuchar</button></div></div><textarea id="runaNotaPersonal" rows="3" placeholder="Notas personales sobre esta runa..."></textarea><div class="btn-group"><button class="btn btn-primary btn-sm" onclick="guardarNotaRuna()">💾 Guardar nota</button></div></div></div>
 <div id="modal-selector-cartas" class="modal-overlay"><div class="modal-content"><button class="close-btn" onclick="cerrarModalSelector()">✕</button><h2>Selecciona una carta</h2><div class="search-box"><input id="selector-search" placeholder="🔍 Buscar carta..."></div><div class="chip-scroll" id="selector-chip-container"></div><div id="selector-grid" class="modal-selector-cartas"></div><div class="btn-group"><button class="btn btn-secondary" onclick="cerrarModalSelector()">Cancelar</button></div></div></div>
-<div id="modal-tirada-guardada" class="modal-overlay"><div class="modal-content"><button class="close-btn" onclick="cerrarTiradaGuardada()">✕</button><h2>📖 Tirada guardada</h2><div id="tirada-guardada-contenido"></div><div class="btn-group"><button class="btn btn-secondary btn-sm" onclick="exportarTiradaGuardadaPDF()">📄 PDF</button></div></div></div>
+<div id="modal-tirada-guardada" class="modal-overlay"><div class="modal-content"><button class="close-btn" onclick="cerrarTiradaGuardada()">✕</button><h2>📖 Tirada guardada</h2><div id="tirada-guardada-contenido"></div><div class="btn-group"><button class="btn btn-secondary btn-sm" onclick="exportarTiradaGuardadaPDF()">📄 PDF</button><button class="btn btn-secondary btn-sm" onclick="exportarTiradaGuardadaImagen()">📸 Imagen</button></div></div></div>
 <div id="modal-config" class="modal-overlay"><div class="modal-content"><button class="close-btn" onclick="cerrarConfigModal()">✕</button><h2>⚙️ Configuración</h2><div><select id="theme-select"><option value="light">☀️ Claro</option><option value="dark">🌙 Oscuro</option><option value="bosque">🌿 Bosque</option><option value="oceanico">🌊 Oceánico</option><option value="mistico">🔮 Místico</option><option value="calido">🔥 Cálido</option></select><select id="tapete-select"><option value="ninguno">Fondo: Ninguno</option><option value="verde">Verde</option><option value="azul">Azul</option><option value="purpura">Púrpura</option><option value="dorado">Dorado</option></select><div class="config-slider"><label>🗣️ Velocidad voz: <span id="speechRateValue">0.9</span></label><input type="range" id="speechRateSlider" min="0.7" max="1.3" step="0.05" value="0.9"></div><div class="config-slider"><label>🎵 Tono voz: <span id="speechPitchValue">1.0</span></label><input type="range" id="speechPitchSlider" min="0.5" max="1.5" step="0.05" value="1.0"></div><div class="config-slider"><label>🗣️ Seleccionar voz:</label><select id="voiceSelect" class="voice-selector"></select></div><div class="config-slider"><label>📏 Tamaño letra:</label><select id="fontSizeSelect"><option value="small">Pequeño</option><option value="normal" selected>Normal</option><option value="large">Grande</option></select></div><div class="config-slider"><label>✨ Sombras en cartas:</label><input type="checkbox" id="cardShadowsCheckbox" checked></div><div class="config-slider"><label>⏱️ Backup automático (minutos):</label><select id="autoBackupIntervalSelect"><option value="0">Desactivado</option><option value="15">15 min</option><option value="30">30 min</option><option value="60">60 min</option><option value="120">120 min</option></select></div></div></div></div>
 <div id="modal-manual" class="modal-overlay"><div class="modal-content"><button class="close-btn" onclick="cerrarManual()">✕</button><h2>📘 Manual de Susana Tarot y Runas</h2><div class="inner-section manual-content"><h3>🔮 Bienvenida</h3><p>Susana Tarot ahora incluye RUNAS NÓRDICAS (Elder Futhark) con glifos SVG, tiradas e interpretación con IA.</p><h3>ᚠ Runas</h3><p>24 símbolos mágicos. Cada runa tiene significado derecho e invertido. Puedes hacer tiradas de 1, 3 o 5 runas, guardarlas y recibir análisis profundo de IA.</p><h3>🃏 Mazo</h3><p>78 cartas de tarot completas con imágenes reales.</p><h3>✨ Carta/Runa del día</h3><p>Inspiración diaria.</p><h3>🔮 Tiradas de Tarot y Runas</h3><p>Múltiples esqueletos y libertad total.</p><h3>🔢 Numerología</h3><p>Números de vida, expresión, año personal, etc.</p><h3>🎤 Voz mejorada</h3><p>Puedes elegir la voz, velocidad y tono. Haz clic en cualquier botón 🔊 para escuchar.</p><p style="margin-top:16px; text-align:center"><strong>Que los dioses y los arcanos te guíen. 🔮</strong></p></div></div></div>
 <div id="tapete-extendido" class="modal-overlay" style="background:rgba(0,0,0,0.8); backdrop-filter:blur(12px);"><div class="modal-content" style="max-width:90%"><button class="close-btn" onclick="cerrarTapeteExtendido()">✕</button><h2>🔍 Tirada expandida</h2><div id="tapete-cards-content" style="display:flex; flex-wrap:wrap; gap:16px; justify-content:center"></div><div class="btn-group"><button class="btn btn-primary" onclick="generarLecturaIA(); cerrarTapeteExtendido()">✨ Interpretar</button></div></div></div>
@@ -253,8 +961,42 @@ function iniciarDictado(idElemento, btn) {
     recognition.start();
 }
 
-// ==================== TAROT Y RUNAS (CÓDIGO COMPLETO) ====================
-// Runas Nórdicas
+// ==================== UTILIDADES DE EXPORTACIÓN ====================
+async function exportarElementoAImagen(elemento, nombreArchivo = 'captura') {
+    if (!elemento) return;
+    try {
+        const canvas = await html2canvas(elemento, { scale: 2, backgroundColor: '#f8f5f0' });
+        const link = document.createElement('a');
+        link.download = `${nombreArchivo}.png`;
+        link.href = canvas.toDataURL();
+        link.click();
+        showToast('📸 Imagen guardada');
+    } catch (e) {
+        console.error(e);
+        showToast('Error al generar imagen');
+    }
+}
+
+async function exportarElementoAPDF(elemento, titulo = 'Documento') {
+    if (!elemento) return;
+    try {
+        const canvas = await html2canvas(elemento, { scale: 2, backgroundColor: '#f8f5f0' });
+        const imgData = canvas.toDataURL('image/png');
+        const { jsPDF } = window.jspdf || await import('https://cdn.skypack.dev/jspdf');
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const imgProps = pdf.getImageProperties(imgData);
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+        pdf.save(`${titulo}.pdf`);
+        showToast('📄 PDF guardado');
+    } catch (e) {
+        console.error(e);
+        showToast('Error al generar PDF');
+    }
+}
+
+// ==================== RUNAS NÓRDICAS ====================
 const runasData = [
     { id: "fehu", glyph: "ᚠ", nombre: "Fehu", significado: "Riqueza, ganado, prosperidad material. Éxito financiero.", significadoInv: "Pérdida, fracaso, avaricia. Cuidado con lo material.", sombra: "Apego al dinero." },
     { id: "uruz", glyph: "ᚢ", nombre: "Uruz", significado: "Fuerza, salud, vitalidad, cambios positivos.", significadoInv: "Debilidad, falta de motivación, enfermedad.", sombra: "Fuerza mal dirigida." },
@@ -377,10 +1119,38 @@ function guardarTiradaRunas() {
     showToast('💾 Tirada de runas guardada');
     renderDiario();
 }
-function compartirTiradaRunas() { if(!currentSpreadRunas.length) return; const div = document.createElement('div'); div.style.background='white'; div.style.padding='20px'; div.innerHTML = `<h2>ᚠ Tirada de Runas</h2>${currentSpreadRunas.map(r=>`<p><strong>${r.posicion}</strong>: ${r.runa.nombre} (${r.invertida?'Inv':'Der'})</p>`).join('')}<p>${new Date().toLocaleDateString()}</p>`; document.body.appendChild(div); html2canvas(div,{scale:2}).then(canvas=>{const a=document.createElement('a'); a.download='runas.png'; a.href=canvas.toDataURL(); a.click(); document.body.removeChild(div);}); }
+function compartirTiradaRunas() { 
+    if(!currentSpreadRunas.length) return; 
+    const div = document.createElement('div'); 
+    div.style.background = 'white'; 
+    div.style.padding = '20px'; 
+    div.innerHTML = `<h2>ᚠ Tirada de Runas</h2>${currentSpreadRunas.map(r=>`<p><strong>${r.posicion}</strong>: ${r.runa.nombre} (${r.invertida?'Inv':'Der'})</p>`).join('')}<p>${new Date().toLocaleDateString()}</p>`; 
+    document.body.appendChild(div); 
+    html2canvas(div,{scale:2}).then(canvas=>{const a=document.createElement('a'); a.download='runas.png'; a.href=canvas.toDataURL(); a.click(); document.body.removeChild(div);}); 
+}
+function exportarTiradaRunasPDF() {
+    if(!currentSpreadRunas.length) return;
+    const div = document.createElement('div');
+    div.style.background = 'white';
+    div.style.padding = '20px';
+    div.innerHTML = `<h2>ᚠ Tirada de Runas</h2>${currentSpreadRunas.map(r=>`<p><strong>${r.posicion}</strong>: ${r.runa.nombre} (${r.invertida?'Inv':'Der'})</p>`).join('')}<p>${new Date().toLocaleDateString()}</p><p>${runaReadingText || ''}</p>`;
+    document.body.appendChild(div);
+    html2canvas(div, { scale: 2 }).then(canvas => {
+        const imgData = canvas.toDataURL('image/png');
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const imgProps = pdf.getImageProperties(imgData);
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+        pdf.save('tirada_runas.pdf');
+        document.body.removeChild(div);
+        showToast('📄 PDF guardado');
+    }).catch(() => { document.body.removeChild(div); showToast('Error'); });
+}
 function runaDelDia() { const idx = Math.floor(Math.random() * runasData.length); const inv = Math.random() < 0.25; abrirRuna(idx, inv); showToast(`🌞 Runa del día: ${runasData[idx].nombre}`); }
 
-// Tarot
+// ==================== TAROT Y FUNCIONES GENERALES ====================
 const IMG_BASE = "https://www.sacred-texts.com/tarot/pkt/img/";
 const ASES_MAP = {'wa1':'waac.jpg','cu1':'cuac.jpg','sw1':'swac.jpg','pe1':'peac.jpg'};
 function getCardImageUrl(card) {
@@ -452,6 +1222,7 @@ let streakData = JSON.parse(localStorage.getItem('daily_streak')||'{"count":0,"l
 let dailyCardData = null;
 let pendingLibreSlotIndex = null;
 let selectorCallback = null;
+let dreamChart = null;
 
 function showToast(msg) { const t=document.getElementById('toast'); t.innerText=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2500); }
 function loadNotas() { const saved=localStorage.getItem('tarot_notas'); if(saved) try{JSON.parse(saved).forEach(n=>{const c=deck.find(x=>x.id===n.id);if(c)c.nota=n.nota;});}catch(e){} }
@@ -607,7 +1378,7 @@ function editDream(idx){ const newText=prompt('Edita tu sueño:',dreamsData[idx]
 function deleteDream(idx){ dreamsData.splice(idx,1); saveDreams(); }
 function saveDreams(){ localStorage.setItem('tarot_suenos',JSON.stringify(dreamsData)); cargarSuenos(); }
 function guardarSueno(){ const t=document.getElementById('dream-text').value.trim(); if(!t){ showToast('✏️ Escribe tu sueño'); return; } const mood=document.getElementById('dream-mood').value; const cardId=document.getElementById('dream-card').value; const lunarPhase=getLunarPhase(); const aiText=document.getElementById('dream-ai-text').innerText; dreamsData.unshift({fecha:new Date().toLocaleString(),texto:t,emocion:mood,cartaAsociada:cardId,lunarPhase:lunarPhase,interpretacion:aiText}); saveDreams(); document.getElementById('dream-text').value=''; document.getElementById('dream-ai-text').style.display='none'; showToast('🌙 Sueño guardado'); }
-function actualizarGraficoSuenos(){ const emociones={}; dreamsData.forEach(d=>{ if(d.emocion) emociones[d.emocion]=(emociones[d.emocion]||0)+1; }); const ctx=document.getElementById('dreamStatsChart')?.getContext('2d'); if(ctx && Object.keys(emociones).length){ new Chart(ctx,{type:'bar',data:{labels:Object.keys(emociones),datasets:[{label:'Frecuencia',data:Object.values(emociones),backgroundColor:'var(--gold)'}]},options:{responsive:true,maintainAspectRatio:true}}); } }
+function actualizarGraficoSuenos(){ const emociones={}; dreamsData.forEach(d=>{ if(d.emocion) emociones[d.emocion]=(emociones[d.emocion]||0)+1; }); const ctx=document.getElementById('dreamStatsChart')?.getContext('2d'); if(ctx && Object.keys(emociones).length){ if(dreamChart) dreamChart.destroy(); dreamChart = new Chart(ctx,{type:'bar',data:{labels:Object.keys(emociones),datasets:[{label:'Frecuencia',data:Object.values(emociones),backgroundColor:'var(--gold)'}]},options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{position:'top'},tooltip:{bodyFont:{size:12}}}}}); } }
 function llenarSelectCartas(){ const sel=document.getElementById('dream-card'); if(sel){ sel.innerHTML='<option value="">Asociar carta</option>'; deck.forEach(c=>{ const opt=document.createElement('option'); opt.value=c.id; opt.textContent=c.name; sel.appendChild(opt); }); } }
 function getLunarPhase() { return ['🌑 Nueva','🌒 Creciente','🌓 Cuarto Creciente','🌔 Gibosa','🌕 Llena','🌖 Gibosa Menguante','🌗 Cuarto Menguante','🌘 Menguante'][Math.floor((new Date().getDate()/29.53)*8)%8]; }
 function getSignoLunar() { return ['♈ Aries','♉ Tauro','♊ Géminis','♋ Cáncer','♌ Leo','♍ Virgo','♎ Libra','♏ Escorpio','♐ Sagitario','♑ Capricornio','♒ Acuario','♓ Piscis'][Math.floor((new Date().getDate()/2.5)%12)]; }
@@ -620,6 +1391,7 @@ function renderDiario() { let tiradas = tiradasData; const df = document.getElem
 function abrirTiradaGuardada(ts) { const t = tiradasData.find(x => x.ts == ts); if (!t) return; tiradaGuardadaActual = t; let h = `<p><strong>${t.tipo}</strong> - ${t.fecha}</p>`; if (t.nota) h += `<p><em>${t.nota}</em></p>`; h += `<div style="display:flex; flex-wrap:wrap; justify-content:center; gap:12px; margin:16px 0;">`; if (t.cartas && t.cartas.length) { t.cartas.forEach(c => { const card = deck.find(x => x.id === c.id); if (card) { h += `<div class="saved-card-large"><img src="${getCardImage(card)}" style="transform:${c.invertida ? 'rotate(180deg)' : 'none'}" onerror="this.src='${getFallbackSVG(card)}'"><p>${card.name}</p><small>${c.posicion || ''}</small></div>`; } }); } else if (t.runas && t.runas.length) { t.runas.forEach(r => { h += `<div style="text-align:center; margin:8px;"><div style="font-size:3rem;">${r.glyph}</div><p><strong>${r.posicion}</strong><br>${r.nombre} (${r.invertida?'Inv':'Der'})</p></div>`; }); } h += `</div>`; if (t.aiReading) h += `<div class="inner-section" style="margin-top:12px;">${t.aiReading.replace(/\n/g, '<br>')}</div>`; document.getElementById('tirada-guardada-contenido').innerHTML = h; document.getElementById('modal-tirada-guardada').classList.add('active'); }
 function cerrarTiradaGuardada(){ document.getElementById('modal-tirada-guardada').classList.remove('active'); tiradaGuardadaActual=null; }
 function exportarTiradaGuardadaPDF(){ if(!tiradaGuardadaActual) return; const t=tiradaGuardadaActual; let cartasHTML = ''; if(t.cartas) cartasHTML = t.cartas.map(c=>{ const card=deck.find(x=>x.id===c.id); if(!card) return ''; return `<div style="display:inline-block;width:80px;margin:4px;text-align:center"><img src="${getCardImage(card)}" style="width:60px;height:105px;transform:${c.invertida?'rotate(180deg)':'none'}"><p>${c.posicion||''}</p><p>${card.name}</p></div>`; }).join(''); else if(t.runas) cartasHTML = t.runas.map(r=>`<div style="display:inline-block;margin:8px;text-align:center"><div style="font-size:4rem;">${r.glyph}</div><p>${r.posicion}<br>${r.nombre}</p></div>`).join(''); const h=`<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:Georgia;padding:15px}</style></head><body><h1>🔮 SUSANA TAROT · ${t.tipo}</h1><p>${t.fecha}</p>${cartasHTML}${t.nota?`<h2>Reflexión</h2><p>${t.nota}</p>`:''}<h2>Interpretación</h2><p>${t.aiReading||''}</p></body></html>`; const w=window.open('','_blank'); w.document.write(h); w.document.close(); setTimeout(()=>w.print(),500); }
+function exportarTiradaGuardadaImagen() { if(!tiradaGuardadaActual) return; const div = document.getElementById('tirada-guardada-contenido'); if(div) exportarElementoAImagen(div, `tirada_${tiradaGuardadaActual.ts}`); }
 function exportAllData(){ const d={tiradas:tiradasData,suenos:dreamsData,notas:deck.map(c=>({id:c.id,nota:c.nota})),config:{speechRate,fontSize,showCardShadows,theme:document.documentElement.getAttribute('data-theme')}}; const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([JSON.stringify(d)],{type:'application/json'})); a.download='susana_backup_'+new Date().toISOString().split('T')[0]+'.json'; a.click(); showToast('📦 Backup descargado'); }
 function exportHistorialCSV(){ let csv='Fecha,Tipo,Nota\n'; tiradasData.forEach(t=>{ csv+=`"${t.fecha}","${t.tipo||''}","${(t.nota||'').replace(/"/g,'""')}"\n`; }); const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'})); a.download='historial.csv'; a.click(); }
 function clearAllData(){ if(confirm('⚠️ ¿Borrar TODO?')){ localStorage.clear(); location.reload(); } }
@@ -636,6 +1408,8 @@ function valorLetra(letra) { const mapa = { 'a':1,'b':2,'c':3,'d':4,'e':5,'f':6,
 function calcularNumerologia() { const fechaStr = document.getElementById('fecha-nacimiento').value; const nombreCompleto = document.getElementById('nombre-completo').value.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""); if (!fechaStr) { showToast('Ingresa tu fecha de nacimiento'); return; } const fecha = new Date(fechaStr); const dia = fecha.getDate(); const mes = fecha.getMonth() + 1; const anio = fecha.getFullYear(); const sumaFecha = dia + mes + anio; let numeroVida = reducirNumero(sumaFecha); let numeroExpresion = null, numeroAlma = null, numeroPersonalidad = null; if (nombreCompleto) { let sumaConsonantes = 0, sumaVocales = 0; const vocales = new Set(['a','e','i','o','u']); for (let letra of nombreCompleto) { let val = valorLetra(letra); if (val === 0) continue; if (vocales.has(letra)) sumaVocales += val; else sumaConsonantes += val; } const sumaTotal = sumaVocales + sumaConsonantes; numeroExpresion = reducirNumero(sumaTotal); numeroAlma = reducirNumero(sumaVocales); numeroPersonalidad = reducirNumero(sumaConsonantes); } const digitos = new Set(dia.toString()+mes.toString()+anio.toString()); let karmico = []; for (let i=1; i<=9; i++) if (!digitos.has(i.toString())) karmico.push(i); let numeroKarmico = karmico.length ? karmico.join(', ') : 'Ninguno'; let numeroSuerte = reducirNumero(dia, false); const hoy = new Date(); const anioActual = hoy.getFullYear(); let mesActual = hoy.getMonth() + 1; let diaActual = hoy.getDate(); let edad = anioActual - anio; if (mesActual < mes || (mesActual === mes && diaActual < dia)) edad--; const anioPersonalBase = reducirNumero(anioActual + numeroVida); let anioPersonal = anioPersonalBase; let mesPersonal = reducirNumero(anioPersonal + mesActual); const significados = { 1: "Liderazgo, independencia, iniciativa.", 2: "Cooperación, diplomacia, sensibilidad.", 3: "Creatividad, comunicación, optimismo.", 4: "Estabilidad, orden, trabajo duro.", 5: "Libertad, aventura, versatilidad.", 6: "Armonía, responsabilidad, amor.", 7: "Análisis, sabiduría, introspección.", 8: "Poder, abundancia, ambición.", 9: "Humanitarismo, compasión, idealismo.", 11: "Intuición, iluminación, espiritualidad.", 22: "Constructor maestro, grandes logros.", 33: "Maestro sanador, servicio compasivo." }; const consejos = { 1: "Toma la iniciativa, pero permite colaborar.", 2: "Escucha activamente, evita la codependencia.", 3: "Haz algo creativo cada día.", 4: "Organiza tu entorno, respeta los procesos.", 5: "Sal de tu zona de confort.", 6: "Establece límites sanos.", 7: "Dedica tiempo a la meditación.", 8: "Administra tus recursos.", 9: "Practica el desapego.", 11: "Confía en tus corazonadas.", 22: "Construye algo que perdure.", 33: "Comparte tu mensaje." }; let html = `<div class="numero-resultado"><h3>✨ Tus Números Clave ✨</h3><div class="numero-tabla">`; html += `<div class="numero-card"><h4>🔢 Número de Vida</h4><div class="numero-valor">${numeroVida}</div><p>${significados[numeroVida] || 'Camino de vida'}</p><div class="numero-consejo">💡 ${consejos[numeroVida] || 'Confía'}</div></div>`; if (numeroExpresion) html += `<div class="numero-card"><h4>✍️ Expresión</h4><div class="numero-valor">${numeroExpresion}</div><p>${significados[numeroExpresion]}</p></div>`; if (numeroAlma) html += `<div class="numero-card"><h4>❤️ Alma</h4><div class="numero-valor">${numeroAlma}</div><p>${significados[numeroAlma]}</p></div>`; if (numeroPersonalidad) html += `<div class="numero-card"><h4>🎭 Personalidad</h4><div class="numero-valor">${numeroPersonalidad}</div><p>${significados[numeroPersonalidad]}</p></div>`; html += `<div class="numero-card"><h4>📿 Lección Kármica</h4><div class="numero-valor">${numeroKarmico}</div><p>Dígitos ausentes en tu fecha. Trabájalos.</p></div>`; html += `<div class="numero-card"><h4>🍀 Número de la Suerte</h4><div class="numero-valor">${numeroSuerte}</div><p>Tu día de nacimiento simplificado.</p></div>`; html += `<div class="numero-card"><h4>📆 Año Personal</h4><div class="numero-valor">${anioPersonal}</div><p>Desde tu cumpleaños. Energía anual.</p><div class="numero-consejo">💡 ${consejos[anioPersonal] || 'Alinear acciones'}</div></div>`; html += `<div class="numero-card"><h4>🌙 Mes Personal</h4><div class="numero-valor">${mesPersonal}</div><p>Vibración del mes actual.</p></div>`; html += `</div><p class="numero-consejo" style="text-align:center">✨ Para una interpretación detallada, pulsa "Interpretación IA". ✨</p></div>`; document.getElementById('numerologia-resultados').innerHTML = html; window.numerologiaData = { fecha: fechaStr, nombre: nombreCompleto, vida: numeroVida, expresion: numeroExpresion, alma: numeroAlma, personalidad: numeroPersonalidad, karmico: numeroKarmico, suerte: numeroSuerte, anioPersonal, mesPersonal }; }
 async function interpretarNumerologiaIA() { if (!window.numerologiaData) { showToast('Primero calcula tus números'); return; } const div = document.getElementById('numerologia-ia-text'); div.style.display = 'block'; div.innerHTML = '<p>🌀 Consultando a la IA...</p>'; const prompt = `Realiza una interpretación numerológica profunda y cálida para una persona con: - Fecha: ${window.numerologiaData.fecha} - Número de Vida: ${window.numerologiaData.vida} ${window.numerologiaData.expresion ? `- Expresión: ${window.numerologiaData.expresion}` : ''} ${window.numerologiaData.alma ? `- Alma: ${window.numerologiaData.alma}` : ''} - Lección Kármica: ${window.numerologiaData.karmico} - Número de la Suerte: ${window.numerologiaData.suerte} - Año Personal: ${window.numerologiaData.anioPersonal} - Mes Personal: ${window.numerologiaData.mesPersonal}. Explica cada número, integración, y consejo espiritual.`; let respuesta = await callAI(prompt); if (!respuesta) { respuesta = `✨ **Tu Numerología Personal** ✨\n\nTu Número de Vida ${window.numerologiaData.vida} representa tu camino principal. Actualmente estás en un Año Personal ${window.numerologiaData.anioPersonal}, que te invita a reflexionar y actuar según su vibración. Tu Lección Kármica son los dígitos ${window.numerologiaData.karmico}; intégralos con consciencia. Confía en tu proceso.`; } div.innerHTML = respuesta.replace(/\n/g,'<br>'); }
 function escucharNumerologiaIA() { const texto = document.getElementById('numerologia-ia-text').innerText; if (texto && !texto.includes('🌀')) speakText(texto); else showToast('Genera interpretación primero'); }
+function exportarNumerologiaImagen() { const resultados = document.getElementById('numerologia-resultados'); const iaText = document.getElementById('numerologia-ia-text'); if (resultados) { const div = document.createElement('div'); div.style.background = 'white'; div.style.padding = '20px'; div.innerHTML = resultados.innerHTML + (iaText.style.display !== 'none' ? iaText.innerHTML : ''); document.body.appendChild(div); exportarElementoAImagen(div, 'numerologia'); document.body.removeChild(div); } }
+function exportarNumerologiaPDF() { const resultados = document.getElementById('numerologia-resultados'); const iaText = document.getElementById('numerologia-ia-text'); if (resultados) { const div = document.createElement('div'); div.style.background = 'white'; div.style.padding = '20px'; div.innerHTML = resultados.innerHTML + (iaText.style.display !== 'none' ? iaText.innerHTML : ''); document.body.appendChild(div); exportarElementoAPDF(div, 'numerologia'); document.body.removeChild(div); } }
 function verificarConexionIA() { const led = document.getElementById('ai-led'); const texto = document.getElementById('ai-status-text'); const disponible = (typeof puter !== 'undefined' && puter.ai && typeof puter.ai.chat === 'function'); if (disponible) { led.className = 'status-led green'; texto.innerText = 'Conectada'; } else { led.className = 'status-led red'; texto.innerText = 'Sin conexión'; } }
 function changeView(view){ currentView = view; document.querySelectorAll('.view').forEach(v => v.classList.remove('active')); document.getElementById(`view-${view}`).classList.add('active'); document.querySelectorAll('.bottom-nav button').forEach(b => b.classList.remove('active')); document.querySelector(`.bottom-nav button[data-view="${view}"]`).classList.add('active'); if(view === 'mazo') renderMazo(); if(view === 'hoy') renderCartaDelDia(); if(view === 'tirada') { aplicarTapete(); if (currentSpreadType !== 'libre') document.getElementById('libre-panel').style.display = 'none'; else document.getElementById('libre-panel').style.display = 'block'; } if(view === 'runas') renderRunasMazo(); if(view === 'suenos'){ cargarSuenos(); llenarSelectCartas(); } if(view === 'luna'){ renderLunarCalendar(); renderLunarInfo(); } if(view === 'historial') renderDiario(); }
 function toggleTema(){ const themes=['light','dark','bosque','oceanico','mistico','calido']; const cur=document.documentElement.getAttribute('data-theme')||'light'; const next=themes[(themes.indexOf(cur)+1)%themes.length]; document.documentElement.setAttribute('data-theme',next); localStorage.setItem('susana_theme',next); showToast('🎨 '+next); }
@@ -686,8 +1460,8 @@ document.addEventListener('DOMContentLoaded',()=>{
     mostrarBienvenidaPrimeraVez();
     verificarConexionIA();
     // Exponer funciones globales
-    window.abrirRuna = abrirRuna; window.cerrarModalRuna = cerrarModalRuna; window.guardarNotaRuna = guardarNotaRuna; window.interpretarRunaIA = interpretarRunaIA; window.escucharRunaIA = escucharRunaIA; window.generarTiradaRunas = generarTiradaRunas; window.interpretarRunasConIA = interpretarRunasConIA; window.escucharLecturaRunas = escucharLecturaRunas; window.guardarTiradaRunas = guardarTiradaRunas; window.compartirTiradaRunas = compartirTiradaRunas; window.runaDelDia = runaDelDia;
-    window.abrirCarta = abrirCarta; window.cerrarModal = cerrarModal; window.guardarNotaCarta = guardarNotaCarta; window.borrarNotaCarta = borrarNotaCarta; window.toggleInvertirEnModal = toggleInvertirEnModal; window.generarLecturaCartaIA = generarLecturaCartaIA; window.escucharLecturaCartaIA = escucharLecturaCartaIA; window.escucharSignificadoModal = escucharSignificadoModal; window.generarLecturaIA = generarLecturaIA; window.escucharLecturaIA = escucharLecturaIA; window.guardarTirada = guardarTirada; window.compartirTirada = compartirTirada; window.exportarLecturaPDF = exportarLecturaPDF; window.abrirTapeteExtendido = abrirTapeteExtendido; window.cerrarTapeteExtendido = cerrarTapeteExtendido; window.abrirTiradaGuardada = abrirTiradaGuardada; window.cerrarTiradaGuardada = cerrarTiradaGuardada; window.exportarTiradaGuardadaPDF = exportarTiradaGuardadaPDF; window.generarReflexionDiaria = generarReflexionDiaria; window.escucharReflexionDiaria = escucharReflexionDiaria; window.exportarCartaDiaPDF = exportarCartaDiaPDF; window.compartirCartaDia = compartirCartaDia; window.registrarEmocion = registrarEmocion; window.guardarSueno = guardarSueno; window.interpretarSueno = interpretarSueno; window.escucharSuenoIA = escucharSuenoIA; window.filtrarSuenos = filtrarSuenos; window.editDream = editDream; window.deleteDream = deleteDream; window.exportAllData = exportAllData; window.exportHistorialCSV = exportHistorialCSV; window.clearAllData = clearAllData; window.toggleTema = toggleTema; window.abrirConfigModal = abrirConfigModal; window.cerrarConfigModal = cerrarConfigModal; window.abrirManual = abrirManual; window.cerrarManual = cerrarManual; window.setChip = setChip; window.setSpreadType = setSpreadType; window.toggleMusica = toggleMusica; window.detenerVoz = detenerVoz; window.iniciarDictado = iniciarDictado; window.grabarAudio = grabarAudio; window.renderDiario = renderDiario; window.changeView = changeView; window.configurarTiradaLibre = configurarTiradaLibre; window.editarPosicionLibre = editarPosicionLibre; window.cambiarCartaAleatoriaLibre = cambiarCartaAleatoriaLibre; window.seleccionarCartaParaLibre = seleccionarCartaParaLibre; window.eliminarCartaLibre = eliminarCartaLibre; window.asignarCartaATiradaLibre = asignarCartaATiradaLibre; window.abrirSelectorCartas = abrirSelectorCartas; window.setSelectorChip = setSelectorChip; window.seleccionarCartaDesdeSelector = seleccionarCartaDesdeSelector; window.cerrarModalSelector = cerrarModalSelector; window.calcularNumerologia = calcularNumerologia; window.interpretarNumerologiaIA = interpretarNumerologiaIA; window.escucharNumerologiaIA = escucharNumerologiaIA;
+    window.abrirRuna = abrirRuna; window.cerrarModalRuna = cerrarModalRuna; window.guardarNotaRuna = guardarNotaRuna; window.interpretarRunaIA = interpretarRunaIA; window.escucharRunaIA = escucharRunaIA; window.generarTiradaRunas = generarTiradaRunas; window.interpretarRunasConIA = interpretarRunasConIA; window.escucharLecturaRunas = escucharLecturaRunas; window.guardarTiradaRunas = guardarTiradaRunas; window.compartirTiradaRunas = compartirTiradaRunas; window.exportarTiradaRunasPDF = exportarTiradaRunasPDF; window.runaDelDia = runaDelDia;
+    window.abrirCarta = abrirCarta; window.cerrarModal = cerrarModal; window.guardarNotaCarta = guardarNotaCarta; window.borrarNotaCarta = borrarNotaCarta; window.toggleInvertirEnModal = toggleInvertirEnModal; window.generarLecturaCartaIA = generarLecturaCartaIA; window.escucharLecturaCartaIA = escucharLecturaCartaIA; window.escucharSignificadoModal = escucharSignificadoModal; window.generarLecturaIA = generarLecturaIA; window.escucharLecturaIA = escucharLecturaIA; window.guardarTirada = guardarTirada; window.compartirTirada = compartirTirada; window.exportarLecturaPDF = exportarLecturaPDF; window.abrirTapeteExtendido = abrirTapeteExtendido; window.cerrarTapeteExtendido = cerrarTapeteExtendido; window.abrirTiradaGuardada = abrirTiradaGuardada; window.cerrarTiradaGuardada = cerrarTiradaGuardada; window.exportarTiradaGuardadaPDF = exportarTiradaGuardadaPDF; window.exportarTiradaGuardadaImagen = exportarTiradaGuardadaImagen; window.generarReflexionDiaria = generarReflexionDiaria; window.escucharReflexionDiaria = escucharReflexionDiaria; window.exportarCartaDiaPDF = exportarCartaDiaPDF; window.compartirCartaDia = compartirCartaDia; window.registrarEmocion = registrarEmocion; window.guardarSueno = guardarSueno; window.interpretarSueno = interpretarSueno; window.escucharSuenoIA = escucharSuenoIA; window.filtrarSuenos = filtrarSuenos; window.editDream = editDream; window.deleteDream = deleteDream; window.exportAllData = exportAllData; window.exportHistorialCSV = exportHistorialCSV; window.clearAllData = clearAllData; window.toggleTema = toggleTema; window.abrirConfigModal = abrirConfigModal; window.cerrarConfigModal = cerrarConfigModal; window.abrirManual = abrirManual; window.cerrarManual = cerrarManual; window.setChip = setChip; window.setSpreadType = setSpreadType; window.toggleMusica = toggleMusica; window.detenerVoz = detenerVoz; window.iniciarDictado = iniciarDictado; window.grabarAudio = grabarAudio; window.renderDiario = renderDiario; window.changeView = changeView; window.configurarTiradaLibre = configurarTiradaLibre; window.editarPosicionLibre = editarPosicionLibre; window.cambiarCartaAleatoriaLibre = cambiarCartaAleatoriaLibre; window.seleccionarCartaParaLibre = seleccionarCartaParaLibre; window.eliminarCartaLibre = eliminarCartaLibre; window.asignarCartaATiradaLibre = asignarCartaATiradaLibre; window.abrirSelectorCartas = abrirSelectorCartas; window.setSelectorChip = setSelectorChip; window.seleccionarCartaDesdeSelector = seleccionarCartaDesdeSelector; window.cerrarModalSelector = cerrarModalSelector; window.calcularNumerologia = calcularNumerologia; window.interpretarNumerologiaIA = interpretarNumerologiaIA; window.escucharNumerologiaIA = escucharNumerologiaIA; window.exportarNumerologiaImagen = exportarNumerologiaImagen; window.exportarNumerologiaPDF = exportarNumerologiaPDF;
 });
 </script>
 </body>
